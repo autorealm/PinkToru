@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="transparent">#22000000</color>
+	<color name="snow">#FFFAFA</color><!-- 雪白色 -->
+	<color name="bisque">#FFE4C4</color><!-- 橘黄色 -->
+</resources>

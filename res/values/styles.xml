@@ -1,0 +1,34 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+		<item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="ButtonBar">
+		<item name="android:paddingTop">5dip</item>   
+		<item name="android:paddingLeft">4dip</item>    
+		<item name="android:paddingRight">4dip</item>    
+		<item name="android:paddingBottom">2dip</item>    
+		<item name="android:background">#22000000</item>
+    </style>
+
+	<style name="PopupAnimation" parent="android:Animation">
+		<item name="android:windowEnterAnimation">@anim/popup_enter</item>
+		<item name="android:windowExitAnimation">@anim/popup_exit</item>
+	</style>
+	
+</resources>

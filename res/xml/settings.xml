@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+     android:title="游戏设置" >
+	<PreferenceCategory android:title="基本设置">
+		<CheckBoxPreference android:key="absinmove"
+			android:title="移动判断"
+			android:summary="是否在碎片移动时进行拼合判断" >
+		</CheckBoxPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="模式设置">        
+		<ListPreference 
+			android:key="gamemode"
+			android:title="游戏模式"
+			android:dialogTitle="选择游戏模式"
+			android:defaultValue="0"
+			android:entries="@array/game_mode_key"
+			android:entryValues="@array/game_mode_value" >
+		</ListPreference>
+        
+		<ListPreference 
+			android:key="piececutflag"
+			android:title="切图方式" 
+			android:dialogTitle="选择切图方式"
+			android:defaultValue="0"
+			android:entries="@array/piece_cut_key"
+			android:entryValues="@array/piece_cut_value" >
+		</ListPreference>
+		<ListPreference 
+			android:key="piecerenderflag"
+			android:title="算法"
+			android:dialogTitle="选择算法"
+			android:defaultValue="0"
+			android:entries="@array/piece_render_key"
+			android:entryValues="@array/piece_render_value" >
+		</ListPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="参数设置">
+	    <EditTextPreference android:key="pieceedgewidth"
+			android:title="碎片边缘宽度"
+			android:summary="请输入碎片边缘宽度（0-24）"
+			android:defaultValue="16"
+			android:dialogTitle="输入宽度值">
+        </EditTextPreference>
+        <EditTextPreference android:key="piecekochcurven"
+			android:title="碎片多边切图参数"
+			android:summary="请输入碎片雪花状切图参数（0-6）"
+			android:defaultValue="2"
+			android:dialogTitle="输入参数值">
+        </EditTextPreference>
+        <EditTextPreference android:key="pieceshadowoffset"
+			android:title="碎片阴影范围"
+			android:summary="请输入碎片阴影范围（0-10）"
+			android:defaultValue="5"
+			android:dialogTitle="输入范围值">
+        </EditTextPreference>
+        <EditTextPreference android:key="pieceshadowcolor"
+			android:title="碎片阴影颜色"
+			android:summary="请输入碎片颜色值（-?-?）"
+			android:defaultValue="-12303292"
+			android:dialogTitle="输入颜色值">
+        </EditTextPreference>
+	</PreferenceCategory>
+	
+	
+</PreferenceScreen>

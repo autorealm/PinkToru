@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="effect">
+		<item>震动</item>
+		<item>声音</item>
+		<item>其他</item>
+	</string-array>
+	
+	<string-array name="game_mode_value">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	
+	<string-array name="game_mode_key">
+		<item>拼图模式</item>
+		<item>填图模式</item>
+		<item>组合模式</item>
+	</string-array>
+
+	<string-array name="piece_cut_value">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	
+	<string-array name="piece_cut_key">
+		<item>普通凹凸切图方式</item>
+		<item>雪花状切图方式</item>
+		<item>矩形切图方式</item>
+	</string-array>
+
+	<string-array name="piece_render_value">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	
+	<string-array name="piece_render_key">
+		<item>像素填充渲染算法</item>
+		<item>路径切图渲染算法</item>
+	</string-array>
+
+</resources>

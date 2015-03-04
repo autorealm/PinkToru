@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:app="http://schemas.android.com/apk/res/com.sunteorum.pinktoru"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer
+        xmlns:my="http://schemas.android.com/apk/res/com.sunteorum.pinktoru"
+        android:id="@id/drawer"
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        android:visibility="gone"
+        app:content="@+id/content"
+        app:direction="topToBottom"
+        app:handle="@+id/handle" >
+
+        <include
+            android:id="@+id/pen_content"
+            layout="@layout/pen_content" />
+
+        <LinearLayout
+            android:id="@id/handle"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:background="@drawable/backgroud_2"
+            android:orientation="vertical" />
+    </com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer>
+
+    <LinearLayout
+        android:id="@+id/rlines"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:animateLayoutChanges="true" >
+
+        <TextView
+            android:id="@+id/tvGameLevel"
+            android:layout_width="match_parent"
+            android:layout_height="28dip"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="4dp"
+            android:shadowColor="#fff"
+            android:shadowDx="0"
+            android:shadowDy="0.5"
+            android:shadowRadius="0.8"
+            android:singleLine="true"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/tvGameTime"
+            android:layout_width="match_parent"
+            android:layout_height="28dip"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="4dp"
+            android:shadowColor="#fff"
+            android:shadowDx="0"
+            android:shadowDy="0.5"
+            android:shadowRadius="0.8"
+            android:singleLine="true"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/tvGameStatus"
+            android:layout_width="match_parent"
+            android:layout_height="28dip"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="4dp"
+            android:shadowColor="#fff"
+            android:shadowDx="0"
+            android:shadowDy="0.5"
+            android:shadowRadius="0.8"
+            android:singleLine="true"
+            android:textColor="#000" />
+    </LinearLayout>
+
+</merge>

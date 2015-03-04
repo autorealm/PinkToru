@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="space"/>
+    <item type="id" name="drawer"/>
+    <item type="id" name="handle"/>
+    
+    <item type="id" name="gallery_piece_list"/>
+    
+</resources>
