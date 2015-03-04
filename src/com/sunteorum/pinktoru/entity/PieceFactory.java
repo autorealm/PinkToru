@@ -3,6 +3,8 @@ package com.sunteorum.pinktoru.entity;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.sunteorum.pinktoru.PinkToru;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -108,7 +110,7 @@ public class PieceFactory {
 		edgePaint.setColor(Color.LTGRAY);
 		//edgePaint.setARGB(120, 60, 60, 60);
 		edgePaint.setStyle(Paint.Style.STROKE);
-		edgePaint.setStrokeWidth((PIECE_CUT_FLAG != 0)?0:PIECE_EDGE_WIDTH);
+		edgePaint.setStrokeWidth((PIECE_CUT_FLAG != 1)?0:PIECE_EDGE_WIDTH);
 		edgePaint.setAntiAlias(true);
 		if (RENDER_FLAG != 0) edgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
 		else edgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));
@@ -181,7 +183,7 @@ public class PieceFactory {
 		boolean isnear = false;
     	for (int i = 0; i < dotArray.size(); i++) {
     		Point dot = (Point) dotArray.get(i);
-    		if (Math.abs(dot.x - p.x) < 3 && Math.abs(dot.y - p.y) < 3) {
+    		if (Math.abs(dot.x - p.x) < 5 && Math.abs(dot.y - p.y) < 5) {
     			isnear = true;
     			break;
     		}
@@ -228,11 +230,6 @@ public class PieceFactory {
         }
     }
 	
-	private int getRndD() {
-		//返回与边界错开的高度
-		return _pieceD - (int)Math.random() * 2 * _pieceD;
-	}
-	
 	private ArrayList<Point> getKochDotArray(Piece piece, Place position) {
 		//int rnd = ((int)(Math.random()*10)%2 ==0) ? 1 : -1;
 		ArrayList<Point> kochDotArray = new ArrayList<Point>();
@@ -278,6 +275,74 @@ public class PieceFactory {
 		
 		return rectDotArray;
 		
+	}
+	
+	private void aotuBlock(Point point, double angle, double length, int n, ArrayList<Point> dotArray) {
+		if (dotArray == null) dotArray = new ArrayList<Point>();
+		int rnd = ((int)(Math.random()*10)%2 ==0) ? 1 : -1;
+		int x0 = point.x;
+		int y0 = point.y;
+        if (n == 0) {
+            int x1 = (int) (x0 + Math.round(length * Math.cos(angle)));
+            int y1 = (int) (y0 - Math.round(length * Math.sin(angle)));
+            Point p = new Point(x1, y1);
+            if (!dotArray.contains(point)) {
+            	if (!isNearPoint(dotArray, point)) dotArray.add(point);
+            }
+            if (!dotArray.contains(p)) {
+            	if (!isNearPoint(dotArray, p)) dotArray.add(p);
+            }
+            
+        } else {
+            length /= 3;
+            n--;
+            aotuBlock(new Point(x0, y0), angle, length, n, dotArray);
+ 
+            x0 += length * Math.cos(angle);
+            y0 -= length * Math.sin(angle);
+            angle += rnd * Math.PI / 2;
+            aotuBlock(new Point(x0, y0), angle, length, n, dotArray);
+ 
+            x0 += length * Math.cos(angle);
+            y0 -= length * Math.sin(angle);
+            angle -= rnd * Math.PI / 2;
+            aotuBlock(new Point(x0, y0), angle, length, n, dotArray);
+
+            x0 += length * Math.cos(angle);
+            y0 -= length * Math.sin(angle);
+            angle -= rnd * Math.PI / 2;
+            aotuBlock(new Point(x0, y0), angle, length, n, dotArray);
+            
+            x0 += length * Math.cos(angle);
+            y0 -= length * Math.sin(angle);
+            angle += rnd * Math.PI / 2;
+            aotuBlock(new Point(x0, y0), angle, length, n, dotArray);
+        }
+    }
+	
+	//取得凹凸点集
+	public ArrayList<Point> getAotuDotArray(Piece piece, Place position) {
+		ArrayList<Point> dotArray = new ArrayList<Point>();
+		Point key = piece.getKey();
+		switch(position){
+		case Right:
+			Point r1 = new Point(key.x + _pieceWidth, key.y);
+			aotuBlock(r1, -Math.PI / 2, _pieceHeight, KOCH_CURVE_N, dotArray);
+			
+			break;
+		case Feet:
+			Point f1 = new Point(key.x + _pieceWidth, key.y + _pieceHeight);
+			aotuBlock(f1, Math.PI, _pieceWidth, KOCH_CURVE_N, dotArray);
+			
+			break;
+		}
+		
+		return dotArray;
+	}
+
+	private int getRndD() {
+		//返回与边界错开的高度
+		return _pieceD - (int)Math.random() * 2 * _pieceD;
 	}
 	
 	//顺时针取椭圆点位，右边界和下边界
@@ -383,8 +448,9 @@ public class PieceFactory {
 			feet.add(fp1);
 			feet.add(fp2);
 		} else {
-			if (PIECE_CUT_FLAG == 0) feet = getOvalDotArray(piece, Place.Feet);
-			else if (PIECE_CUT_FLAG == 1) feet = getKochDotArray(piece, Place.Feet);
+			if (PIECE_CUT_FLAG == 1) feet = getOvalDotArray(piece, Place.Feet);
+			else if (PIECE_CUT_FLAG == 2) feet = getKochDotArray(piece, Place.Feet);
+			else if (PIECE_CUT_FLAG == 3) feet = getAotuDotArray(piece, Place.Feet);
 			else feet = getRectDotArray(piece, Place.Feet);
 		}
 		
@@ -395,8 +461,9 @@ public class PieceFactory {
 			right.add(rp1);
 			right.add(rp2);
 		} else {
-			if (PIECE_CUT_FLAG == 0) right = getOvalDotArray(piece, Place.Right);
-			else if (PIECE_CUT_FLAG == 1) right = getKochDotArray(piece, Place.Right);
+			if (PIECE_CUT_FLAG == 1) right = getOvalDotArray(piece, Place.Right);
+			else if (PIECE_CUT_FLAG == 2) right = getKochDotArray(piece, Place.Right);
+			else if (PIECE_CUT_FLAG == 3) right = getAotuDotArray(piece, Place.Right);
 			else right = getRectDotArray(piece, Place.Right);
 		}
 		
@@ -498,7 +565,7 @@ public class PieceFactory {
 		int tpieceW = pieceBit.getWidth();
 		int tpieceH = pieceBit.getHeight();
 		
-		int _d = (PIECE_CUT_FLAG != 0 && SHADOW_OFFSET > 1)?1:SHADOW_OFFSET;
+		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1)?1:SHADOW_OFFSET;
 		
 		for(int i=_d; i<tpieceW; i++){
 			for(int j=_d; j<tpieceH; j++){
@@ -544,7 +611,7 @@ public class PieceFactory {
 		ArrayList<Point> left = piece.getApLeft();
 		changeDotPath(left, dotPath, diff);
 		
-		int _d = (PIECE_CUT_FLAG != 0 && SHADOW_OFFSET > 0)?0:SHADOW_OFFSET;
+		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 0)?0:SHADOW_OFFSET;
 		dotPath.offset(_d, _d);
 		
 		/////根据碎片的大小，创建透明图片，在画布上每次绘制一个碎片，然后保存
@@ -604,14 +671,14 @@ public class PieceFactory {
 		this.allPiece = allPiece;
 	}
 	
-	/*public void setPintuValue(Activity a) {
-		PIECE_CUT_FLAG = ((Pintu) a.getApplication()).getPieceCutFlag();
-		SHADOW_OFFSET = ((Pintu) a.getApplication()).getPieceShadowOffset();
-		SHADOW_COLOR = ((Pintu) a.getApplication()).getPieceShadowColor();
-		RENDER_FLAG = ((Pintu) a.getApplication()).getPieceRenderFlag();
-		PIECE_EDGE_WIDTH = ((Pintu) a.getApplication()).getPieceEdgeWidth();
-		KOCH_CURVE_N = ((Pintu) a.getApplication()).getPieceKochCurveN();
-	}*/
+	public void setPintuValue(PinkToru app) {
+		PIECE_CUT_FLAG = app.getPieceCutFlag();
+		SHADOW_OFFSET = app.getPieceShadowOffset();
+		SHADOW_COLOR = app.getPieceShadowColor();
+		RENDER_FLAG = app.getPieceRenderFlag();
+		PIECE_EDGE_WIDTH = app.getPieceEdgeWidth();
+		KOCH_CURVE_N = app.getPieceKochCurveN();
+	}
 	
 	public void setPieceCutFlag(int flag) {
 		PIECE_CUT_FLAG = flag;

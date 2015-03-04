@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="140dp"
         android:visibility="gone"
-        app:content="@+id/content"
+        app:content="@+id/pen_content"
         app:direction="topToBottom"
         app:handle="@+id/handle" >
 

@@ -565,8 +565,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 
 	private Vector<Piece> createAllPieces(Bitmap bitmap, int row, int line) {
 		PieceFactory pu = new PieceFactory(this);
-		//pu.setPintuValue(this);
-		//pu.setPieceCutFlag(3);
+		pu.setPintuValue(app);
+		//pu.setPieceCutFlag(0);
 		
     	pu.setImage(bitmap);
     	pu.setRowAndLine(row, line);

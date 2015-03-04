@@ -29,7 +29,6 @@ import android.webkit.WebSettings.PluginState;
 import android.webkit.WebSettings.RenderPriority;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class WebActivity extends BaseActivity implements OnClickListener,DownloadListener   {
 	WebView webView;
@@ -41,10 +40,10 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_web);
 		
-		progressbar = (ProgressBar)  findViewById(R.id.progBar);
+		progressbar = (ProgressBar) findViewById(R.id.progBar);
         
         
 		webView = (WebView) findViewById(R.id.webViewer);
@@ -104,7 +103,7 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 		} else if (getIntent().getData() != null) {
 			url = getIntent().getDataString();
 			System.out.println("LoadURL:" + url);
-			if (url != null && url.startsWith("http://pt.939j.com/game_award.php"))
+			if (url != null && url.startsWith("http://"))
 				;
 			else 
 				webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -263,7 +262,6 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					result.confirm();
-					System.out.println("=====================确定领取======================");
 				}
 				
 			});
@@ -272,8 +270,6 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					result.cancel();
-					Toast.makeText(WebActivity.this, "很可惜，您放弃了该奖品", Toast.LENGTH_SHORT).show();
-					finish();
 				}
 				
 			});

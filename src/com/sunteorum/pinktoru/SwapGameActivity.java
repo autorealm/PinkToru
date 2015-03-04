@@ -120,6 +120,8 @@ public class SwapGameActivity extends BaseGameActivity {
 		puzzle.getChildAt(0).setVisibility(4);
 		puzzle.getChildAt(1).setVisibility(4);
 		
+		//强制使用纯矩形分图方式
+		app.setPieceCutFlag(0);
 		INACCURACY = 0;
 	}
 
