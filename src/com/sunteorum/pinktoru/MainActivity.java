@@ -24,7 +24,7 @@ public class MainActivity extends BaseActivity {
 		intent = new Intent(MainActivity.this, HomeActivity.class);
 		
 		//…Ë÷√∂Øª≠
-		final Animation hide = AnimationUtils.loadAnimation(this, R.anim.hide);
+		final Animation hide = AnimationUtils.loadAnimation(this, R.anim.hide_half);
         hide.setAnimationListener(hide_listener);
         
         Handler mHandler = new Handler();
