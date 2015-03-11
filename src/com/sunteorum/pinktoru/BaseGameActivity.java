@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.sunteorum.pinktoru.entity.GameEntity;
+import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.Piece;
 import com.sunteorum.pinktoru.entity.PieceFactory;
 import com.sunteorum.pinktoru.util.Common;
@@ -77,7 +77,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	
 	protected int dx, dy; //游戏窗口与根布局的距离
 	
-	protected GameEntity ge;
+	protected LevelEntity le;
 	protected MultiDirectionSlidingDrawer drawer;
 	protected View handle;
 	protected LinearLayout layGameStatus;
@@ -113,12 +113,12 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 				return;
 			}
 			
-			ge = app.games.get(level - 1);
-			row = ge.getGameRow();
-			line = ge.getGameLine();
+			le = app.games.get(level - 1);
+			row = le.getPieceRow();
+			line = le.getPieceLine();
 			
 			if (imageUrl == null && imagePath == null) {
-				imageUrl = ge.getGameImageUrl();
+				imageUrl = le.getImageUrl();
 			}
 		}
 		
@@ -255,7 +255,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 		TextView txtDesc = (TextView) progd.findViewById(R.id.txtGameDesc);
 		ImageButton btnClose = (ImageButton) progd.findViewById(R.id.btnGameClose);
 		txtName.setText("准备开始第 " + level + " 关...");
-		txtDesc.setText((ge != null) ? ge.getGameDesc() : "");
+		txtDesc.setText((le != null) ? le.getLevelDesc() : "");
 		
 		final FlippingImageView mFivIcon = (FlippingImageView) progd.findViewById(R.id.game_loading_icon);
 		if (mFivIcon != null) mFivIcon.startAnimation();

@@ -2,7 +2,7 @@ package com.sunteorum.pinktoru.db;
 
 import java.util.LinkedList;
 
-import com.sunteorum.pinktoru.entity.GameEntity;
+import com.sunteorum.pinktoru.entity.LevelEntity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -136,9 +136,9 @@ public class DataBean {
 	}
 	
 	/** 查询数据 */
-	public LinkedList<GameEntity> queryGame(String mode, String level) {
+	public LinkedList<LevelEntity> queryGame(String mode, String level) {
 		
-		LinkedList<GameEntity> recordList = new LinkedList<GameEntity>();
+		LinkedList<LevelEntity> recordList = new LinkedList<LevelEntity>();
 		Cursor cursor = null;
 		try {
 			cursor = mSQLiteDatabase.query(DBHelper.TABLE_LEVEL,
@@ -154,7 +154,7 @@ public class DataBean {
 			// 获取总共有多少条数据
 			cursor.getCount();
 			
-			GameEntity record = null;
+			LevelEntity record = null;
 			while (cursor.moveToNext()) {// 要查询的列
 				cursor.getString(nameIndex);
 				cursor.getInt(stepsIndex);

@@ -2,7 +2,7 @@ package com.sunteorum.pinktoru.db;
 
 import java.util.ArrayList;
 
-import com.sunteorum.pinktoru.entity.GameEntity;
+import com.sunteorum.pinktoru.entity.LevelEntity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -59,20 +59,33 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String GAME_TABLE_CREATE_SQL = "create table " +
-				TABLE_GAME + " (" + KEY_ID + " integer primary key autoincrement, " +
-				"game_id integer, " +
-				"game_name text, " +
-				"level_id integer, " +
+		String GAME_TABLE_CREATE_SQL = "create table " + TABLE_GAME + " (" +
+				KEY_ID + " integer primary key autoincrement, " +
+				"game_id integer not null, " +
+				"game_name tinytext not null, " +
+				"level text not null, " +
+				"image_id integer default null, " +
+				"image_uri tinytext default null, " +
 				"desc text ); ";
 		String LEVEL_TABLE_CREATE_SQL = "create table " + TABLE_LEVEL + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
 				"level_id integer not null, " +
-				"piece_row integer not null, " +
-				"piece_line integer not null, " +
+				"piece_row tinyint not null, " +
+				"piece_line tinyint not null, " +
+				"target_value integer default null, " +
+				"image_id integer default null, " +
+				"image_uri tinytext default null, " +
+				"game_mode tinyint default null, " +
+				"cut_flag tinyint default null, " +
+				"cut_alt tinyint default null, " +
+				"render_flag tinyint default null, " +
+				"edge_width tinyint default null, " +
+				"shadow_offset tinyint default null, " +
+				"add_data text default null, " +
 				"desc text ); ";
 		String RECORD_TABLE_CREATE_SQL = "create table " + TABLE_RECORD + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
+				"game_id integer not null, " +
 				"level_id integer not null, " +
 				"record_time integer not null, " +
 				"steps integer not null, " +
@@ -84,29 +97,33 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		ContentValues values = new ContentValues();
 		values.clear();
-		values.put("level_id", 1);
+		values.put("game_id", 1);
+		values.put("game_name", "д╛хо");
+		values.put("level", "{}");
+		values.put("desc", "");
 		db.insertOrThrow(TABLE_GAME, null, values);
 		
-		ArrayList<GameEntity> gamelist = new ArrayList<GameEntity>();
-		gamelist.add(new GameEntity(1, 3, 2, "3*2"));
-		gamelist.add(new GameEntity(2, 5, 3, "5*3"));
-		gamelist.add(new GameEntity(3, 6, 4, "6*4"));
-		gamelist.add(new GameEntity(4, 7, 5, "7*5"));
-		gamelist.add(new GameEntity(5, 8, 6, "8*6"));
-		gamelist.add(new GameEntity(6, 9, 7, "9*7"));
-		gamelist.add(new GameEntity(7, 10, 8, "10*8"));
-		gamelist.add(new GameEntity(8, 12, 9, "12*9"));
+		ArrayList<LevelEntity> lvlist = new ArrayList<LevelEntity>();
+		lvlist.add(new LevelEntity(1, 3, 2, "3*2"));
+		lvlist.add(new LevelEntity(2, 5, 3, "5*3"));
+		lvlist.add(new LevelEntity(3, 6, 4, "6*4"));
+		lvlist.add(new LevelEntity(4, 7, 5, "7*5"));
+		lvlist.add(new LevelEntity(5, 8, 6, "8*6"));
+		lvlist.add(new LevelEntity(6, 9, 7, "9*7"));
+		lvlist.add(new LevelEntity(7, 10, 8, "10*8"));
+		lvlist.add(new LevelEntity(8, 12, 9, "12*9"));
+		lvlist.add(new LevelEntity(9, 14, 10, "14*10"));
 		
-		for (GameEntity ge:gamelist) {
+		for (LevelEntity le:lvlist) {
 			values.clear();
-			values.put("level_id", ge.getGameLevel());
-			values.put("piece_row", ge.getGameRow());
-			values.put("piece_line", ge.getGameLine());
-			values.put("desc", ge.getGameDesc());
+			values.put("level_id", le.getLevelId());
+			values.put("piece_row", le.getPieceRow());
+			values.put("piece_line", le.getPieceLine());
+			values.put("desc", le.getLevelDesc());
 			db.insertOrThrow(TABLE_LEVEL, null, values);
 		}
 		
-		gamelist.clear();
+		lvlist.clear();
 		values.clear();
 		
 	}

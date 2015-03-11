@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.sunteorum.pinktoru.adapter.FlowImageAdapter;
 import com.sunteorum.pinktoru.db.DataBean;
-import com.sunteorum.pinktoru.entity.GameEntity;
+import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
 import com.sunteorum.pinktoru.util.Common;
 import com.sunteorum.pinktoru.util.ImageUtils;
@@ -90,13 +90,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			uri = data.getData();
 			String s1 = getUriFilePath(uri);
 			
-			gotoPlayTheGame(new GameEntity());
+			gotoPlayTheGame(new LevelEntity());
 			
 			break;
 		case 2:
 			String s2 = capimgPath;
 			
-			gotoPlayTheGame(new GameEntity());
+			gotoPlayTheGame(new LevelEntity());
 			
 			break;
 		case 3:
@@ -132,7 +132,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		String imgpath = imageList.get(position);
 		
-		gotoPlayTheGame(new GameEntity());
+		gotoPlayTheGame(new LevelEntity());
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			}
 			String imgpath = imageList.get(galleryFlow.getSelectedItemPosition());
 			
-			gotoPlayTheGame(new GameEntity());
+			gotoPlayTheGame(new LevelEntity());
 			
 			break;
 		case R.id.button_return:
@@ -187,12 +187,12 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		}
 	}
 	
-	public void gotoPlayTheGame(GameEntity ge) {
-		Intent i = new Intent(this, ((PinkToru) getApplication()).getGameClass(ge.getGameMode()));
+	public void gotoPlayTheGame(LevelEntity le) {
+		Intent i = new Intent(this, ((PinkToru) getApplication()).getGameClass(le.getGameMode()));
 		i.setAction("NEW_GAME_ACTION");
 		
 		DataBean db = DataBean.getInstance(this);
-		Cursor cursor = db.getEntry("pt_level", "level_id=" + ge.getGameLevel());
+		Cursor cursor = db.getEntry("pt_level", "level_id=" + le.getLevelId());
 		cursor.moveToFirst();
 		int row = cursor.getInt(cursor.getColumnIndexOrThrow("piece_row"));
 		int line = cursor.getInt(cursor.getColumnIndexOrThrow("piece_line"));
@@ -200,13 +200,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		db.close();
 		
 		Bundle bundle = new Bundle();
-		bundle.putInt("imageId", ge.getGameImageId());
-		bundle.putInt("levelId", ge.getGameLevel());
+		bundle.putInt("imageId", le.getImageId());
+		bundle.putInt("levelId", le.getLevelId());
 		bundle.putInt("level", 1);
 		bundle.putInt("row", row);
 		bundle.putInt("line", line);
-		bundle.putString("imageUrl", ge.getGameImageUrl());
-		bundle.putString("imagePath", ge.getGameDesc());
+		bundle.putString("imageUrl", le.getImageUrl());
+		//bundle.putString("imagePath", le.getGameDesc());
 		
 		i.putExtras(bundle);
 		startActivity(i);

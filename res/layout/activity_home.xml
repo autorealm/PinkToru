@@ -2,6 +2,281 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
+    <LinearLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/backgroud_1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp" >
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/list_selector_2"
+            android:drawableLeft="@android:drawable/ic_dialog_info"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:freezesText="false"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="4dp"
+            android:singleLine="true"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btn_msg"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/list_selector_2"
+            android:drawableLeft="@android:drawable/ic_dialog_email"
+            android:drawablePadding="4dp"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/btn_renew"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/list_selector_2"
+            android:drawableLeft="@android:drawable/ic_popup_sync"
+            android:padding="8dp"
+            android:text="@string/change_prize"
+            android:textColor="@color/snow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_footer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/bannershape_2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp" >
+
+        <Button
+            android:id="@+id/btn_all"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_selector_0"
+            android:drawablePadding="-14dp"
+            android:padding="8dp"
+            android:text="全部"
+            android:textColor="@color/snow"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_loc"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_selector_0"
+            android:drawablePadding="-14dp"
+            android:padding="8dp"
+            android:text="本地"
+            android:textColor="@color/snow"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_selector_0"
+            android:drawablePadding="-14dp"
+            android:padding="8dp"
+            android:text="更多"
+            android:textColor="@color/snow"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_footer"
+        android:layout_below="@id/layout_header"
+        android:fillViewport="true"
+        android:nestedScrollingEnabled="false" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent" >
+
+                <ViewFlipper
+                    android:id="@+id/viewflipper_slideshow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateFirstView="true"
+                    android:autoStart="true"
+                    android:flipInterval="2000"
+                    android:minHeight="120dp"
+                    android:inAnimation="@android:anim/slide_in_left"
+                    android:outAnimation="@android:anim/slide_out_right" >
+
+                    <ImageView
+                        android:id="@+id/imageView_ss_1"
+                        style="@style/SlideShowImage"
+                        android:src="@drawable/backgroud_1" />
+                    <ImageView
+                        android:id="@+id/imageView_ss_2"
+                        style="@style/SlideShowImage"
+                        android:src="@drawable/backgroud_1" />
+                    <ImageView
+                        android:id="@+id/imageView_ss_3"
+                        style="@style/SlideShowImage"
+                        android:src="@drawable/backgroud_1" />
+
+                </ViewFlipper>
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginRight="16dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radio_ss_1"
+                        style="@style/RadioPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/radio_ss_2"
+                        style="@style/RadioPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <RadioButton
+                        android:id="@+id/radio_ss_3"
+                        style="@style/RadioPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RadioGroup>
+
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/btn_new_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bannershape_1"
+                android:drawableLeft="@android:drawable/ic_menu_directions"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/login_icon_go"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="最近更新" />
+
+            <com.sunteorum.pinktoru.view.SquareGridView
+                android:id="@+id/grid_new_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="false"
+                android:focusableInTouchMode="true"
+                android:horizontalSpacing="0dp"
+                android:listSelector="@drawable/list_selector_3"
+                android:numColumns="auto_fit"
+                android:overScrollMode="never"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:scrollbars="none"
+                android:smoothScrollbar="false"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0dp" >
+            </com.sunteorum.pinktoru.view.SquareGridView>
+
+            <Button
+                android:id="@+id/btn_pop_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bannershape_1"
+                android:drawableLeft="@android:drawable/ic_menu_share"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/login_icon_go"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="最受欢迎" />
+
+            <com.sunteorum.pinktoru.view.SquareGridView
+                android:id="@+id/grid_pop_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="false"
+                android:focusableInTouchMode="true"
+                android:horizontalSpacing="0dp"
+                android:listSelector="@drawable/list_selector_3"
+                android:numColumns="auto_fit"
+                android:overScrollMode="never"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:scrollbars="none"
+                android:smoothScrollbar="false"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0dp" >
+            </com.sunteorum.pinktoru.view.SquareGridView>
+
+            <Button
+                android:id="@+id/btn_last_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bannershape_1"
+                android:drawableLeft="@android:drawable/ic_menu_my_calendar"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/login_icon_go"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="历史记录" />
+
+            <com.sunteorum.pinktoru.view.SquareGridView
+                android:id="@+id/grid_last_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="false"
+                android:focusableInTouchMode="true"
+                android:horizontalSpacing="0dp"
+                android:listSelector="@drawable/list_selector_3"
+                android:numColumns="auto_fit"
+                android:overScrollMode="never"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:scrollbars="none"
+                android:smoothScrollbar="false"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0dp" >
+            </com.sunteorum.pinktoru.view.SquareGridView>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

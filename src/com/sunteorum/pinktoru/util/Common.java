@@ -9,6 +9,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -159,6 +160,18 @@ public class Common {
 
     }
 	
+	public static String getUriFilePath(Activity activity, Uri uri) {
+		String[] proj = { MediaStore.Images.Media.DATA };
+		@SuppressWarnings("deprecation")
+		android.database.Cursor actualimagecursor = activity.managedQuery(uri, proj, null, null, null);
+		int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		actualimagecursor.moveToFirst();
+		String file_path = actualimagecursor.getString(actual_image_column_index);
+		//File file = new File(file_path);
+		//actualimagecursor.close();
+		
+		return file_path;
+	}
 
 	public static Intent cropImageUri(Uri uri, int aspectX, int aspectY, int outputX, int outputY){
 		 Intent intent = new Intent("com.android.camera.action.CROP");

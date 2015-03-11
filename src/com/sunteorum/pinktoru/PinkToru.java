@@ -10,7 +10,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.sunteorum.pinktoru.entity.GameEntity;
+import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
 import com.sunteorum.pinktoru.util.AppUtils;
 
@@ -37,7 +37,7 @@ public class PinkToru extends Application {
 	final String APP_IMAGE_DIR = "Image";
 	
 	private UserEntity user;
-	protected ArrayList<GameEntity> games;
+	protected ArrayList<LevelEntity> games;
 	//protected PrizeEntity pe;
 	protected boolean offline = false;	//是否离线游戏模式，测试用
 	final int INACCURACY = 12;	//判断拼合的距离
@@ -102,12 +102,12 @@ public class PinkToru extends Application {
 	}
 
 	public void setGames(String json) {
-		games = new ArrayList<GameEntity>();
+		games = new ArrayList<LevelEntity>();
 		try {
 			//System.out.println(json);
 			JSONArray jso = new JSONArray(json);
 			for (int i = 0; i < jso.length(); i++) {
-				GameEntity ge = new GameEntity(jso.optString(i));
+				LevelEntity ge = new LevelEntity(jso.optString(i));
 				games.add(ge);
 			}
 		} catch (JSONException e) {
@@ -116,21 +116,21 @@ public class PinkToru extends Application {
 		
 	}
 	
-	public GameEntity getGameAtIndex(int index) {
+	public LevelEntity getGameAtIndex(int index) {
 		if (games == null || games.size() < index + 1) return null;
-		GameEntity ge = games.get(index);
+		LevelEntity ge = games.get(index);
 		return ge;
 	}
 	
 	public String getGameImageAtIndex(int index) {
 		if (games == null || games.size() < index + 1) return null;
-		GameEntity ge = games.get(index);
-		return ge.getGameImageUrl();
+		LevelEntity le = games.get(index);
+		return le.getImageUrl();
 	}
 	
 	public void setGameModeAtIndex(int index) {
 		if (games == null || games.size() < index + 1) return; //this.gameMode = 0;
-		GameEntity ge = games.get(index);
+		LevelEntity ge = games.get(index);
 		this.gameMode = ge.getGameMode() - 1;
 		System.out.println("GameMode:" + this.gameMode);
 	}

@@ -23,12 +23,31 @@
 		<item name="android:paddingLeft">4dip</item>    
 		<item name="android:paddingRight">4dip</item>    
 		<item name="android:paddingBottom">2dip</item>    
-		<item name="android:background">#22000000</item>
+		<item name="android:background">#33000000</item>
     </style>
 
 	<style name="PopupAnimation" parent="android:Animation">
 		<item name="android:windowEnterAnimation">@anim/popup_enter</item>
 		<item name="android:windowExitAnimation">@anim/popup_exit</item>
+	</style>
+	
+	<style name="RadioPoint">
+		<item name="android:gravity">center</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_gravity">center</item>
+		<item name="android:button">@null</item>
+		<item name="android:background">@null</item>
+		<item name="android:clickable">false</item>
+		<item name="android:drawableLeft">@drawable/dot_white</item>
+		<item name="android:layout_marginLeft">8dp</item>
+	</style>
+ 
+	<style name="SlideShowImage">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:scaleType">fitXY</item>
+		<item name="android:background">#22000000</item>
 	</style>
 	
 </resources>

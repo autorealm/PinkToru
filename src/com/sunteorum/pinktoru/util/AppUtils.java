@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
 
 import android.app.ActivityManager;
@@ -472,7 +471,7 @@ public class AppUtils {
 		
 	}
 	
-	public static void sendScore(final Context c, final UserEntity ue, final GameEntity ge, final long score) {
+	public static void sendScore(final Context c, final UserEntity ue, final int gameId, final int levelId, final long score) {
 		
 		new Thread(new Runnable() {
 
@@ -481,8 +480,8 @@ public class AppUtils {
 				String url = HOST_URL + "score.php";
 				Map<String, String> params = new HashMap<String, String>();
 				
-				params.put("game_id", String.valueOf(ge.getGameId()));
-				params.put("game_level", String.valueOf(ge.getGameLevel()));
+				params.put("game_id", String.valueOf(gameId));
+				params.put("level_id", String.valueOf(levelId));
 				params.put("user_id", (ue == null)?String.valueOf(0):String.valueOf(ue.getUserId()));
 				params.put("app_name", c.getPackageName());
 				params.put("app_ver", "" + AppUtils.getVersionCode(c));
