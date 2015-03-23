@@ -30,6 +30,9 @@ public class PieceFactory {
 	private int PIECE_EDGE_WIDTH = 16;
 	private int KOCH_CURVE_N = 2;
 	
+	private int _D = 12; //比率系数，默认12
+	private int _W = 6; //碎片凹凸系数，占边界长度的百分比，默认4
+	
 	public enum Place {
 		Right, Feet;
 	}
@@ -92,10 +95,9 @@ public class PieceFactory {
 		_pieceWidth = Math.round((float) _imageWidth / (float) _line);
 		_pieceHeight = Math.round((float) _imageHeight / (float) _row);
 		int minWH = Math.min(_pieceWidth, _pieceHeight);
-		_pieceD = minWH / 12; //比率系数
-		_pieceOW = minWH / 4; ////碎片凹凸系数，占边界长度的百分比
-		_pieceOH = minWH / 4;
-		
+		_pieceD = minWH / _D;
+		_pieceOW = minWH / _W;
+		_pieceOH = minWH / _W;
 		
 		noPicPaint.setColor(Color.GRAY);
 		noPicPaint.setFlags(Paint.ANTI_ALIAS_FLAG);

@@ -37,6 +37,7 @@
 	<string name="btn_cancel">取消</string>
 	<string name="btn_continue">继续</string>
 	<string name="btn_apply">应用</string>
+	<string name="label_cancel">撤销</string>
 	<string name="local_image">本地图片</string>
 	<string name="upload_score">上传成绩</string>
 	<string name="setting_level">难易设置</string>

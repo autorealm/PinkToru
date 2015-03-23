@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notify_view"
+    android:layout_width="match_parent"
+    android:layout_height="26.0dip"
+    android:layout_marginLeft="6.0dip"
+    android:layout_marginRight="6.0dip"
+    android:layout_marginTop="6.0dip"
+    android:background="@drawable/bg_notify" >
+
+    <TextView
+        android:id="@+id/notify_view_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textSize="14.0sp"
+        android:textColor="#fff"
+        android:minHeight="26.0dip"
+        android:background="@null" />
+
+    <LinearLayout
+        android:id="@+id/notify_view_cancel_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
+
+        <View
+            android:id="@+id/notify_view_divider"
+            android:layout_width="0.5dip"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="#88ffffff"
+            android:layout_marginBottom="5.0dip"
+            android:layout_marginTop="5.0dip" />
+
+        <ImageView
+            android:id="@+id/notify_view_close"
+            android:layout_width="32.0dip"
+            android:layout_height="26.0dip"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_close" />
+
+    </LinearLayout>
+
+</RelativeLayout>

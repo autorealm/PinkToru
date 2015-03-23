@@ -3,7 +3,10 @@ package com.sunteorum.pinktoru.util;
 import java.io.File;
 import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -91,6 +94,12 @@ public class Common {
     	
     }
     
+	public static String formatTime(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		
+		return sdf.format(new Date(time * 1000L));
+	}
+	
 	public static class TouchDragListener implements OnTouchListener {
 
 		private PointF startPoint = new PointF();

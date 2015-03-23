@@ -85,10 +85,11 @@ public class LoadImageThread  extends Thread {
     		
     		if (f.exists()) {
     			BitmapFactory.Options opts = new BitmapFactory.Options();
-    			opts.inSampleSize = 2;
-    			opts.inJustDecodeBounds = false;
+    			//opts.inSampleSize = 2;
+    			//opts.inJustDecodeBounds = false;
+    			opts.inPreferredConfig = Bitmap.Config.RGB_565;
     			
-    			bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
+    			bmp = BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
     		} else {
     			InputStream is = new URL(url).openStream();
     			bmp = BitmapFactory.decodeStream(is);

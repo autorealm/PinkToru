@@ -13,13 +13,13 @@ import android.os.Parcelable;
  */
 public class GameEntity implements Parcelable {
 
-	private int gameId;//游戏ID
-	private int gameMode;//游戏通用模式
-	private int gameImageId;//游戏图片的ID
-	private String gameName;//游戏名称
-	private String gameLevel = "{}";//游戏关卡JSON数据
-	private String gameImageUrl;//游戏图片的URL
-	private String gameDesc = "该游戏暂无介绍";//游戏介绍
+	private int gameId;				//游戏ID
+	private int gameMode;			//游戏通用模式
+	private int gameImageId;		//游戏图片的ID
+	private String gameName;		//游戏名称
+	private String gameLevel = "{}";		//游戏关卡JSON数据
+	private String gameImageUrl;	//游戏图片的URL
+	private String gameDesc = "该游戏暂无介绍";	//游戏介绍
 	
 	public GameEntity() {
 		super();

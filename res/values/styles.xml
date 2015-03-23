@@ -19,13 +19,19 @@
     </style>
 
     <style name="ButtonBar">
-		<item name="android:paddingTop">5dip</item>   
-		<item name="android:paddingLeft">4dip</item>    
-		<item name="android:paddingRight">4dip</item>    
-		<item name="android:paddingBottom">2dip</item>    
+		<item name="android:paddingTop">5dip</item>
+		<item name="android:paddingLeft">4dip</item>
+		<item name="android:paddingRight">4dip</item>
+		<item name="android:paddingBottom">2dip</item>
 		<item name="android:background">#33000000</item>
     </style>
-
+    
+    <style name="TitleBar">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">48dip</item>
+		<item name="android:background">#33000000</item>
+    </style>
+    
 	<style name="PopupAnimation" parent="android:Animation">
 		<item name="android:windowEnterAnimation">@anim/popup_enter</item>
 		<item name="android:windowExitAnimation">@anim/popup_exit</item>
@@ -50,4 +56,21 @@
 		<item name="android:background">#22000000</item>
 	</style>
 	
+	<style name="SeperateLine">
+		<item name="android:background">#ffcbcbcb</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">0.5dip</item>
+		<item name="android:layout_marginTop">12.0dip</item>
+		<item name="android:layout_marginBottom">12.0dip</item>
+	</style>
+	
+	<style name="SectionText">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@null</item>
+    </style>
+    
 </resources>

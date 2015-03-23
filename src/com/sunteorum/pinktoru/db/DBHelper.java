@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String GAME_TABLE_CREATE_SQL = "create table " + TABLE_GAME + " (" +
+		String GAME_TABLE_CREATE_SQL = "create table if not exists " + TABLE_GAME + " (" +
 				KEY_ID + " integer primary key autoincrement, " +
 				"game_id integer not null, " +
 				"game_name tinytext not null, " +
@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				"image_id integer default null, " +
 				"image_uri tinytext default null, " +
 				"desc text ); ";
-		String LEVEL_TABLE_CREATE_SQL = "create table " + TABLE_LEVEL + " (" + 
+		String LEVEL_TABLE_CREATE_SQL = "create table if not exists " + TABLE_LEVEL + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
 				"level_id integer not null, " +
 				"piece_row tinyint not null, " +
@@ -83,7 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				"shadow_offset tinyint default null, " +
 				"add_data text default null, " +
 				"desc text ); ";
-		String RECORD_TABLE_CREATE_SQL = "create table " + TABLE_RECORD + " (" + 
+		String RECORD_TABLE_CREATE_SQL = "create table if not exists " + TABLE_RECORD + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
 				"game_id integer not null, " +
 				"level_id integer not null, " +
@@ -91,6 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				"steps integer not null, " +
 				"score integer not null, " +
 				"desc text ); ";
+		
 		db.execSQL(GAME_TABLE_CREATE_SQL);
 		db.execSQL(LEVEL_TABLE_CREATE_SQL);
 		db.execSQL(RECORD_TABLE_CREATE_SQL);

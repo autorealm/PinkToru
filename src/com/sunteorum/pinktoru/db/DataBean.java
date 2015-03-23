@@ -1,7 +1,10 @@
 package com.sunteorum.pinktoru.db;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
+import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.LevelEntity;
 
 import android.content.ContentValues;
@@ -108,13 +111,14 @@ public class DataBean {
 	}
 
 	/** 插入成绩记录数据 */
-	public void insertRecord(String mode, String level, String name, int steps, int time) {
+	public void insertRecord(int gameId, int levelId, int score, int steps, int time, String desc) {
 		ContentValues values = new ContentValues();
-		values.put("", mode);
-		values.put("", level);
-		values.put("", name);
-		values.put("", steps);
-		values.put("", time);
+		values.put("game_id", gameId);
+		values.put("level_id", levelId);
+		values.put("record_time", time);
+		values.put("steps", steps);
+		values.put("score", score);
+		values.put("desc", desc);
 		
 		mSQLiteDatabase.insert(DBHelper.TABLE_RECORD, "", values);
 	}
@@ -122,9 +126,9 @@ public class DataBean {
 	/** 更新关卡数据 */
 	public void updateLevel(String mode, String level, String desc, int row, int line) {
 		ContentValues values = new ContentValues();
-		values.put("", row);
-		values.put("", line);
-		values.put("", desc);
+		values.put("piece_row", row);
+		values.put("piece_line", line);
+		values.put("desc", desc);
 		mSQLiteDatabase.update(DBHelper.TABLE_LEVEL, values, "game_mode=? and " + "level_id=?",
 				new String[] { mode, level });
 	}
@@ -170,5 +174,101 @@ public class DataBean {
 		
 		return recordList;
 	}
+	
+	public boolean addGame(GameEntity ge) {
+		Cursor cursor = null;
+		boolean success = false;
+		try {
+			ContentValues values = new ContentValues();
+			values.put("game_name", ge.getGameName());
+			values.put("image_uri", ge.getGameImageUrl());
+			values.put("level", ge.getGameLevel());
+			values.put("game_id", ge.getGameId());
+			values.put("image_id", ge.getGameImageId());
+			values.put("desc", ge.getGameDesc());
+			
+			long id = -1;
+			id = mSQLiteDatabase.insert(DBHelper.TABLE_GAME, null, values);
+			success = (id != -1 ? true : false);
+		} catch (Exception e) {
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+		
+		return success;
+	}
+	
+	public boolean delectGame(String whereClause, String[] whereArgs) {
+		boolean success = false;
+		try {
+			int count = 0;
+			count = mSQLiteDatabase.delete(DBHelper.TABLE_GAME, whereClause, whereArgs);
+			success = (count > 0 ? true : false);
+		} catch (Exception e) {
+		} finally {
+		}
+		
+		return success;
+	}
+	
+	public boolean updateGame(ContentValues values, String whereClause, String[] whereArgs) {
+		boolean flag = false;
+		int count = 0;
+		try {
+			count = mSQLiteDatabase.update(DBHelper.TABLE_GAME, values, whereClause, whereArgs);
+			flag = (count > 0 ? true : false);
+		} catch (Exception e) {
+		} finally {
+		}
+		
+		return flag;
+	}
+	
+	public List<GameEntity> listGame(String selection, String[] selectionArgs) {
+		List<GameEntity> list = new ArrayList<GameEntity>();
+		Cursor cursor = null;
+		try {
+			cursor = mSQLiteDatabase.query(false, DBHelper.TABLE_GAME, null, selection, selectionArgs, null, null, null, null);
+			int cols_len = cursor.getColumnCount();
+			while (cursor.moveToNext()) {
+				GameEntity map = new GameEntity();
+				for (int i = 0; i < cols_len; i++) {
+					String cols_name = cursor.getColumnName(i);
+					int cols_index = cursor.getColumnIndex(cols_name);
+					if (("game_name").equalsIgnoreCase(cols_name)) {
+						map.setGameName(cursor.getString(cols_index));
+					} else if (("image_uri").equalsIgnoreCase(cols_name)) {
+						map.setGameImageUrl(cursor.getString(cols_index));
+					} else if (("level").equalsIgnoreCase(cols_name)) {
+						map.setGameLevel(cursor.getString(cols_index));
+					} else if (("game_id").equalsIgnoreCase(cols_name)) {
+						map.setGameId(cursor.getInt(cols_index));
+					} else if (("image_id").equalsIgnoreCase(cols_name)) {
+						map.setGameImageId(cursor.getInt(cols_index));
+					} else if (("desc").equalsIgnoreCase(cols_name)) {
+						map.setGameDesc(cursor.getString(cols_index));
+					}
+					
+					String cols_values = cursor.getString(cursor.getColumnIndex(cols_name));
+					if (cols_values == null) {
+						cols_values = "";
+					}
+					
+					//map.put(cols_name, cols_values);
+				}
+				
+				list.add(map);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+		}
+		
+		return list;
+	}
+	
 	
 }

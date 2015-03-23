@@ -9,7 +9,7 @@
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/backgroud_1"
+        android:background="@drawable/bannershape_4"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp" >

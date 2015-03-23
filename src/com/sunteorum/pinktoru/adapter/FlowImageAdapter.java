@@ -22,6 +22,7 @@ import android.widget.ImageView;
 public class FlowImageAdapter extends BaseAdapter {
 	private Context mContext;
 	PinkToru app = null;
+	private int width = 0, height = 0;
 	private ArrayList<String> mImageList;
 	protected Map<String, SoftReference<Bitmap>> imgcache = new HashMap<String, SoftReference<Bitmap>>();
 	
@@ -31,32 +32,47 @@ public class FlowImageAdapter extends BaseAdapter {
 		this.mImageList = imgList;
 	}
 
+	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return mImageList.size();
 	}
 
-	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return position;
+	@Override
+	public Bitmap getItem(int position) {
+		final SoftReference<Bitmap> bitmapReference = imgcache.get(position);
+		if (bitmapReference != null) {
+			final Bitmap bitmap = bitmapReference.get();
+			if (bitmap != null) {
+				return bitmap;
+			}
+		}
+		
+		return null;
 	}
 
+	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
 		return position;
 	}
 
 	@SuppressWarnings("deprecation")
+	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		ImageView iv = null;
 		DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 		int screenWidth = dm.widthPixels;
 		int screenHeight = dm.heightPixels;
 		if (null == convertView) {
 			iv = new ImageView(mContext);
-			iv.setLayoutParams(new GalleryFlow.LayoutParams((int) Math.round(screenWidth * 0.50),
+			if (width > 0 && height > 0 && width <= screenWidth && height <= screenHeight) {
+				iv.setLayoutParams(new GalleryFlow.LayoutParams(width, height));
+			} else {
+				iv.setLayoutParams(new GalleryFlow.LayoutParams((int) Math.round(screenWidth * 0.50),
 					(int) Math.round(screenHeight * 0.60)));
+			}
+			
 			iv.setAdjustViewBounds(true);
 			
 			convertView = iv;
@@ -73,6 +89,10 @@ public class FlowImageAdapter extends BaseAdapter {
 			
 			@Override
 			public void onGetImage(Bitmap bmp, String url) {
+				if (bmp == null) {
+					
+					return;
+				}
 				final Bitmap current = ImageUtils.createReflectedImage(mContext, bmp);
 				if (!bmp.isRecycled()) bmp.recycle();
 				if (current == null) Log.i("FlowImageAdapter_getView_" + position, "Bitmap == NULL");
@@ -87,6 +107,19 @@ public class FlowImageAdapter extends BaseAdapter {
 		return convertView;
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+
+	public synchronized void setWidthAndHeight(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+
 	public Map<String, SoftReference<Bitmap>> getDataCache() {
 		return imgcache;
 	}
