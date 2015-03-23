@@ -6,7 +6,7 @@
     android:background="#ffefefef" >
     <include
         android:id="@+id/title_bar"
-        layout="@layout/title_bar" />
+        layout="@layout/titlebar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             <View
                 style="@style/SeperateLine" />
 
-            <GridView
+            <com.sunteorum.pinktoru.view.DragGridView
                 android:id="@+id/userGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

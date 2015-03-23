@@ -32,6 +32,51 @@
 		<item name="android:background">#33000000</item>
     </style>
     
+    <style name="ToolBar_Action">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:minWidth">48.0dip</item>
+        <item name="android:layout_weight">0.0</item>
+    </style>
+    
+    <style name="ToolBar_Action_Comment">
+        <item name="android:textSize">8.0sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">#ffcc3131</item>
+        <item name="android:paddingLeft">2.0dip</item>
+        <item name="android:paddingRight">2.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10.0dip</item>
+        <item name="android:layout_marginTop">-6.0dip</item>
+        <item name="android:maxWidth">44.0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    
+    <style name="ShadowText">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:shadowDx">0.3</item>
+        <item name="android:shadowDy">0.8</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">2.0dip</item>
+        <item name="android:paddingBottom">2.0dip</item>
+        <item name="android:shadowColor">#fff</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusable">false</item>
+    </style>
+    
 	<style name="PopupAnimation" parent="android:Animation">
 		<item name="android:windowEnterAnimation">@anim/popup_enter</item>
 		<item name="android:windowExitAnimation">@anim/popup_exit</item>
