@@ -33,11 +33,12 @@ import android.widget.Toast;
 
 import com.sunteorum.pinktoru.util.Common;
 import com.sunteorum.pinktoru.util.ImageUtils;
+import com.sunteorum.pinktoru.view.SlideLinearLayout;
 import com.sunteorum.pinktoru.view.SquareGridView;
 
 public class HomeActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
 
-	Button btnLocal, btnAll, btnMore;
+	Button btnLocal, btnCustom, btnMore;
 	SquareGridView gridNew, gridPop, gridLast;
 	
 	PinkToru app = (PinkToru) this.getApplication();
@@ -162,7 +163,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
-		case R.id.btn_all:
+		case R.id.btn_cus:
 			
 			
 			break;
@@ -228,8 +229,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		btnLocal = (Button) findViewById(R.id.btn_loc);
 		btnLocal.setOnClickListener(this);
 		
-		btnAll = (Button) findViewById(R.id.btn_all);
-		btnAll.setOnClickListener(this);
+		btnCustom = (Button) findViewById(R.id.btn_cus);
+		btnCustom.setOnClickListener(this);
 		
 		btnMore = (Button) findViewById(R.id.btn_more);
 		btnMore.setOnClickListener(this);
@@ -248,6 +249,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		gridLast = (SquareGridView) findViewById(R.id.grid_last_list);
 		gridLast.setCacheColorHint(Color.TRANSPARENT);
 		gridLast.setOnItemClickListener(this);
+		
+		SlideLinearLayout slideDrawer = (SlideLinearLayout) findViewById(R.id.slide_drawer);
+		slideDrawer.setScrollEvent(this.getWindow().getDecorView());
 		
 		//padapter = new PrizeAdapter(this, getPrizeList(), true);
 		//lstView.setAdapter(padapter);

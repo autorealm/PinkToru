@@ -16,6 +16,7 @@ public class LevelEntity implements Parcelable {
 	private int levelId;//游戏关卡ID
 	private int gameMode = 1;//游戏模式，0.连图，1.拼图，2.填图，3.组图。
 	private int targetValue = 0;//游戏关卡目标分值
+	private int giftPoints = 0;//游戏关卡赠送点数
 	private int pieceRow;//行
 	private int pieceLine;//列
 	
@@ -36,7 +37,7 @@ public class LevelEntity implements Parcelable {
 	}
 	
 	public LevelEntity(int id, int row, int line, String desc) {
-		//游戏ID分类：0为预置，1～100为自定义，100以上为下载内容
+		//游戏ID分类：0为预置，1～100为自定义，1000以上为下载内容
 		this.levelId = 0;
 		this.imageId = 0;
 		this.imageUrl = "";
@@ -85,6 +86,7 @@ public class LevelEntity implements Parcelable {
 			if (jso.has("desc")) this.levelDesc = jso.getString("desc");
 			if (jso.has("add_data")) this.addData = jso.getString("add_data");
 			if (jso.has("target")) this.targetValue = jso.getInt("target");
+			if (jso.has("gift_pts")) this.giftPoints = jso.getInt("gift_pts");
 			
 			if (jso.has("cut_alt")) this.cutAlt = jso.getInt("cut_alt");
 			if (jso.has("cut_flag")) this.cutFlag = jso.getInt("cut_flag");
@@ -105,6 +107,7 @@ public class LevelEntity implements Parcelable {
 			jso.put("image_id", this.imageId);
 			jso.put("image_url", this.imageUrl);
 			jso.put("target", this.targetValue);
+			jso.put("gift_pts", this.giftPoints);
 			jso.put("row", this.pieceRow);
 			jso.put("line", this.pieceLine);
 			jso.put("mode", this.gameMode);
@@ -137,6 +140,7 @@ public class LevelEntity implements Parcelable {
 		p.writeInt(levelId);
 		p.writeInt(gameMode);
 		p.writeInt(targetValue);
+		p.writeInt(giftPoints);
 		p.writeInt(pieceRow);
 		p.writeInt(pieceLine);
 		p.writeInt(imageId);
@@ -162,6 +166,7 @@ public class LevelEntity implements Parcelable {
 			pe.levelId = p.readInt();
 			pe.gameMode = p.readInt();
 			pe.targetValue = p.readInt();
+			pe.giftPoints = p.readInt();
 			pe.pieceRow = p.readInt();
 			pe.pieceLine = p.readInt();
 			pe.imageId = p.readInt();
@@ -209,6 +214,14 @@ public class LevelEntity implements Parcelable {
 
 	public void setTargetValue(int targetValue) {
 		this.targetValue = targetValue;
+	}
+
+	public int getGiftPoints() {
+		return giftPoints;
+	}
+
+	public void setGiftPoints(int giftPoints) {
+		this.giftPoints = giftPoints;
 	}
 
 	public int getPieceRow() {

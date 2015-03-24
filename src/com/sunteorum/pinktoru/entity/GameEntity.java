@@ -15,7 +15,9 @@ public class GameEntity implements Parcelable {
 
 	private int gameId;				//游戏ID
 	private int gameMode;			//游戏通用模式
-	private int gameImageId;		//游戏图片的ID
+	private int gameReward = 2;		//游戏奖励点数
+	private int gamePrice = 0;		//游戏价值点数
+	private int gameImageId = 0;		//游戏图片的ID
 	private String gameName;		//游戏名称
 	private String gameLevel = "{}";		//游戏关卡JSON数据
 	private String gameImageUrl;	//游戏图片的URL
@@ -26,13 +28,16 @@ public class GameEntity implements Parcelable {
 		
 	}
 	
-	public GameEntity(int id, int mode, String name, String desc) {
+	public GameEntity(int id, int mode, String name, String imgUrl) {
 		this.gameId = id;
 		this.gameMode = mode;
-		this.gameImageUrl = "";
+		this.gameDesc = "";
 		this.gameLevel = "{}";
 		this.gameName = name;
-		this.gameDesc = desc;
+		this.gameImageUrl = imgUrl;
+		this.gameImageId = 0;
+		this.gameReward = 2;
+		this.gamePrice = 0;
 		
 	}
 	
@@ -44,6 +49,8 @@ public class GameEntity implements Parcelable {
 			this.gameId = id;
 			this.gameName = jso.getString("name");
 			this.gameMode = jso.getInt("mode");
+			this.gameReward = jso.has("reward_pts")?jso.getInt("reward_pts"):0;
+			this.gamePrice = jso.has("price_pts")?jso.getInt("price_pts"):0;
 			this.gameImageId = jso.has("image_id")?jso.getInt("img_id"):0;
 			this.gameImageUrl = jso.getString("image_url");
 			this.gameLevel = jso.getString("level");
@@ -62,6 +69,8 @@ public class GameEntity implements Parcelable {
 			jso.put("id", this.gameId);
 			jso.put("name", this.gameName);
 			jso.put("mode", this.gameMode);
+			jso.put("reward_pts", this.gameReward);
+			jso.put("price_pts", this.gamePrice);
 			jso.put("image_id", this.gameImageId);
 			jso.put("image_url", this.gameImageUrl);
 			jso.put("level", this.gameLevel);
@@ -90,6 +99,8 @@ public class GameEntity implements Parcelable {
 		p.writeInt(gameId);
 		p.writeInt(gameMode);
 		p.writeInt(gameImageId);
+		p.writeInt(gameReward);
+		p.writeInt(gamePrice);
 	}
 	
 	public static final Parcelable.Creator<GameEntity> CREATOR = new Parcelable.Creator<GameEntity>() {
@@ -104,6 +115,8 @@ public class GameEntity implements Parcelable {
 			pe.gameId = p.readInt();
 			pe.gameMode = p.readInt();
 			pe.gameImageId = p.readInt();
+			pe.gameReward = p.readInt();
+			pe.gamePrice = p.readInt();
 			
 			return pe;
 		}
@@ -170,6 +183,22 @@ public class GameEntity implements Parcelable {
 
 	public void setGameDesc(String gameDesc) {
 		this.gameDesc = gameDesc;
+	}
+
+	public int getGameReward() {
+		return gameReward;
+	}
+
+	public void setGameReward(int gameReward) {
+		this.gameReward = gameReward;
+	}
+
+	public int getGamePrice() {
+		return gamePrice;
+	}
+
+	public void setGamePrice(int gamePrice) {
+		this.gamePrice = gamePrice;
 	}
 
 	

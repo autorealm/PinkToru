@@ -11,6 +11,7 @@ public class UserEntity implements Parcelable {
 
 	private int userId;
 	private int points;
+	private int grade;
 	private String username;
 	private String password;
 	private String email;
@@ -85,8 +86,24 @@ public class UserEntity implements Parcelable {
 		return points;
 	}
 
+	public int getGrade() {
+		return grade;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 	public void setPoints(int points) {
 		this.points = points;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
 	}
 
 	public String getNickname() {
@@ -139,6 +156,7 @@ public class UserEntity implements Parcelable {
 	public void writeToParcel(Parcel desc, int flag) {
 		desc.writeInt(userId);
 		desc.writeInt(points);
+		desc.writeInt(grade);
 		desc.writeString(username);
 		desc.writeString(password);
 		desc.writeString(email);
@@ -160,6 +178,7 @@ public class UserEntity implements Parcelable {
 			
 			ue.userId = p.readInt();
 			ue.points = p.readInt();
+			ue.grade = p.readInt();
 			ue.username = p.readString();
 			ue.password = p.readString();
 			ue.email = p.readString();

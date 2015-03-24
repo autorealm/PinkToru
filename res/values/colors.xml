@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="transparent">#22000000</color>
+    <color name="primary">#009688</color>
+    <color name="primaryDark">#00796b</color>
+    <color name="accent">#eeff41</color>
+    <color name="accentLight">#F4FF81</color>
+	<color name="rippelColor">#FFFFFF</color>
+	
+	<color name="transparent">#00000000</color>
+	<color name="alpha_dark">#22000000</color>
+	<color name="alpha_light">#22ffffff</color>
 	<color name="snow">#FFFAFA</color><!-- 雪白色 -->
 	<color name="bisque">#FFE4C4</color><!-- 橘黄色 -->
 	<color name="branding">#ffa4c639</color>
@@ -20,5 +28,6 @@
 	<color name="pumpkin">#ffD35400</color>
 	<color name="alizarin">#ffE74C3C</color>
 	<color name="pomegranate">#ffC0392B</color>
+	
 	
 </resources>

@@ -185,6 +185,8 @@ public class DataBean {
 			values.put("level", ge.getGameLevel());
 			values.put("game_id", ge.getGameId());
 			values.put("image_id", ge.getGameImageId());
+			values.put("reward_pts", ge.getGameReward());
+			values.put("Price_pts", ge.getGamePrice());
 			values.put("desc", ge.getGameDesc());
 			
 			long id = -1;
@@ -247,6 +249,10 @@ public class DataBean {
 						map.setGameId(cursor.getInt(cols_index));
 					} else if (("image_id").equalsIgnoreCase(cols_name)) {
 						map.setGameImageId(cursor.getInt(cols_index));
+					} else if (("reward_pts").equalsIgnoreCase(cols_name)) {
+						map.setGameReward(cursor.getInt(cols_index));
+					} else if (("price_pts").equalsIgnoreCase(cols_name)) {
+						map.setGamePrice(cursor.getInt(cols_index));
 					} else if (("desc").equalsIgnoreCase(cols_name)) {
 						map.setGameDesc(cursor.getString(cols_index));
 					}

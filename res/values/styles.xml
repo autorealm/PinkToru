@@ -59,14 +59,27 @@
         <item name="android:includeFontPadding">false</item>
     </style>
     
-    <style name="ShadowText">
+    <style name="Shadow" parent="@android:style/Widget.TextView">
+        <item name="android:shadowDx">0.3</item>
+        <item name="android:shadowDy">0.8</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:background">@null</item>
+    </style>
+    
+    <style name="Marquee" parent="@android:style/Widget.TextView">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+    </style>
+    
+    <style name="ShadowText" parent="Shadow">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">#ff000000</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:shadowDx">0.3</item>
-        <item name="android:shadowDy">0.8</item>
-        <item name="android:shadowRadius">1.2</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">2.0dip</item>
@@ -104,18 +117,17 @@
 	<style name="SeperateLine">
 		<item name="android:background">#ffcbcbcb</item>
 		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">0.5dip</item>
+		<item name="android:layout_height">1px</item>
 		<item name="android:layout_marginTop">12.0dip</item>
 		<item name="android:layout_marginBottom">12.0dip</item>
 	</style>
 	
-	<style name="SectionText">
+	<style name="SectionText" parent="Shadow">
         <item name="android:textSize">12.0sp</item>
         <item name="android:textColor">#fff</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
-        <item name="android:background">@null</item>
     </style>
     
 </resources>

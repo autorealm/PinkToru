@@ -271,7 +271,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			if (progd != null && progd.isShowing()) progd.dismiss();
 			if (result) {
 				UserEntity ue = new UserEntity(username, password);
-				ue.setPoints(60);
+				ue.setPoints(300);
 				ue.setUserId(uid);
 				ue.setEmail(email);
 				ue.setPhone(phone);

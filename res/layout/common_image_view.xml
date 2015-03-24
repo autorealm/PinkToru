@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ff000000" >
     
-    <com.sunteorum.pinktoru.view.ZoomImageView
+    <com.sunteorum.pinktoru.view.ImageViewEx
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

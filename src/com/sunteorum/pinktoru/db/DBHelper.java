@@ -64,7 +64,9 @@ public class DBHelper extends SQLiteOpenHelper {
 				"game_id integer not null, " +
 				"game_name tinytext not null, " +
 				"level text not null, " +
-				"image_id integer default null, " +
+				"reward_pts integer default 2, " +
+				"price_pts integer default 0, " +
+				"image_id integer default 0, " +
 				"image_uri tinytext default null, " +
 				"desc text ); ";
 		String LEVEL_TABLE_CREATE_SQL = "create table if not exists " + TABLE_LEVEL + " (" + 
@@ -73,7 +75,8 @@ public class DBHelper extends SQLiteOpenHelper {
 				"piece_row tinyint not null, " +
 				"piece_line tinyint not null, " +
 				"target_value integer default null, " +
-				"image_id integer default null, " +
+				"gift_pts integer default 1, " +
+				"image_id integer default 0, " +
 				"image_uri tinytext default null, " +
 				"game_mode tinyint default null, " +
 				"cut_flag tinyint default null, " +
@@ -87,6 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				KEY_ID + " integer primary key autoincrement, " +
 				"game_id integer not null, " +
 				"level_id integer not null, " +
+				"user_id integer not null, " +
 				"record_time integer not null, " +
 				"steps integer not null, " +
 				"score integer not null, " +
@@ -100,6 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.clear();
 		values.put("game_id", 1);
 		values.put("game_name", "д╛хо");
+		values.put("image_uri", "assets://game/images/default.jpg");
 		values.put("level", "{}");
 		values.put("desc", "");
 		db.insertOrThrow(TABLE_GAME, null, values);

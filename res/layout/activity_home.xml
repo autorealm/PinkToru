@@ -12,14 +12,14 @@
         android:background="@drawable/bannershape_4"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="4dp" >
+        android:padding="6dp" >
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/list_selector_2"
-            android:drawableLeft="@android:drawable/ic_dialog_info"
+            android:drawableLeft="@drawable/ic_person_white"
             android:padding="8dp" />
 
         <TextView
@@ -35,17 +35,24 @@
             android:padding="4dp"
             android:singleLine="true"
             android:visibility="invisible" />
+        
+		<com.sunteorum.pinktoru.view.RippleView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginRight="6dp"
+		    rv_centered="true" >
 
-        <Button
-            android:id="@+id/btn_msg"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginRight="4dp"
-            android:background="@drawable/list_selector_2"
-            android:drawableLeft="@android:drawable/ic_dialog_email"
-            android:drawablePadding="4dp"
-            android:padding="8dp" />
+	        <Button
+	            android:id="@+id/btn_msg"
+	            style="?android:attr/buttonStyleSmall"
+	            android:layout_width="wrap_content"
+	            android:layout_height="40dp"
+	            android:background="@drawable/list_selector_2"
+	            android:drawableLeft="@drawable/ic_pages_white"
+	            android:drawablePadding="4dp"
+	            android:padding="8dp" />
+
+        </com.sunteorum.pinktoru.view.RippleView>
 
         <Button
             android:id="@+id/btn_renew"
@@ -53,10 +60,12 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/list_selector_2"
-            android:drawableLeft="@android:drawable/ic_popup_sync"
+            android:drawableLeft="@drawable/ic_party_mode_white"
+            android:drawablePadding="2dp"
             android:padding="8dp"
             android:text="@string/change_prize"
             android:textColor="@color/snow" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -74,14 +83,14 @@
         android:paddingTop="6dp" >
 
         <Button
-            android:id="@+id/btn_all"
+            android:id="@+id/btn_cus"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/menu_selector_0"
             android:drawablePadding="-14dp"
             android:padding="8dp"
-            android:text="全部"
+            android:text="@string/label_custom"
             android:textColor="@color/snow"
             android:textSize="13sp" />
 
@@ -95,7 +104,7 @@
             android:background="@drawable/menu_selector_0"
             android:drawablePadding="-14dp"
             android:padding="8dp"
-            android:text="本地"
+            android:text="@string/label_local"
             android:textColor="@color/snow"
             android:textSize="13sp" />
 
@@ -107,7 +116,7 @@
             android:background="@drawable/menu_selector_0"
             android:drawablePadding="-14dp"
             android:padding="8dp"
-            android:text="更多"
+            android:text="@string/label_more"
             android:textColor="@color/snow"
             android:textSize="13sp" />
     </LinearLayout>
@@ -123,6 +132,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#efefef"
             android:orientation="vertical" >
 
             <FrameLayout
@@ -137,7 +147,7 @@
                     android:animateFirstView="true"
                     android:autoStart="true"
                     android:flipInterval="2000"
-                    android:minHeight="120dp"
+                    android:minHeight="140dp"
                     android:inAnimation="@android:anim/slide_in_left"
                     android:outAnimation="@android:anim/slide_out_right" >
 
@@ -190,13 +200,14 @@
             <Button
                 android:id="@+id/btn_new_lay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bannershape_1"
+                android:layout_height="32dp"
+                android:background="@drawable/menu_selector_3"
                 android:drawableLeft="@android:drawable/ic_menu_directions"
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/login_icon_go"
                 android:gravity="center_vertical"
                 android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:text="最近更新" />
 
             <com.sunteorum.pinktoru.view.SquareGridView
@@ -220,13 +231,14 @@
             <Button
                 android:id="@+id/btn_pop_lay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bannershape_1"
+                android:layout_height="32dp"
+                android:background="@drawable/menu_selector_3"
                 android:drawableLeft="@android:drawable/ic_menu_share"
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/login_icon_go"
                 android:gravity="center_vertical"
                 android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:text="最受欢迎" />
 
             <com.sunteorum.pinktoru.view.SquareGridView
@@ -250,13 +262,14 @@
             <Button
                 android:id="@+id/btn_last_lay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bannershape_1"
+                android:layout_height="32dp"
+                android:background="@drawable/menu_selector_3"
                 android:drawableLeft="@android:drawable/ic_menu_my_calendar"
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/login_icon_go"
                 android:gravity="center_vertical"
                 android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:text="历史记录" />
 
             <com.sunteorum.pinktoru.view.SquareGridView
@@ -278,5 +291,10 @@
             </com.sunteorum.pinktoru.view.SquareGridView>
         </LinearLayout>
     </ScrollView>
+
+    <include
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_drawer" />
 
 </RelativeLayout>

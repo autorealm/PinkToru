@@ -17,22 +17,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="72dp"
             android:layout_gravity="bottom"
             android:background="@drawable/backgroud_3"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/text_game_title"
+                style="@style/Shadow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:padding="6dp"
                 android:singleLine="true"
-                android:text="TextView"
+                android:text="@string/app_name"
                 android:textColor="#fff"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +48,9 @@
                     style="@style/SectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    android:drawableLeft="@drawable/ic_perm_identity_white_18dp"
+                    android:drawablePadding="2dp"
                     android:text="TextView" />
 
                 <TextView
@@ -56,6 +59,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_favorite_outline_white_18dp"
+                    android:drawablePadding="2dp"
                     android:text="TextView" />
 
                 <TextView
@@ -63,7 +68,9 @@
                     style="@style/SectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    android:drawableLeft="@drawable/ic_query_builder_white_18dp"
+                    android:drawablePadding="2dp"
                     android:text="TextView" />
 
             </LinearLayout>
