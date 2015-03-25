@@ -52,6 +52,13 @@ public class ImageUtils {
 		return Bitmap.createScaledBitmap(bitmap, width, height, true);
 	}
 	
+	/**
+	 * 创建图片Bitmap
+	 * @param path 图片路径
+	 * @param width 最大宽
+	 * @param height 最大高
+	 * @return
+	 */
 	public static Bitmap createBitmap(String path, int width, int height) {
 		try {
 			BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -64,18 +71,18 @@ public class ImageUtils {
 			
 			float ratio = 0; //缩放的比例
 			if (width > 0 && height > 0) {
-			if (srcWidth < width && srcHeight < height) {
-				destWidth = srcWidth;
-				destHeight = srcHeight;
-			} else if (srcWidth > srcHeight) { //按比例计算缩放后的图片大小
-				ratio = (float) srcWidth / (float) width;
-				destWidth = width;
-				destHeight = Math.round(srcHeight / ratio);
-			} else {
-				ratio = (float) srcHeight / (float) height;
-				destHeight = height;
-				destWidth = Math.round(srcWidth / ratio);
-			}
+				if (srcWidth < width && srcHeight < height) {
+					destWidth = srcWidth;
+					destHeight = srcHeight;
+				} else if (srcWidth > srcHeight) { //按比例计算缩放后的图片大小
+					ratio = (float) srcWidth / (float) width;
+					destWidth = width;
+					destHeight = Math.round(srcHeight / ratio);
+				} else {
+					ratio = (float) srcHeight / (float) height;
+					destHeight = height;
+					destWidth = Math.round(srcWidth / ratio);
+				}
 			} else {
 				destWidth = srcWidth;
 				destHeight = srcHeight;
@@ -165,12 +172,13 @@ public class ImageUtils {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static Bitmap readBitmap(Context context, String imagePath, int size) {
+	public static Bitmap readBitmap(String imagePath, int size) {
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 		opt.inPreferredConfig = Bitmap.Config.RGB_565;
 		opt.inPurgeable = true;
 		opt.inInputShareable = true;
-		opt.inSampleSize = size;
+		
+		if (size > 0 ) opt.inSampleSize = size;
 		
 		return BitmapFactory.decodeFile(imagePath, opt);
 	}
@@ -240,6 +248,8 @@ public class ImageUtils {
 	}
 	
 	public static Bitmap createRoundedImage(Bitmap bitmap, float roundPx) {
+		if (bitmap == null) return null;
+		
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 		
@@ -261,15 +271,16 @@ public class ImageUtils {
 	
 	public static Bitmap createReflectedImage(Context context, int resId) {
 		Bitmap originalImage = readBitmap(context, resId);
-		return createReflectedImage(context, originalImage);
+		return createReflectedImage(originalImage);
 	}
 	
-	public static Bitmap createReflectedImage(Context context, String imgPath) {
-		Bitmap originalImage = readBitmap(context, imgPath, 0);
-		return createReflectedImage(context, originalImage);
+	public static Bitmap createReflectedImage(String imgPath) {
+		Bitmap originalImage = readBitmap(imgPath, 0);
+		return createReflectedImage(originalImage);
 	}
 	
-	public static Bitmap createReflectedImage(Context context, Bitmap originalImage) {
+	public static Bitmap createReflectedImage(Bitmap originalImage) {
+		if (originalImage == null) return null;
 		int reflectionGap = 4;
 		
 		int width = originalImage.getWidth();   //原图宽

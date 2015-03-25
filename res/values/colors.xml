@@ -5,6 +5,7 @@
     <color name="accent">#eeff41</color>
     <color name="accentLight">#F4FF81</color>
 	<color name="rippelColor">#FFFFFF</color>
+	<color name="backgroudColor">#EFEFEF</color>
 	
 	<color name="transparent">#00000000</color>
 	<color name="alpha_dark">#22000000</color>

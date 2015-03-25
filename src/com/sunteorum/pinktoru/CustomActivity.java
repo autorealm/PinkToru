@@ -2,7 +2,7 @@ package com.sunteorum.pinktoru;
 
 import android.os.Bundle;
 
-public class PictureViewActivity extends BaseActivity {
+public class CustomActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

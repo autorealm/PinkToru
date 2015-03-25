@@ -74,16 +74,12 @@ public class DBHelper extends SQLiteOpenHelper {
 				"level_id integer not null, " +
 				"piece_row tinyint not null, " +
 				"piece_line tinyint not null, " +
+				"game_mode tinyint default null, " +
 				"target_value integer default null, " +
 				"gift_pts integer default 1, " +
 				"image_id integer default 0, " +
 				"image_uri tinytext default null, " +
-				"game_mode tinyint default null, " +
-				"cut_flag tinyint default null, " +
-				"cut_alt tinyint default null, " +
-				"render_flag tinyint default null, " +
-				"edge_width tinyint default null, " +
-				"shadow_offset tinyint default null, " +
+				"cut_params tinytext default null, " +	//cut_flag,cut_alt,render_flag,edge_width,shadow_offset
 				"add_data text default null, " +
 				"desc text ); ";
 		String RECORD_TABLE_CREATE_SQL = "create table if not exists " + TABLE_RECORD + " (" + 

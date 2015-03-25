@@ -130,4 +130,19 @@
         <item name="android:singleLine">true</item>
     </style>
     
+	<style name="MenuButton">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">40dip</item>
+		<item name="android:background">@drawable/list_selector_1</item>
+		<item name="android:drawablePadding">16dp</item>
+		<item name="android:gravity">left|center_vertical|center_horizontal</item>
+		<item name="android:paddingLeft">32dp</item>
+		<item name="android:paddingRight">8dp</item>
+		<item name="android:shadowColor">#000</item>
+		<item name="android:shadowDx">0.4</item>
+		<item name="android:shadowDy">1.2</item>
+		<item name="android:shadowRadius">2.6</item>
+		<item name="android:textColor">#fff</item>
+	</style>
+	
 </resources>

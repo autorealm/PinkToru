@@ -93,7 +93,7 @@ public class FlowImageAdapter extends BaseAdapter {
 					
 					return;
 				}
-				final Bitmap current = ImageUtils.createReflectedImage(mContext, bmp);
+				final Bitmap current = ImageUtils.createReflectedImage(bmp);
 				if (!bmp.isRecycled()) bmp.recycle();
 				if (current == null) Log.i("FlowImageAdapter_getView_" + position, "Bitmap == NULL");
 				view.setImageBitmap(current);

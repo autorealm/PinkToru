@@ -478,14 +478,14 @@ public class PieceFactory {
 	}
 	
 	//得出碎片的左上角和右下角坐标点位
-	private void getMinAndMaxPoint(Piece piece){
+	private void getMinAndMaxPoint(Piece piece) {
 		int minx = _imageWidth;
 		int miny = _imageHeight;
 		int maxx = 0;
 		int maxy = 0;
 		
 		ArrayList<Point> left = piece.getApLeft();
-		for(int i=0; i<left.size(); i++){
+		for (int i=0; i<left.size(); i++) {
 			Point lp = (Point) left.get(i);
 			if(lp.x < minx){
 				minx = lp.x;
@@ -503,17 +503,17 @@ public class PieceFactory {
 		piece.setMinp(new Point(minx, miny));   // 左上角点位
 		
 		ArrayList<Point> right = piece.getApRight();
-		for(int i=0; i<right.size(); i++){
+		for (int i=0; i<right.size(); i++) {
 			Point rp = (Point) right.get(i);
-			if(rp.x > maxx){
+			if (rp.x > maxx) {
 				maxx = rp.x;
 			}
 		}
 		
 		ArrayList<Point> feet = piece.getApFeet();
-		for(int i=0; i<feet.size(); i++){
+		for (int i=0; i<feet.size(); i++) {
 			Point fp = (Point) feet.get(i);
-			if(fp.y > maxy){
+			if (fp.y > maxy) {
 				maxy = fp.y;
 			}
 		}
@@ -525,7 +525,7 @@ public class PieceFactory {
 		
 	}
 	
-	private int changeColorToLight(int color, double contrast, int light){
+	private int changeColorToLight(int color, double contrast, int light) {
 		int red = Color.red(color);
 		int green = Color.green(color);
 		int blue = Color.blue(color);
@@ -534,21 +534,21 @@ public class PieceFactory {
 		int g = (int) (green * contrast + light);
 		int b = (int) (blue * contrast + light);
 		
-		if(r > 255){
+		if (r > 255) {
 			r = 255;
-		}else if(r < 0){
+		} else if (r < 0) {
 			r = 0;
 		}
 		
-		if(g > 255){
+		if (g > 255) {
 			g = 255;
-		}else if(g < 0){
+		} else if (g < 0) {
 			g = 0;
 		}
 		
-		if(b > 255){
+		if (b > 255) {
 			b = 255;
-		}else if(b < 0){
+		} else if (b < 0) {
 			b = 0;
 		}
 		
@@ -558,7 +558,7 @@ public class PieceFactory {
 	/**
 	 * 给每个piece蒙版填充像素，得到拼图碎片piece
 	 */
-	private void fillPieceWithBitmap(Piece piece){
+	private void fillPieceWithBitmap(Piece piece) {
 		Bitmap pieceEdge = piece.getBmpEdge();
 		Bitmap pieceBit = piece.getBmpPiece();
 		Point minp = piece.getMinp();
@@ -588,7 +588,7 @@ public class PieceFactory {
 	}
 	
 	//获取每块切片的图形
-	private Point getPieceBitmap(Piece piece){
+	private Point getPieceBitmap(Piece piece) {
 		dotPath.reset();
 		
 		Point minp = piece.getMinp();
@@ -648,15 +648,15 @@ public class PieceFactory {
 	}
 	
 	//根据minp点，将绝对点位转化为相对点位
-	private void changeDotPath(ArrayList<Point> dotList, Path dotPath, Point diff){
+	private void changeDotPath(ArrayList<Point> dotList, Path dotPath, Point diff) {
 		int len = dotList.size();
 		ArrayList<Point> tempDot = dotList;
 		
-		for(int i=0; i<len; i++){
-			if(tempDot.size() == 2){
+		for (int i=0; i<len; i++) {
+			if(tempDot.size() == 2) {
 				Point p0 = (Point)tempDot.get(i);
 				dotPath.lineTo(p0.x-diff.x, p0.y-diff.y);
-			}else if(i + 1 < tempDot.size()){
+			} else if (i + 1 < tempDot.size()) {
 				Point p0 = (Point) tempDot.get(i);
 				Point p1 = (Point) tempDot.get(i+1);
 				dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, p1.x-diff.x, p1.y-diff.y);
@@ -664,7 +664,8 @@ public class PieceFactory {
 		}
 		
 	}
-
+	
+	
 	public Vector<Piece> getAllPiece() {
 		return allPiece;
 	}

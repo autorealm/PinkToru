@@ -2,7 +2,101 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:gravity="center"
     android:orientation="vertical" >
     
+    <FrameLayout
+        android:id="@+id/frameLayout_ad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
+        <ImageView
+            android:id="@+id/imageView_ad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|left"
+            android:gravity="center_horizontal"
+            android:minHeight="240dp"
+            android:minWidth="320dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView_ad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="测试文本"
+                    android:textColor="#f00"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/imgClose"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/btn_cancel" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageIcon_ad"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="2" />
+
+            <TextView
+                android:id="@+id/txtView_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_weight="1"
+                android:autoLink="all"
+                android:background="@drawable/list_flow_bg"
+                android:gravity="left|center_horizontal"
+                android:linksClickable="true"
+                android:maxLines="6"
+                android:padding="8dp"
+                android:scrollbarAlwaysDrawVerticalTrack="false"
+                android:scrollbars="none|vertical"
+                android:text="介绍文本"
+                android:textColor="#333"
+                android:textSize="14sp"
+                android:typeface="serif" />
+
+            <Button
+                android:id="@+id/button_ad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/menu_selector_2"
+                android:minHeight="48dp"
+                android:minWidth="64dp"
+                android:text="@string/btn_ok" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+    
 </LinearLayout>
