@@ -1,6 +1,7 @@
 package com.sunteorum.pinktoru.helper;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ public class ImageLoader {
 	private LruCache<String, Bitmap> memCache;
 	private ExecutorService mPool = null;
 	
+	private Context context;
 	private File save_dir;
 	
 	public interface onLoadedListener {
@@ -48,7 +50,8 @@ public class ImageLoader {
 			
 		};
 		
-		save_dir = saveDir;
+		this.context = context;
+		this.save_dir = saveDir;
 		if (save_dir == null || !save_dir.isDirectory()) save_dir = context.getCacheDir();
 	}
 
@@ -125,8 +128,20 @@ public class ImageLoader {
 			String filename = getSaveFileName(url);
 			
 			if (url.startsWith("file://")) file = new File(Uri.parse(url).getPath());
-			else file = new File(save_dir, filename);
-			if (file.exists()) {
+			else if (url.startsWith("assets://")) {
+				BitmapFactory.Options options=new BitmapFactory.Options();
+				options.inPreferredConfig = Bitmap.Config.RGB_565;
+				//options.inJustDecodeBounds = false;
+				//options.inSampleSize = 2;
+				try {
+					bitmap = BitmapFactory.decodeStream(context.getAssets().open(url.substring(9)), null, options);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return bitmap;
+			} else file = new File(save_dir, filename);
+			
+			if (file != null && file.exists()) {
 				BitmapFactory.Options opt = new BitmapFactory.Options();
 				opt.inPreferredConfig = Bitmap.Config.RGB_565;
 				bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opt);

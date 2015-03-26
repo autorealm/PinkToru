@@ -1,35 +1,28 @@
 package com.sunteorum.pinktoru.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.ref.SoftReference;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
-import android.widget.FrameLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 public class Common {
 
@@ -41,48 +34,37 @@ public class Common {
 		return true;
 	}
 	
+	public static boolean isEmpty(String text) {
+		return android.text.TextUtils.isEmpty(text);
+		
+	}
+	
+	public static boolean isNumber(String text) {
+		return android.text.TextUtils.isDigitsOnly(text);
+		
+	}
+	
 	public static void showToast(Context context, String text) {
 		android.widget.Toast.makeText(context, text, android.widget.Toast.LENGTH_SHORT).show();
+		
 	}
 
     public static void showTip(Context context, String title, String message) {
     	new AlertDialog.Builder(context)
-		.setTitle(title)
-		.setMessage(message)
-		.setIcon(android.R.drawable.ic_menu_info_details)
-		.setPositiveButton("确定",null)
-		.create().show();
+			.setTitle(title)
+			.setMessage(message)
+			.setIcon(android.R.drawable.ic_menu_info_details)
+			.setPositiveButton("确定", null)
+			.create().show();
+    	
     }
-    
-
-	public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            Log.i("setListViewHeightBasedOnChildren", "NULL");
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        if (params.height < (height - 12) || params.height > (height + 12)) {
-        	params.height = height;
-        	listView.setLayoutParams(params);
-        }
-        
-        
-	}
 	
 	/**
 	 * 清空内存中缓存的图片数据
 	 * @param ImgCache
 	 */
 	public static void  clearCacheBitmap(Map<String, SoftReference<Bitmap>> ImgCache) {
+		if (ImgCache == null || ImgCache.isEmpty()) return;
     	Object[] keys = ImgCache.keySet().toArray();
     	for (int i = 0; i < keys.length; i++) {
     		if (ImgCache.containsKey(keys[i]) && ImgCache.get(keys[i]).get() != null) {
@@ -100,74 +82,12 @@ public class Common {
 		return sdf.format(new Date(time * 1000L));
 	}
 	
-	public static class TouchDragListener implements OnTouchListener {
-
-		private PointF startPoint = new PointF();
-
-    	private int mode = 0; // 用于标记模式 
-    	private static final int DRAG = 1; // 拖动 
-    	private static final int ZOOM = 2; // 放大 
-    	private boolean isFrame = true;
-    	
-    	public TouchDragListener(boolean isframelayout) {
-    		this.isFrame = isframelayout;
-    	}
-    	
-    	@SuppressLint("ClickableViewAccessibility")
-		@Override
-    	public boolean onTouch(View v, MotionEvent event) {
-    		
-	    	switch (event.getAction() & MotionEvent.ACTION_MASK) {
-	    	case MotionEvent.ACTION_DOWN:
-	            startPoint.set(event.getX(), event.getY());
-	            mode = DRAG;
-	            v.bringToFront();
-	            
-	    	break;
-	    	case MotionEvent.ACTION_MOVE: // 移动事件 
-		    	if (mode == DRAG) {
-			    	int dx = (int) (event.getX() - startPoint.x);
-			    	int dy = (int) (event.getY() - startPoint.y);
-			    	if (isFrame) {
-				    	int left = v.getLeft() + dx;
-		                int top = v.getTop() + dy;
-		                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
-		                lp.leftMargin = left;
-		                lp.topMargin = top;
-		                lp.gravity = Gravity.TOP|Gravity.LEFT;
-		                v.setLayoutParams(lp);
-			    	} else {
-			    		int l = v.getLeft() + dx;
-						int t = v.getTop() + dy;
-						int r = l + v.getWidth();
-						int b = t + v.getHeight();
-						
-						v.layout(l, t, r, b);
-						v.postInvalidate();
-			    	}
-		    	
-		    	} else if (mode == ZOOM) { // 放大事件 
-		    		
-		    	}
-		    	
-	    	break;
-	    	case MotionEvent.ACTION_UP:
-	    		mode = 0;
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_UP:
-	    		mode = 0;
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_DOWN:
-		    	mode = ZOOM;
-		    	
-	    	break;
-	    	
-	    	}
-	    	
-	    	return true;
-    	}
-
-    }
+	public static String formatTime(long time, String template) {
+		SimpleDateFormat sdf = new SimpleDateFormat(template, Locale.getDefault());
+		
+		return sdf.format(new Date(time * 1000L));
+	}
+	
 	
 	public static String getUriFilePath(Activity activity, Uri uri) {
 		String[] proj = { MediaStore.Images.Media.DATA };
@@ -218,7 +138,35 @@ public class Common {
 			
 		}
 	}
-	
+
+	/**
+	 * 取得文件的MD5码
+	 * @param file 文件
+	 * @return MD5码
+	 */
+	public static String getFileMD5(File file) {
+		if (file == null || !file.isFile()) return null;
+		
+		MessageDigest digest = null;
+		FileInputStream in = null;
+		byte buffer[] = new byte[1024];
+		int len;
+		try {
+			digest = MessageDigest.getInstance("MD5");
+			in = new FileInputStream(file);
+			while ((len = in.read(buffer, 0, 1024)) != -1) {
+				digest.update(buffer, 0, len);
+			}
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		BigInteger bigInt = new BigInteger(1, digest.digest());
+		return bigInt.toString(16);
+		
+	}
+
 	/**
 	 * 取得字符串的MD5码
 	 * @param str 字符串
@@ -252,7 +200,50 @@ public class Common {
 		}
 		return hexValue.toString();
     }
-	
+
+    /**
+     * 以编码GB2312保存文本文件
+     * @param context
+     * @param filepath
+     * @param text
+     * @return
+     */
+    public static boolean saveTextFile(Context context, String filepath, String text) {
+		FileOutputStream outputStream;
+		
+		try {
+			outputStream = context.openFileOutput(filepath, Context.MODE_PRIVATE);
+			outputStream.write(text.getBytes("gb2312"));
+			outputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+
+    /**
+	 * 获取目录全部JPEG图片列表
+	 * @return 文件夹中的图片列表
+	 */
+	public static ArrayList<Map<String, ?>> getImageFileList(File dir) {
+		ArrayList<Map<String, ?>> lms = new ArrayList<Map<String, ?>>();
+		if (!dir.exists()) return lms;
+		for (File f:dir.listFiles()) {
+			String name = f.getName().toLowerCase(Locale.getDefault());
+			if (!name.endsWith(".jpg") || !name.endsWith(".jpeg")) continue;
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", String.valueOf(f.getAbsolutePath().hashCode()));
+			map.put("path", f.getParent());
+			map.put("name", f.getName());
+			map.put("uri", Uri.fromFile(f));
+			lms.add(map);
+		}
+		
+		return lms;
+	}
+
 	public static String getJSONFromMap(Map<String, String> map, ArrayList<String> disput) {
 		JSONObject json = new JSONObject();
 		try {

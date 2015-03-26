@@ -66,18 +66,73 @@ public class LoadImageThread  extends Thread {
 		
 		
 	}
+
+	protected Bitmap getBitmapFromCache(String key, Map<String, SoftReference<Bitmap>> cache) {
+		if (cache == null || cache.isEmpty()) return null;
+		synchronized (cache) {
+	    	if (cache.containsKey(key)) {
+	            SoftReference<Bitmap> bitmapReference = cache.get(key);
+	            if (bitmapReference != null) {
+	            	Bitmap bmp = bitmapReference.get();
+	                if (bmp != null) {
+	                    return bmp;
+	                } else {
+	                	cache.remove(key);
+	                }
+	            }
+	        }
+    	}
+    	
+    	return null;
+    }
+    
+	protected void putBitmapToCache(String key, Bitmap bitmap, Map<String, SoftReference<Bitmap>> cache) {
+		if (cache == null || bitmap == null) return;
+		synchronized (cache) {
+			cache.put(key, new SoftReference<Bitmap>(bitmap));
+			
+		}
+		
+	}
 	
+    public static void setImageFromUrl(final ImageView iv, final String url, final Map<String, SoftReference<Bitmap>> cache) {
+    	new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					InputStream is = new URL(url).openStream();
+					final Bitmap bmp = BitmapFactory.decodeStream(is);
+					if (cache != null) cache.put(url, new SoftReference<Bitmap>(bmp));
+					iv.post(new Runnable() {
+
+						@Override
+						public void run() {
+							iv.setImageBitmap(bmp);
+							
+						}
+						
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}).start();
+    	
+    }
+
 	@Override
 	public void run() {
 		Bitmap bmp = null;
 		File f = null;
     	try {
-    		if (imgcache != null && imgcache.containsKey(url)) {
-    			bmp = imgcache.get(url).get();
-		    	if (bmp != null) {
-		    		putImage(bmp);
-		    		return;
-		    	}
+    		bmp = getBitmapFromCache(url, imgcache);
+    		if (bmp != null) {
+	    		putImage(bmp);
+	    		return;
+		    
     		}
     		
     		String name = app.getCacheImageName(url);
@@ -102,7 +157,8 @@ public class LoadImageThread  extends Thread {
     			else cf = CompressFormat.JPEG;
     			ImageUtils.saveBitmap(bmp, f, false, cf);
     			//System.out.println("saveImageToSDCard:" + sv);
-    			if (imgcache != null) imgcache.put(url, new SoftReference<Bitmap>(bmp));
+    			
+    			putBitmapToCache(url, bmp, imgcache);
         		
         	}
     		

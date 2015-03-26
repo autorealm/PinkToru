@@ -15,7 +15,9 @@ import java.util.regex.Pattern;
 
 import com.sunteorum.pinktoru.entity.UserEntity;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -36,6 +38,23 @@ import android.text.format.Formatter;
 public class AppUtils {
 
 	final static String HOST_URL = "";
+	
+	/**
+	 * 检测当前Activity是否在前台
+	 * @return 是否在前台
+	 */
+	public boolean isOnForeground(Activity activity) {
+		ActivityManager mActivityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+		String mPackageName = activity.getPackageName();
+		@SuppressWarnings("deprecation")
+		List<RunningTaskInfo> tasksInfo = mActivityManager.getRunningTasks(1);
+	    if (tasksInfo.size() > 0) {
+	        if (mPackageName.equals(tasksInfo.get(0).topActivity.getPackageName())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 	
 	/**
 	 * 获得应用程序名字

@@ -44,6 +44,7 @@ import com.sunteorum.pinktoru.entity.Piece;
 import com.sunteorum.pinktoru.entity.PieceFactory;
 import com.sunteorum.pinktoru.util.Common;
 import com.sunteorum.pinktoru.util.ImageUtils;
+import com.sunteorum.pinktoru.util.ViewUtils;
 import com.sunteorum.pinktoru.view.FlippingImageView;
 import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer;
 import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer.OnDrawerCloseListener;
@@ -249,7 +250,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 		progd.setContentView(fay, params);
 		progd.getWindow().setGravity(Gravity.CENTER);
 		LinearLayout lay = (LinearLayout) progd.findViewById(R.id.pgdLayout);
-		lay.setOnTouchListener(new Common.TouchDragListener(true));
+		lay.setOnTouchListener(new ViewUtils.TouchDragListener(null));
 		
 		final TextView txtName = (TextView) progd.findViewById(R.id.txtGameName);
 		TextView txtDesc = (TextView) progd.findViewById(R.id.txtGameDesc);
