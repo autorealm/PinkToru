@@ -3,57 +3,64 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/umlc_04"
-    android:gravity="center"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/edtUsername"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:drawableLeft="@drawable/login_icon_account"
-        android:drawablePadding="6dp"
-        android:ems="10"
-        android:hint="@string/username"
-        android:inputType="textPersonName" >
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/titlebar" />
 
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/edtPassword"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:drawableLeft="@drawable/login_icon_password"
-        android:drawablePadding="6dp"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnWXLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/list_selector_2"
-        android:drawableRight="@drawable/login_icon_go"
-        android:padding="12dp"
-        android:shadowColor="#fff"
-        android:shadowDx="0"
-        android:shadowDy="0.6"
-        android:shadowRadius="1"
-        android:text="@string/login"
-        android:textColor="#000" />
+        <EditText
+            android:id="@+id/edtUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="-12dp"
+            android:drawableLeft="@drawable/login_icon_account"
+            android:drawablePadding="6dp"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="4dp"
+            android:drawableLeft="@drawable/login_icon_password"
+            android:drawablePadding="6dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/btnWXLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/list_selector_2"
+            android:drawableRight="@drawable/login_icon_go"
+            android:padding="12dp"
+            android:shadowColor="#fff"
+            android:shadowDx="0"
+            android:shadowDy="0.6"
+            android:shadowRadius="1"
+            android:text="@string/login"
+            android:textColor="#000" />
+    </LinearLayout>
 
   	<LinearLayout
   	    android:layout_width="match_parent"

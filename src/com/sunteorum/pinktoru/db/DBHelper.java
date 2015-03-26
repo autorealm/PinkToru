@@ -68,6 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				"price_pts integer default 0, " +
 				"image_id integer default 0, " +
 				"image_uri tinytext default null, " +
+				"icon_uri tinytext default null, " +
 				"desc text ); ";
 		String LEVEL_TABLE_CREATE_SQL = "create table if not exists " + TABLE_LEVEL + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +

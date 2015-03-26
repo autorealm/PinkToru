@@ -17,8 +17,8 @@ public class LevelEntity implements Parcelable {
 	private int gameMode = 1;//游戏模式，0.连图，1.拼图，2.填图，3.组图。
 	private int targetValue = 0;//游戏关卡目标分值
 	private int giftPoints = 0;//游戏关卡赠送点数
-	private int pieceRow;//行
-	private int pieceLine;//列
+	private int pieceRow;//列
+	private int pieceLine;//行
 	
 	private int cutFlag = 0;//切图方式
 	private int cutAlt = 2;//切图参数

@@ -59,7 +59,7 @@
         <item name="android:includeFontPadding">false</item>
     </style>
     
-    <style name="Shadow" parent="@android:style/Widget.TextView">
+    <style name="Shadow">
         <item name="android:shadowDx">0.3</item>
         <item name="android:shadowDy">0.8</item>
         <item name="android:shadowRadius">1.2</item>
@@ -88,6 +88,21 @@
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
         <item name="android:focusable">false</item>
+    </style>
+    
+    <style name="SubjectText" parent="Shadow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:textColor">#233</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">12.0dip</item>
+        <item name="android:shadowColor">#fff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusable">false</item>
+        <item name="android:background">#eaeaea</item>
     </style>
     
 	<style name="PopupAnimation" parent="android:Animation">

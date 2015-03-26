@@ -33,7 +33,13 @@
             android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
             android:padding="4dp"
+            android:shadowColor="#000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
             android:singleLine="true"
+            android:textColor="#fff"
+            android:textSize="13sp"
             android:visibility="invisible" />
         
 		<com.sunteorum.pinktoru.view.RippleView
@@ -152,15 +158,15 @@
                     android:outAnimation="@android:anim/slide_out_right" >
 
                     <ImageView
-                        android:id="@+id/imageView_ss_1"
+                        android:id="@+id/img_ss_1"
                         style="@style/SlideShowImage"
                         android:src="@drawable/backgroud_1" />
                     <ImageView
-                        android:id="@+id/imageView_ss_2"
+                        android:id="@+id/img_ss_2"
                         style="@style/SlideShowImage"
                         android:src="@drawable/backgroud_1" />
                     <ImageView
-                        android:id="@+id/imageView_ss_3"
+                        android:id="@+id/img_ss_3"
                         style="@style/SlideShowImage"
                         android:src="@drawable/backgroud_1" />
 

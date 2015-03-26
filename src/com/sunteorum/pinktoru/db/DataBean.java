@@ -182,6 +182,7 @@ public class DataBean {
 			ContentValues values = new ContentValues();
 			values.put("game_name", ge.getGameName());
 			values.put("image_uri", ge.getGameImageUrl());
+			values.put("icon_uri", ge.getGameIconUrl());
 			values.put("level", ge.getGameLevel());
 			values.put("game_id", ge.getGameId());
 			values.put("image_id", ge.getGameImageId());
@@ -243,6 +244,8 @@ public class DataBean {
 						map.setGameName(cursor.getString(cols_index));
 					} else if (("image_uri").equalsIgnoreCase(cols_name)) {
 						map.setGameImageUrl(cursor.getString(cols_index));
+					} else if (("icon_uri").equalsIgnoreCase(cols_name)) {
+						map.setGameIconUrl(cursor.getString(cols_index));
 					} else if (("level").equalsIgnoreCase(cols_name)) {
 						map.setGameLevel(cursor.getString(cols_index));
 					} else if (("game_id").equalsIgnoreCase(cols_name)) {

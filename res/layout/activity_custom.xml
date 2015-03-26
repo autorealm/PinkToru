@@ -10,83 +10,111 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="top|left"
         android:layout_marginTop="48dp"
         android:orientation="vertical" >
 
+		<TextView
+		    style="@style/SubjectText"
+		    android:layout_width="match_parent"
+		    android:layout_height="24dp"
+		    android:background="@drawable/bannershape_5"
+		    android:text="@string/label_game" />
+
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="120dp" >
+
+			<ImageView
+			    android:id="@+id/img_game_image"
+			    android:layout_width="72dp"
+			    android:layout_height="96dp"
+			    android:layout_gravity="center"
+			    android:layout_margin="12dp"
+			    android:background="@drawable/itemshape_1"
+			    android:contentDescription="@string/label_game_image"
+			    android:padding="2dp"
+			    android:src="@drawable/umlc_h0" />
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="vertical"
+			    android:paddingBottom="8dp"
+			    android:paddingRight="8dp"
+			    android:paddingTop="8dp" >
+
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:gravity="center_vertical" >
+
+					<EditText
+					    android:id="@+id/edt_game_name"
+					    android:layout_width="0dip"
+					    android:layout_height="36dp"
+					    android:layout_weight="1"
+					    android:ems="10"
+					    android:hint="@string/label_game_name"
+					    android:minWidth="128dp"
+					    android:textSize="13sp" />
+
+					<Button
+					    android:id="@+id/btn_game_mode"
+					    style="?android:attr/buttonStyleSmall"
+					    android:layout_width="48dp"
+					    android:layout_height="36dp"
+					    android:drawableLeft="@drawable/ic_book_white_18dp"
+					    android:paddingLeft="4dp" />
+
+				</LinearLayout>
+
+				<EditText
+				    android:id="@+id/edt_game_desc"
+				    android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+				    android:ems="10"
+				    android:gravity="top|left"
+				    android:hint="@string/label_add_desc"
+				    android:inputType="textMultiLine"
+				    android:textSize="12sp" />
+
+			</LinearLayout>
+
+		</LinearLayout>
+
         <TextView
+            style="@style/SubjectText"
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:text="TextView" />
+            android:background="@drawable/bannershape_5"
+            android:text="@string/label_stage" />
 
-        <TableLayout
+        <com.sunteorum.pinktoru.view.DragGridView
+            android:id="@+id/grid_game_stages"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="128dp"
+            android:numColumns="3" >
+
+        </com.sunteorum.pinktoru.view.DragGridView>
+
+        <TextView
+            style="@style/SubjectText"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="@drawable/bannershape_5"
+            android:text="@string/label_other" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center"
             android:padding="8dp" >
 
-            <TableRow
-                android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/editText1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10" >
-
-                    <requestFocus />
-                </EditText>
-
-                <Button
-                    android:id="@+id/button1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Button" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/editText2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </TableRow>
-        </TableLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:text="TextView" />
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -14,13 +14,14 @@ import android.os.Parcelable;
 public class GameEntity implements Parcelable {
 
 	private int gameId;				//游戏ID
-	private int gameMode;			//游戏通用模式
+	private int gameMode = 1;			//游戏通用模式
 	private int gameReward = 2;		//游戏奖励点数
 	private int gamePrice = 0;		//游戏价值点数
 	private int gameImageId = 0;		//游戏图片的ID
 	private String gameName;		//游戏名称
 	private String gameLevel = "{}";		//游戏关卡JSON数据
 	private String gameImageUrl;	//游戏图片的URL
+	private String gameIconUrl;		//游戏图标的URL
 	private String gameDesc = "该游戏暂无介绍";	//游戏介绍
 	
 	public GameEntity() {
@@ -31,6 +32,7 @@ public class GameEntity implements Parcelable {
 	public GameEntity(int id, int mode, String name, String imgUrl) {
 		this.gameId = id;
 		this.gameMode = mode;
+		this.gameIconUrl = null;
 		this.gameDesc = "";
 		this.gameLevel = "{}";
 		this.gameName = name;
@@ -55,6 +57,7 @@ public class GameEntity implements Parcelable {
 			this.gameImageUrl = jso.getString("image_url");
 			this.gameLevel = jso.getString("level");
 			
+			if (jso.has("icon_url")) this.gameIconUrl = jso.getString("icon_url");
 			if (jso.has("desc")) this.gameDesc = jso.getString("desc");
 			
 		} catch (JSONException e) {
@@ -73,6 +76,7 @@ public class GameEntity implements Parcelable {
 			jso.put("price_pts", this.gamePrice);
 			jso.put("image_id", this.gameImageId);
 			jso.put("image_url", this.gameImageUrl);
+			jso.put("icon_url", this.gameIconUrl);
 			jso.put("level", this.gameLevel);
 			jso.put("desc", this.gameDesc);
 			
@@ -94,6 +98,7 @@ public class GameEntity implements Parcelable {
 	public void writeToParcel(Parcel p, int flag) {
 		p.writeString(gameName);
 		p.writeString(gameImageUrl);
+		p.writeString(gameIconUrl);
 		p.writeString(gameLevel);
 		p.writeString(gameDesc);
 		p.writeInt(gameId);
@@ -110,6 +115,7 @@ public class GameEntity implements Parcelable {
 			GameEntity pe = new GameEntity();
 			pe.gameName = p.readString();
 			pe.gameImageUrl = p.readString();
+			pe.gameIconUrl = p.readString();
 			pe.gameLevel = p.readString();
 			pe.gameDesc = p.readString();
 			pe.gameId = p.readInt();
@@ -175,6 +181,14 @@ public class GameEntity implements Parcelable {
 
 	public void setGameImageUrl(String gameImageUrl) {
 		this.gameImageUrl = gameImageUrl;
+	}
+
+	public String getGameIconUrl() {
+		return gameIconUrl;
+	}
+
+	public void setGameIconUrl(String gameIconUrl) {
+		this.gameIconUrl = gameIconUrl;
 	}
 
 	public String getGameDesc() {
