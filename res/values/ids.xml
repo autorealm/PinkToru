@@ -4,6 +4,9 @@
     <item type="id" name="drawer"/>
     <item type="id" name="handle"/>
     
+    <item type="id" name="back"/>
+    <item type="id" name="title"/>
+    
     <item type="id" name="gallery_piece_list"/>
     
 </resources>

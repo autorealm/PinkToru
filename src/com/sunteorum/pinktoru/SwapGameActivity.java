@@ -11,11 +11,11 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +27,7 @@ import com.sunteorum.pinktoru.view.PieceView;
 
 public class SwapGameActivity extends BaseGameActivity {
 
+	private String tag = this.getClass().getSimpleName();
 	private ArrayList<Point> mPoints;
 	private int step = 0;
 	private int lastX;
@@ -41,7 +42,7 @@ public class SwapGameActivity extends BaseGameActivity {
         	tagpib.setBackgroundDrawable(null);
         }*/
 		
-		switch(event.getAction() & MotionEvent.ACTION_MASK){
+		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			pib.bringToFront();
 			lastX = (int) event.getX();
@@ -55,8 +56,8 @@ public class SwapGameActivity extends BaseGameActivity {
 			
 			int left = v.getLeft() + dx;
             int top = v.getTop() + dy;
-            //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)(v.getLayoutParams());
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) (v.getLayoutParams());
+            //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
             lp.leftMargin = left;
             lp.topMargin = top;
             lp.gravity = Gravity.TOP|Gravity.LEFT;
@@ -85,7 +86,7 @@ public class SwapGameActivity extends BaseGameActivity {
 			break;
 		case MotionEvent.ACTION_UP:
 			LinearLayout play = (LinearLayout) space.getParent();
-			FrameLayout.LayoutParams pfp = (FrameLayout.LayoutParams)play.getLayoutParams();
+			FrameLayout.LayoutParams pfp = (FrameLayout.LayoutParams) play.getLayoutParams();
             tx = (int) event.getRawX() - pfp.leftMargin - play.getPaddingLeft();
             ty = (int) event.getRawY() - pfp.topMargin - play.getPaddingTop();
 			drop(pib, tx, ty);
@@ -108,7 +109,7 @@ public class SwapGameActivity extends BaseGameActivity {
 		setContentView(puzzle);
 		
 		space = (FrameLayout) findViewById(R.id.space);
-		//layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
+		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
 		drawer = (MultiDirectionSlidingDrawer) this.findViewById(R.id.drawer);
 		handle = (View) this.findViewById(R.id.handle);
 		tvGameLevel = ((TextView) findViewById(R.id.tvGameLevel));
@@ -120,30 +121,32 @@ public class SwapGameActivity extends BaseGameActivity {
 		puzzle.getChildAt(0).setVisibility(4);
 		puzzle.getChildAt(1).setVisibility(4);
 		
+		handle.setBackgroundResource(R.drawable.bannershape_1);
+		
 		//强制使用纯矩形分图方式
 		app.setPieceCutFlag(0);
 		INACCURACY = 0;
+		
+		Log.i(tag, String.format("", System.currentTimeMillis()));
 	}
 
 
 	@Override
-	void OnCreatePuzzle(PieceView pib, int i) {
+	void OnCreatePiece(PieceView pv, int i) {
 		Point p = mPoints.get(i);
 		int autoX = p.x;
 		int autoY = p.y;
 		
-		pib.setLocation(p);
+		pv.setLocation(p);
 		
-		if (distance(pib.getMinp(), p, 12)) pib.setTraverse(true);
-		else pib.setTraverse(false);
+		if (distance(pv.getMinp(), p, 12)) pv.setTraverse(true);
+		else pv.setTraverse(false);
 		
-		FrameLayout.LayoutParams autoParams = new FrameLayout.LayoutParams
-				(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+		FrameLayout.LayoutParams autoParams = (FrameLayout.LayoutParams) pv.getLayoutParams();
 		autoParams.leftMargin = (autoX);
 		autoParams.topMargin = (autoY);
-		autoParams.gravity = Gravity.TOP|Gravity.LEFT;
 		
-		space.addView(pib);
+		space.addView(pv);
 		
 	}
 
@@ -157,9 +160,11 @@ public class SwapGameActivity extends BaseGameActivity {
 		if (dg != null) {
 			space.setBackgroundDrawable(dg);
 			space.getBackground().setAlpha(120);
+			space.postInvalidate();
 		}
 		
 		puzzle.setBackgroundColor(Color.LTGRAY);
+		puzzle.getChildAt(0).setVisibility(0);
 		puzzle.getChildAt(1).setVisibility(0);
 	}
 
@@ -169,10 +174,11 @@ public class SwapGameActivity extends BaseGameActivity {
 		mPoints = new ArrayList<Point>();
 		Point p = null;
 		
-		for (int i=0; i<allPieces.size(); i++) {
-			p = allPieces.get(i).getMinp();
+		for (int i = 0; i < pieces.size(); i++) {
+			p = pieces.get(i).getMinp();
 			//p.x = p.x+1;
 			//p.y = p.y+1;
+			
 			mPoints.add(p);
 		}
 		
@@ -187,26 +193,26 @@ public class SwapGameActivity extends BaseGameActivity {
 	}
 
 
-    public void drop(PieceView pib, int x, int y) {
+    public void drop(PieceView pv, int x, int y) {
 		Point p = new Point(x, y);
 		
 		int left, top, left2, top2;
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		left = pib.getLocation().x;
-		top = pib.getLocation().y;
+				(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
+		left = pv.getLocation().x;
+		top = pv.getLocation().y;
 		
 		PieceView pib2 = getPieceBtnInLocal(x, y);
-		if (pib2 == null || pib2.equals(pib)) {
-			params.leftMargin = pib.getLocation().x;
-			params.topMargin = pib.getLocation().y;
+		if (pib2 == null || pib2.equals(pv)) {
+			params.leftMargin = pv.getLocation().x;
+			params.topMargin = pv.getLocation().y;
 			params.gravity = Gravity.TOP|Gravity.LEFT;
-			pib.setLayoutParams(params);
+			pv.setLayoutParams(params);
 			return;
 		}
 		
 		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams
-				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
 		left2 = pib2.getLocation().x;
 		top2 = pib2.getLocation().y;
 		
@@ -217,7 +223,7 @@ public class SwapGameActivity extends BaseGameActivity {
 		params.topMargin = top2;
 		
 		params.gravity = Gravity.TOP|Gravity.LEFT;
-		pib.setLayoutParams(params);
+		pv.setLayoutParams(params);
 		
 		params2.gravity = Gravity.TOP|Gravity.LEFT;
 		pib2.setLayoutParams(params2);
@@ -228,12 +234,12 @@ public class SwapGameActivity extends BaseGameActivity {
 		else pib2.setTraverse(false);
 		
 		p = new Point(left2, top2);
-		pib.setLocation(p);
-		if (distance(pib.getMinp(), p, 12)) pib.setTraverse(true);
-		else pib.setTraverse(false);
+		pv.setLocation(p);
+		if (distance(pv.getMinp(), p, 12)) pv.setTraverse(true);
+		else pv.setTraverse(false);
 		
 		step++;
-		game_status = String.valueOf(step);
+		game_status = "步数：" + String.valueOf(step);
     	setGameStatus();
 		hasComplete();
 		
@@ -244,7 +250,7 @@ public class SwapGameActivity extends BaseGameActivity {
     	int piececount = allPieces.size();
 		
 		
-		for(int i=0; i<piececount; i++){
+		for(int i = 0; i < piececount; i++){
 			pib = allPieces.get(i);
 			Point op = pib.getLocation();
 			if (x > (op.x + INACCURACY) && x < (op.x + pib.getWidth() - INACCURACY)) {

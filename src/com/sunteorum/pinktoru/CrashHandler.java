@@ -103,6 +103,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		if(msg == null) return false;
 		
 		if (DEBUG) Log.e(TAG, ex.getLocalizedMessage());
+		ex.printStackTrace();
 		
 		new Thread(new Runnable() {
 

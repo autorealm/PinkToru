@@ -1,60 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/umlc_09"
+	android:gravity="center" >
 
-	<com.sunteorum.pinktoru.view.GalleryFlow
-	    android:id="@+id/gallery_image_flow"
-	    android:layout_width="fill_parent"
-	    android:layout_height="0dip"
+    <com.sunteorum.pinktoru.view.GalleryFlow
+        android:id="@+id/gallery_image_flow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:spacing="8dp" />
+
+	 <LinearLayout
+	     android:layout_width="match_parent"
+	     android:layout_height="48dp"
+	     android:layout_gravity="top"
+	     android:background="@drawable/backgroud_2"
+	     android:gravity="center_vertical" >
+
+		 <TextView
+		     android:id="@id/back"
+		     android:layout_width="wrap_content"
+		     android:layout_height="wrap_content"
+		     android:layout_marginLeft="2dp"
+		     android:layout_marginRight="2dp"
+		     android:background="@android:color/transparent"
+		     android:clickable="true"
+		     android:drawableLeft="@drawable/btn_back_bg"
+		     android:drawablePadding="0.0dip"
+		     android:gravity="right|center"
+		     android:minHeight="44.0dip"
+		     android:onClick="doBack"
+		     android:paddingLeft="12.0dip"
+		     android:paddingRight="6.0dip"
+		     android:text="@null"
+		     android:textColor="@android:color/white"
+		     android:textSize="17sp" />
+
+	<TextView
+	    android:id="@id/title"
+	    android:layout_width="0dp"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
 	    android:layout_weight="1"
-	    android:spacing="8dp" />
+	    android:gravity="center"
+	    android:text="@string/app_name"
+	    android:textColor="@android:color/white"
+	    android:textSize="20sp"
+	    android:typeface="serif" />
 
-  <LinearLayout
-      style="@style/ButtonBar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:orientation="horizontal"
-      android:paddingBottom="5dp" >
+	<Button
+	    android:id="@+id/more"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="2dp"
+	    android:layout_marginRight="4dp"
+	    android:background="@drawable/btn_new_bg"
+	    android:onClick="addMore"
+	    android:paddingLeft="6dp"
+	    android:paddingRight="12dp"
+	    android:text="@null" />
 
-  	<Button
-  	    android:id="@+id/button_local_pic"
-  	    android:layout_width="fill_parent"
-  	    android:layout_height="wrap_content"
-  	    android:layout_marginLeft="10dp"
-  	    android:layout_marginRight="10dp"
-  	    android:layout_weight="1"
-  	    android:background="@drawable/menu_selector_1"
-  	    android:text="@string/btn_review"
-  	    android:visibility="gone" >
+	 </LinearLayout>
 
-  	</Button>
+	 <LinearLayout
+		 style="@style/ButtonBar"
+		 android:layout_width="match_parent"
+		 android:layout_height="wrap_content"
+		 android:layout_gravity="bottom"
+		 android:background="@drawable/backgroud_2"
+		 android:gravity="center"
+		 android:orientation="horizontal"
+		 android:paddingBottom="5dp" >
 
-  	<Button
-  	    android:id="@+id/button_ok"
-  	    android:layout_width="fill_parent"
-  	    android:layout_height="wrap_content"
-  	    android:layout_marginLeft="10dp"
-  	    android:layout_marginRight="10dp"
-  	    android:layout_weight="1"
-  	    android:background="@drawable/menu_selector_1"
-  	    android:text="@string/btn_ok" >
+		 <Button
+			 android:id="@+id/button_local_pic"
+			 android:layout_width="fill_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_marginLeft="10dp"
+			 android:layout_marginRight="10dp"
+			 android:layout_weight="1"
+			 android:background="@drawable/menu_selector_1"
+			 android:text="@string/btn_review"
+			 android:visibility="gone" />
 
-  	</Button>
+		 <Button
+			 android:id="@+id/button_ok"
+			 android:layout_width="fill_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_marginLeft="10dp"
+			 android:layout_marginRight="10dp"
+			 android:layout_weight="1"
+			 android:background="@drawable/menu_selector_1"
+			 android:text="@string/btn_ok" />
 
-  	<Button
-  	    android:id="@+id/button_return"
-  	    android:layout_width="fill_parent"
-  	    android:layout_height="wrap_content"
-  	    android:layout_marginLeft="10dp"
-  	    android:layout_marginRight="10dp"
-  	    android:layout_weight="1"
-  	    android:background="@drawable/menu_selector_1"
-  	    android:text="@string/btn_return" >
+		 <Button
+			 android:id="@+id/button_return"
+			 android:layout_width="fill_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_marginLeft="10dp"
+			 android:layout_marginRight="10dp"
+			 android:layout_weight="1"
+			 android:background="@drawable/menu_selector_1"
+			 android:text="@string/btn_return" />
+	 </LinearLayout>
 
-  	</Button>
-  </LinearLayout>
-</LinearLayout>
+</FrameLayout>

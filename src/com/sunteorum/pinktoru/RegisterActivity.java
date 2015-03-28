@@ -2,8 +2,6 @@ package com.sunteorum.pinktoru;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -34,15 +32,16 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 	String email;
 	String phone;
 	
-	final String murl = "http://api.pintu.com/reg.php";
-	PinkToru app = (PinkToru) getApplication();
-	
-	protected List<AsyncTask<Void, Void, Boolean>> mAsyncTasks = new ArrayList<AsyncTask<Void, Void, Boolean>>();
+	final String murl = "http://app.sunteorum.com/pinktoru/reg.php";
+	Handler mHandler = new Handler();
+	PinkToru app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		app = (PinkToru) this.getApplication();
 		
 		findViewById(R.id.edt_reg_username).setOnFocusChangeListener(this);
 		findViewById(R.id.edt_reg_password).setOnFocusChangeListener(this);
@@ -158,7 +157,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			return;
 		}
 		
-		putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
+		app.putAsyncTask(new AsyncTask<Void, String, Boolean>() {
 		
 		ProgressDialog progd;
 		Map<String, String> pmap = new HashMap<String, String>();
@@ -189,7 +188,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			pmap.put("iccid", iccid);
 			pmap.put("imsi", imsi);
 			
-			final AsyncTask<Void, Void, Boolean> ask = this;
+			final AsyncTask<Void, String, Boolean> ask = this;
 			
 			progd = ProgressDialog.show(RegisterActivity.this, null, "ÕýÔÚ×¢²á,ÇëÉÔºó¡­", true, false);
 			progd.setOnCancelListener(new OnCancelListener() {
@@ -202,7 +201,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 				}
 				
 			});
-			Handler mHandler = new Handler();
+			
 			mHandler.postDelayed(new Runnable() {
 
 				@Override
@@ -255,7 +254,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			if (values == null)
@@ -289,23 +288,6 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 		}
 		
 		});
-	}
-	
-	protected void putAsyncTask(AsyncTask<Void, Void, Boolean> asyncTask) {
-		mAsyncTasks.add(asyncTask.execute());
-		
-	}
-
-	protected void clearAsyncTask() {
-		Iterator<AsyncTask<Void, Void, Boolean>> iterator = mAsyncTasks.iterator();
-		while (iterator.hasNext()) {
-			AsyncTask<Void, Void, Boolean> asyncTask = iterator.next();
-			if (asyncTask != null && !asyncTask.isCancelled()) {
-				asyncTask.cancel(true);
-			}
-		}
-		
-		mAsyncTasks.clear();
 	}
 	
 }

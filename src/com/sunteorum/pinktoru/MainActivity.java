@@ -18,8 +18,8 @@ public class MainActivity extends BaseActivity {
 		
 		setContentView(R.layout.activity_main);
 		
-		final View root_view = getWindow().getDecorView();
-		//getWindow().getDecorView().findViewById(android.R.id.content);
+		final View root_view = findViewById(android.R.id.content);
+		//getWindow().getDecorView();
 		
 		intent = new Intent(MainActivity.this, HomeActivity.class);
 		

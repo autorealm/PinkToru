@@ -2,6 +2,7 @@ package com.sunteorum.pinktoru;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunteorum.pinktoru.adapter.DragImageAdapter;
@@ -52,7 +54,7 @@ public class FillGameActivity extends BaseGameActivity {
 		setContentView(puzzle);
 		
 		space = (FrameLayout) findViewById(R.id.space);
-		//layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
+		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
 		drawer = (MultiDirectionSlidingDrawer) this.findViewById(R.id.drawer);
 		handle = (View) this.findViewById(R.id.handle);
 		tvGameLevel = ((TextView) findViewById(R.id.tvGameLevel));
@@ -76,6 +78,8 @@ public class FillGameActivity extends BaseGameActivity {
 		puzzle.setBackgroundDrawable(background_drawalbe);
 		puzzle.setKeepScreenOn(true);
 		puzzle.getChildAt(0).setVisibility(4);
+		
+		handle.setBackgroundResource(R.drawable.bannershape_1);
 		
 		INACCURACY = screenWidth / line / 2;
 
@@ -108,10 +112,10 @@ public class FillGameActivity extends BaseGameActivity {
 				if (drawer != null && drawer.isOpened()) drawer.animateClose();
 				step++;
 				
-				//Log.i("drop-toger" + pos,pm.x + " - " + pm.y); //$NON-NLS-1$ //$NON-NLS-2$
-				//Log.i("drop-pointer",x + " - " + y); //$NON-NLS-1$ //$NON-NLS-2$
-				if(distance(p, pm, INACCURACY)){
-	    			//Log.i("drop", "XXXXXXXXXXXXXXXXXXXXXXXXXX"); //$NON-NLS-1$ //$NON-NLS-2$
+				//Log.i("drop-toger" + pos,pm.x + " - " + pm.y);
+				//Log.i("drop-pointer",x + " - " + y);
+				if (distance(p, pm, INACCURACY)) {
+	    			//Log.i("drop", "XXXXXXXXXXXXXXXXXXXXXXXXXX");
 	    			PieceView pib = (PieceView) allPieces.get(getPieceImageButtonPos(pie));
 	    			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
 	    					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -122,13 +126,12 @@ public class FillGameActivity extends BaseGameActivity {
 	    			pib.setFocusable(false);
 	    			space.addView(pib);
 	    			
-	    			allPieces.remove(pos);
+	    			pieces.remove(pos);
 	    			adapter.notifyDataSetChanged();
-	    			game_status = "步数：" + step + " (" + (allPieces.size() - allPieces.size()) * 100 /allPieces.size() + "%)";
-	    			setGameStatus();
+	    			
 	    			//adapter.setSelected(pos, false);
 	    			//if (adapter.lostCount() == 0) {
-	    			if (allPieces.size() == 0) {
+	    			if (pieces.size() == 0) {
 	    				space.postDelayed(new Runnable() {
 
 							@Override
@@ -160,6 +163,12 @@ public class FillGameActivity extends BaseGameActivity {
 	    			
 	    		}
 				
+				String str = String.format(Locale.getDefault(), "%.1f",
+    					(float) (allPieces.size() - pieces.size()) * 100 /allPieces.size());
+    			
+				game_status = "步数：" + step + " (" + str + "%)";
+    			setGameStatus();
+				
 			}
 		});
 
@@ -167,7 +176,7 @@ public class FillGameActivity extends BaseGameActivity {
 
 
 	@Override
-	void OnCreatePuzzle(PieceView pib, int index) {
+	void OnCreatePiece(PieceView pib, int index) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -205,8 +214,8 @@ public class FillGameActivity extends BaseGameActivity {
 
 	private int getPieceImageButtonPos(Piece piece) {
 		int pos = -1;
-		for(int i=0; i<allPieces.size(); i++){
-			Piece pie = (Piece) allPieces.get(i).getTag();
+		for (int i = 0; i< allPieces.size(); i++) {
+			Piece pie = (Piece) allPieces.get(i).getPiece();
 			if (pie.equals(piece)) {
 				pos = i;
 				break;

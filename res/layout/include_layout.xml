@@ -27,10 +27,13 @@
     </com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer>
 
     <LinearLayout
-        android:id="@+id/rlines"
+        android:id="@+id/layGameStatus"
         android:layout_width="match_parent"
         android:layout_height="28dp"
-        android:animateLayoutChanges="true" >
+        android:animateLayoutChanges="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp" >
 
         <TextView
             android:id="@+id/tvGameLevel"
@@ -45,8 +48,8 @@
             android:padding="4dp"
             android:shadowColor="#fff"
             android:shadowDx="0"
-            android:shadowDy="0.5"
-            android:shadowRadius="0.8"
+            android:shadowDy="0.4"
+            android:shadowRadius="0.6"
             android:singleLine="true"
             android:textColor="#000" />
 
@@ -63,8 +66,8 @@
             android:padding="4dp"
             android:shadowColor="#fff"
             android:shadowDx="0"
-            android:shadowDy="0.5"
-            android:shadowRadius="0.8"
+            android:shadowDy="0.4"
+            android:shadowRadius="0.6"
             android:singleLine="true"
             android:textColor="#000" />
 
@@ -81,10 +84,11 @@
             android:padding="4dp"
             android:shadowColor="#fff"
             android:shadowDx="0"
-            android:shadowDy="0.5"
-            android:shadowRadius="0.8"
+            android:shadowDy="0.4"
+            android:shadowRadius="0.6"
             android:singleLine="true"
             android:textColor="#000" />
+
     </LinearLayout>
 
 </merge>

@@ -1,12 +1,16 @@
 package com.sunteorum.pinktoru;
 
-import android.annotation.SuppressLint;
+import java.util.ArrayList;
+import java.util.Arrays;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -27,7 +31,7 @@ import com.sunteorum.pinktoru.view.SquareGridView;
 public class HomeActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
 
 	Button btnLocal, btnCustom, btnMore;
-	SquareGridView gridNew, gridPop, gridLast;
+	SquareGridView gridNew, gridPop, gridMy, gridLast;
 	SlideLinearLayout slideDrawer;
 	
 	PinkToru app = (PinkToru) this.getApplication();
@@ -40,6 +44,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_home);
+
+		curtime = System.currentTimeMillis();
 		
 		init();
         
@@ -50,7 +56,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		// TODO Auto-generated method stub
 		super.onResume();
 		
-		curtime = System.currentTimeMillis();
 		
 	}
 
@@ -63,9 +68,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, 1, 0, "刷新");
-		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "本地图片");
-		sm1.add(1, 11, 0, "相册选取");
-		sm1.add(1, 12, 0, "拍照获得");
+		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "更多");
+		sm1.add(1, 11, 0, "调试");
+		sm1.add(1, 12, 0, "关于");
 		menu.add(0, 3, 0, "设置");
 		
 		return super.onCreateOptionsMenu(menu);
@@ -84,6 +89,28 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			
 			break;
 		case 11:
+			SharedPreferences sdf = this.getSharedPreferences("CrashHandler", Context.MODE_PRIVATE);
+			final Object ks[] = sdf.getAll().keySet().toArray();
+			Arrays.sort(ks);
+			ArrayList<String> str = new ArrayList<String>();
+			for (int i = 0; i < ks.length; i++) {
+				str.add(ks[i].toString());
+			}
+			ArrayAdapter<String> aa = new ArrayAdapter<String>(this,android.R.layout.select_dialog_item,str);
+			
+			new AlertDialog.Builder(this)
+				.setIcon(android.R.drawable.star_big_on)
+				.setTitle("Bug 列表")
+				.setSingleChoiceItems(aa, 0, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						showPopupInfo(new String[] {ks[which].toString()});
+						
+					}
+					
+				})
+				.setNegativeButton("关闭", null)
+				.show();
 			
 			break;
 		case 12:
@@ -103,16 +130,16 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 
 	@Override
 	public void onBackPressed() {
-		if (slideDrawer.isLeftLayoutVisible() || slideDrawer.getVisibility() == 0) {
-			slideDrawer.scrollToRightLayout();
-		} else {
+		//if (slideDrawer.isLeftLayoutVisible() || slideDrawer.getVisibility() == 0) {
+			//slideDrawer.scrollToRightLayout();
+		//} else {
 			if ((System.currentTimeMillis() - curtime) > 2000) {
 				Toast.makeText(this, "再次按返回键退出", Toast.LENGTH_SHORT).show();
 				curtime = System.currentTimeMillis();
 			} else {
 				super.onBackPressed();
 			}
-		}
+		//}
 		
 	}
 
@@ -137,6 +164,18 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			break;
 		case R.id.btn_renew:
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
+			break;
+		case R.id.btn_new_lay:
+					
+			break;
+		case R.id.btn_pop_lay:
+			
+			break;
+		case R.id.btn_my_lay:
+			
+			break;
+		case R.id.btn_last_lay:
+			
 			break;
 		}
 		
@@ -188,18 +227,27 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		((Button) findViewById(R.id.btn_login)).setOnClickListener(this);
 		((Button) findViewById(R.id.btn_renew)).setOnClickListener(this);
 		
+		((Button) findViewById(R.id.btn_new_lay)).setOnClickListener(this);
+		((Button) findViewById(R.id.btn_pop_lay)).setOnClickListener(this);
+		((Button) findViewById(R.id.btn_my_lay)).setOnClickListener(this);
+		((Button) findViewById(R.id.btn_last_lay)).setOnClickListener(this);
+		
 		gridNew = (SquareGridView) findViewById(R.id.grid_new_list);
 		gridNew.setCacheColorHint(Color.TRANSPARENT);
 		gridNew.setOnItemClickListener(this);
 		gridPop = (SquareGridView) findViewById(R.id.grid_pop_list);
 		gridPop.setCacheColorHint(Color.TRANSPARENT);
 		gridPop.setOnItemClickListener(this);
+		gridMy = (SquareGridView) findViewById(R.id.grid_my_list);
+		gridMy.setCacheColorHint(Color.TRANSPARENT);
+		gridMy.setOnItemClickListener(this);
 		gridLast = (SquareGridView) findViewById(R.id.grid_last_list);
 		gridLast.setCacheColorHint(Color.TRANSPARENT);
 		gridLast.setOnItemClickListener(this);
 		
-		slideDrawer = (SlideLinearLayout) findViewById(R.id.slide_drawer);
-		slideDrawer.setScrollEvent(this.getWindow().getDecorView());
+		//slideDrawer = (SlideLinearLayout) findViewById(R.id.slide_drawer);
+		
+		//slideDrawer.setScrollEvent(findViewById(android.R.id.content));
 
 		//lstView = (ListView) findViewById(R.id.lst_prize);
 		//lstView.setCacheColorHint(Color.TRANSPARENT);
@@ -212,12 +260,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 	}
 
 	
-
-	@SuppressLint("InflateParams")
 	protected void showPopupInfo(String[] strings) {
-		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-		View layout = inflater.inflate(R.layout.common_list, null);
-		
+		//LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+		//View layout = inflater.inflate(R.layout.common_list, null);
+		View layout = View.inflate(this, R.layout.common_list, null);
 		final ListView lstPop = (ListView) layout.findViewById(android.R.id.list);
 		lstPop.setCacheColorHint(Color.TRANSPARENT);
 		

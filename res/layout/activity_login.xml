@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="6dp" >
 
         <EditText
             android:id="@+id/edtUsername"
@@ -43,23 +44,28 @@
             android:hint="@string/password"
             android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/btnWXLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/list_selector_2"
-            android:drawableRight="@drawable/login_icon_go"
-            android:padding="12dp"
-            android:shadowColor="#fff"
-            android:shadowDx="0"
-            android:shadowDy="0.6"
-            android:shadowRadius="1"
-            android:text="@string/login"
-            android:textColor="#000" />
+        <com.sunteorum.pinktoru.view.RippleView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="8dp"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginRight="16dp"
+	        android:layout_marginTop="12dp"
+		    rv_centered="true" >
+	        <Button
+	            android:id="@+id/btnLogin"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:background="@drawable/list_selector_2"
+	            android:drawableRight="@drawable/login_icon_go"
+	            android:padding="12dp"
+	            android:shadowColor="#fff"
+	            android:shadowDx="0"
+	            android:shadowDy="0.6"
+	            android:shadowRadius="1"
+	            android:text="@string/login"
+	            android:textColor="#000" />
+        </com.sunteorum.pinktoru.view.RippleView>
     </LinearLayout>
 
   	<LinearLayout

@@ -54,7 +54,7 @@ public class SampleAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = View.inflate(mContext, R.layout.sample_list_item_, null);
+			convertView = View.inflate(mContext, R.layout.sample_list_item, null);
 			holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
 		} else {

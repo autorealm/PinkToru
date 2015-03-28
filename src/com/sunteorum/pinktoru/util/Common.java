@@ -3,6 +3,7 @@ package com.sunteorum.pinktoru.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -76,6 +77,14 @@ public class Common {
     	
     }
     
+	public static void closeStream(java.io.Closeable stream) {
+		try {
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static String formatTime(long time) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 		

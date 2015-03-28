@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sunteorum.pinktoru"
+    android:installLocation="preferExternal"
     android:versionCode="2"
     android:versionName="2.0.1" >
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -10,14 +11,12 @@
 	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
 	
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="16" />
 
+    <!--  -->
     <application
         android:allowBackup="true"
         android:largeHeap="true"
@@ -45,12 +44,47 @@
         </activity>
         <activity
 			android:name=".HomeActivity"
-			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
 			android:screenOrientation="portrait"
 			android:launchMode="singleTask" />
         <activity
 			android:name=".GameActivity"
 			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".PintuGameActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".FillGameActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".SwapGameActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".CustomActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".PictureFlowActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".GameListActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
+			android:name=".UserCenterActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait" />
         <activity
@@ -60,20 +94,20 @@
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".WebActivity"
-			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
 			android:launchMode="singleTask" />
 		<activity
 			android:name=".ReviewActivity"
-			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+			android:theme="@android:style/Theme.Light.NoTitleBar" />
 		<activity
 			android:name=".GalleryActivity"
-			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+			android:theme="@android:style/Theme.Light.NoTitleBar" />
         <activity
 			android:name=".PrizeListActivity"
-			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:theme="@android:style/Theme.Light.NoTitleBar"
             android:screenOrientation="portrait" />
-        <activity android:name=".LoginActivity" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
-        <activity android:name=".RegisterActivity" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+        <activity android:name=".LoginActivity" android:theme="@android:style/Theme.Light.NoTitleBar" />
+        <activity android:name=".RegisterActivity" android:theme="@android:style/Theme.Light.NoTitleBar" />
         
     </application>
 

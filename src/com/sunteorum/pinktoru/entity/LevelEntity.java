@@ -128,6 +128,18 @@ public class LevelEntity implements Parcelable {
 		
 		return this.toString();
 	}
+	
+	public void setExtParams(String extParams) {
+		
+	}
+	
+	public String getExtParams() {
+		String extParams;
+		
+		extParams = "";
+		
+		return extParams;
+	}
 
 	@Override
 	public int describeContents() {

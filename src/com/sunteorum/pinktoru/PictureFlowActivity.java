@@ -2,9 +2,11 @@ package com.sunteorum.pinktoru;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.sunteorum.pinktoru.adapter.FlowImageAdapter;
 import com.sunteorum.pinktoru.db.DataBean;
+import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
 import com.sunteorum.pinktoru.util.Common;
@@ -23,6 +25,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.Time;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -42,12 +47,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	private ArrayList<String> imageList = new ArrayList<String>();
 	private String capimgPath = "";
 	
-	PinkToru app = (PinkToru) this.getApplication();
+	PinkToru app;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_flow);
+		
+		app = (PinkToru) this.getApplication();
 		
 		galleryFlow = (GalleryFlow) findViewById(R.id.gallery_image_flow);
         galleryFlow.setAdapter(adpater);
@@ -60,6 +67,9 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
         btnReturn = (Button)findViewById(R.id.button_return);
         btnReturn.setOnClickListener(this);
         
+        this.setTitle("本地图片库");
+        
+        loadImageList();
 	}
 
 	@Override
@@ -80,6 +90,41 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, 1, 0, "刷新");
+		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "本地图片");
+		sm1.add(1, 11, 0, "相册选取");
+		sm1.add(1, 12, 0, "拍照获得");
+		menu.add(0, 3, 0, "设置");
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			
+			break;
+		case 1:
+			loadImageList();
+			break;
+		case 11:
+			startPickIntent(1);
+			
+			break;
+		case 12:
+			startCropIntent(2);
+			break;
+		case 3:
+			startActivity(new Intent(this, SystemSetting.class));
+			break;
+		
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_OK) return;
@@ -90,18 +135,19 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		case 1:
 			uri = data.getData();
 			String s = Common.getUriFilePath(PictureFlowActivity.this, uri);
+			System.out.println(s);
 			Intent i = new Intent(PictureFlowActivity.this, app.getGameClass(1));
 			i.setAction("NEW_GAME_ACTION");
 			
 			Bundle bundle = new Bundle();
-			bundle.putInt("imageId", Math.abs(s.hashCode()));
+			bundle.putInt("imageId", 0);
 			bundle.putString("imagePath", s);
 			
 			i.putExtras(bundle);
 			startActivity(i);
     		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     		
-    		if (!app.offline) finish();
+    		finish();
 			break;
 		case 2:
 			Intent i2 = new Intent(PictureFlowActivity.this, app.getGameClass(1));
@@ -115,7 +161,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			startActivity(i2);
     		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     		
-    		if (!app.offline) finish();
+    		finish();
 			break;
 		case 3:
 			uri = data.getData();
@@ -125,11 +171,12 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			ImageUtils.saveBitmap(bm, f, true, CompressFormat.JPEG);
 			capimgPath = f.getAbsolutePath();
 			
-			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, 480, 800), 9);
+			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, 540, 960), 9);
 			break;
 		case 4:
 			
-			startActivityForResult(Common.cropImageUri(Uri.fromFile(new File(capimgPath)), 3, 5, 480, 800), 9);
+			startActivityForResult(Common.cropImageUri(Uri.fromFile(new File(capimgPath)), 3, 5, 540, 960), 9);
+			
 			break;
 		case 9:
 			Bitmap bmp = data.getParcelableExtra("data");
@@ -150,13 +197,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		String imgpath = imageList.get(position);
 		
-		gotoPlayTheGame(new LevelEntity());
+		gotoPlayTheGame(new GameEntity(1, 3, "默认本地图片游戏", imgpath));
 	}
 
 	@Override
 	public void onClick(View v) {
 		int currentViewID = ((Button)v).getId();
-		Intent i = null;
+		
 		switch (currentViewID) {
 		case R.id.button_ok:
 			if (imageList == null || imageList.size() == 0) {
@@ -165,11 +212,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			}
 			String imgpath = imageList.get(galleryFlow.getSelectedItemPosition());
 			
-			gotoPlayTheGame(new LevelEntity());
+			gotoPlayTheGame(new GameEntity(1, 1, "默认本地图片游戏", imgpath));
 			
 			break;
 		case R.id.button_return:
-			startActivity(i);
+			startActivity(new Intent(this, HomeActivity.class));
+    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+			finish();
 			
 			break;
 		case 0:
@@ -215,6 +264,27 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	protected void loadImageList() {
 		
 		try {
+			final ProgressDialog progd = ProgressDialog.show(this, null, "正在加载本地图片...", true, true);
+			
+			galleryFlow.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					imageList.clear();
+					
+					File dir = android.os.Environment.getExternalStorageDirectory();
+					dir = new File(dir, "图片");
+					
+					listLocalImages(dir.getAbsolutePath());
+					
+					adpater = new FlowImageAdapter(app, imageList);
+					adpater.setBackRes(R.drawable.itemshape_7);
+					galleryFlow.setAdapter(adpater);
+					
+					progd.dismiss();
+				}
+				
+			}, 200);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,26 +292,43 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		}
 	}
 	
-	public void gotoPlayTheGame(LevelEntity le) {
-		Intent i = new Intent(this, app.getGameClass(le.getGameMode()));
+	protected void listLocalImages(String path) {
+		File sfile = new File(path);
+		if (!sfile.exists() || !sfile.isDirectory()) return;
+		
+		File[] files = sfile.listFiles();
+		for (File tfile:files) {
+			if (tfile.isDirectory()) {listLocalImages(tfile.getAbsolutePath());}
+			String tname = tfile.getName().toLowerCase(Locale.getDefault());
+			if (tname.endsWith(".jpg") || tname.endsWith(".jpeg") || tname.endsWith(".png")
+					 || tname.endsWith(".bmp")) {
+				String f = Uri.fromFile(tfile).toString();
+				System.out.println(f);
+				imageList.add(f);
+				
+			}
+		}
+		
+	}
+	
+	public void gotoPlayTheGame(GameEntity ge) {
+		Intent i = new Intent(this, app.getGameClass(ge.getGameMode()));
 		i.setAction("NEW_GAME_ACTION");
 		
-		DataBean db = DataBean.getInstance(this);
-		Cursor cursor = db.getEntry("pt_level", "level_id=" + le.getLevelId());
-		cursor.moveToFirst();
-		int row = cursor.getInt(cursor.getColumnIndexOrThrow("piece_row"));
-		int line = cursor.getInt(cursor.getColumnIndexOrThrow("piece_line"));
-		cursor.close();
-		db.close();
+		LevelEntity le = app.getLevelById(1);
+		if (le == null) {
+			Common.showToast(this, "数据出错了！");
+			return;
+		}
 		
 		Bundle bundle = new Bundle();
-		bundle.putInt("imageId", le.getImageId());
-		bundle.putInt("levelId", le.getLevelId());
-		bundle.putInt("level", 1);
-		bundle.putInt("row", row);
-		bundle.putInt("line", line);
-		bundle.putString("imageUrl", le.getImageUrl());
-		//bundle.putString("imagePath", le.getGameDesc());
+		bundle.putInt("gameId", 1);
+		bundle.putInt("levelId", 1);
+		bundle.putInt("stage", 1);
+		bundle.putInt("row", le.getPieceRow());
+		bundle.putInt("line", le.getPieceLine());
+		bundle.putInt("imageId", ge.getGameImageId());
+		bundle.putString("imageUri", ge.getGameImageUrl());
 		
 		i.putExtras(bundle);
 		startActivity(i);
@@ -249,6 +336,10 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		
 		if (!((PinkToru) getApplication()).offline) finish();
+	}
+	
+	protected void addMore() {
+		
 	}
 	
 	protected String getUriFilePath(Uri uri) {
@@ -331,7 +422,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			return;
 		}
 		
-		View view = this.getLayoutInflater().inflate(R.layout.sample_image_item, null);
+		View view = View.inflate(this, R.layout.sample_image_item, null);
 		ImageView imgItem = (ImageView) view.findViewById(R.id.imageview_sample);
 		imgItem.setImageURI(Uri.fromFile(imgfile));
 		
@@ -347,7 +438,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 
 						@Override
 						public void run() {
-							String result = "";
+							//String result = "";
 							try {
 								//Thread.sleep(5000);
 								

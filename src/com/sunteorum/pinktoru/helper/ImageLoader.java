@@ -2,13 +2,15 @@ package com.sunteorum.pinktoru.helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,10 +23,11 @@ import android.util.LruCache;
 
 import com.sunteorum.pinktoru.util.ImageUtils;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+@SuppressLint("NewApi")
 public class ImageLoader {
 
 	private LruCache<String, Bitmap> memCache;
+	private Map<String, SoftReference<Bitmap>> imgCache;
 	private ExecutorService mPool = null;
 	
 	private Context context;
@@ -35,20 +38,25 @@ public class ImageLoader {
 	}
 	
 	public ImageLoader(Context context, File saveDir) {
-		int maxMemory = (int) Runtime.getRuntime().maxMemory();
-		int mCacheSize = maxMemory / 6;
 		
-		memCache = new LruCache<String, Bitmap>(mCacheSize) {
-
-			@Override
-			protected int sizeOf(String key, Bitmap value) {
-				if (value == null)
-					return super.sizeOf(key, value);
-				else
-					return value.getRowBytes() * value.getHeight();
-			}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+			int maxMemory = (int) Runtime.getRuntime().maxMemory();
+			int mCacheSize = maxMemory / 6;
+			memCache = new LruCache<String, Bitmap>(mCacheSize) {
+	
+				@Override
+				protected int sizeOf(String key, Bitmap value) {
+					if (value == null)
+						return super.sizeOf(key, value);
+					else
+						return value.getRowBytes() * value.getHeight();
+				}
+				
+			};
+		} else {
+			imgCache = new HashMap<String, SoftReference<Bitmap>>();
 			
-		};
+		}
 		
 		this.context = context;
 		this.save_dir = saveDir;
@@ -117,10 +125,8 @@ public class ImageLoader {
 	}
 	
 	private Bitmap getCacheBitmap(String url) {
-		Bitmap bitmap = null;
-		synchronized (memCache) {
-			bitmap = memCache.get(url);
-		}
+		Bitmap bitmap = getBitmapFromCache(url);
+		
 		if (bitmap != null) {
 			return bitmap;
 		} else {
@@ -155,13 +161,31 @@ public class ImageLoader {
 		return null;
 	}
 	
-	private void putBitmapToCache(String key, Bitmap bitmap) {
-		synchronized (memCache) {
+	private synchronized void putBitmapToCache(String key, Bitmap bitmap) {
+		if (memCache != null) {
 			if (memCache.get(key) == null && bitmap != null) {
 			    memCache.put(key, bitmap);
 			}
+		} else if (imgCache != null) {
+			imgCache.put(key, new SoftReference<Bitmap>(bitmap));
 		}
 		
+	}
+	
+	private synchronized Bitmap getBitmapFromCache(String key) {
+		Bitmap bitmap = null;
+		if (memCache != null) {
+			bitmap = memCache.get(key);
+		} else if (imgCache != null && imgCache.containsKey(key)) {
+			SoftReference<Bitmap> bitmapReference = imgCache.get(key);
+			if (bitmapReference != null) {
+				bitmap = bitmapReference.get();
+				if (bitmap == null) imgCache.remove(key);
+			}
+			
+		}
+		
+		return bitmap;
 	}
 	
 	private String getSaveFileName(String url) {

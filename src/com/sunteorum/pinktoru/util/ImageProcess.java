@@ -70,32 +70,32 @@ public class ImageProcess {
 		y1 = y - 1;
 		while (y1 >= 0 && bitmap.getPixel(x, y1) == oldColor) {
 			bitmap.setPixel(x, y1, newColor);
-		    y1--;
+			y1--;
 		}
 		
 		
 		y1 = y;
 		while (y1 < h && bitmap.getPixel(x, y1) == newColor) {
-		    if (x > 0 && bitmap.getPixel(x - 1, y1) == oldColor) {
-		        floodFill(bitmap, x - 1, y1, oldColor, newColor);
-		    }
-		    y1++;
+			if (x > 0 && bitmap.getPixel(x - 1, y1) == oldColor) {
+				floodFill(bitmap, x - 1, y1, oldColor, newColor);
+			}
+			y1++;
 		}
 		
 		y1 = y - 1;
 		while (y1 >= 0 && bitmap.getPixel(x, y1) == newColor) {
-		    if (x > 0 && bitmap.getPixel(x - 1, y1) == oldColor) {
-		        floodFill(bitmap, x - 1, y1, oldColor, newColor);
-		    }
-		    y1--;
+			if (x > 0 && bitmap.getPixel(x - 1, y1) == oldColor) {
+				floodFill(bitmap, x - 1, y1, oldColor, newColor);
+			}
+			y1--;
 		} 
 		
 		y1 = y;
 		while (y1 < h && bitmap.getPixel(x, y1) == newColor) {
-		    if (x < w - 1 && bitmap.getPixel(x + 1, y1) == oldColor) {           
-		        floodFill(bitmap, x + 1, y1, oldColor, newColor);
-		    } 
-		    y1++;
+			if (x < w - 1 && bitmap.getPixel(x + 1, y1) == oldColor) {           
+				floodFill(bitmap, x + 1, y1, oldColor, newColor);
+			} 
+			y1++;
 		}
 		
 		y1 = y - 1;

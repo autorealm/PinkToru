@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:interpolator="@[package:]anim/interpolator_resource"
+	android:shareInterpolator="[true | false]" >
+	<!-- Interpolator - 插值器 : @android:anim/accelerate_interpolator -->
+	<alpha
+		android:fromAlpha="float"
+		android:toAlpha="float" />
+	<scale
+		android:fromXScale="float"
+		android:toXScale="float"
+		android:fromYScale="float"
+		android:toYScale="float"
+		android:pivotX="float"
+		android:pivotY="float" />
+	<!-- pivot - 中轴点 -->
+	<!--  浮点数 - 自身、num% - 百分比、num%p - 相对布局； -->
+	<!-- Degrees - 度 -->
+	<translate
+		android:fromX="float"
+		android:toX="float"
+		android:fromY="float"
+		android:toY="float" />
+	<rotate
+		android:fromDegrees="float"
+		android:toDegrees="float"
+		android:pivotX="float"
+		android:pivotY="float" />
+	<set>
+		...
+	</set>
+</set>

@@ -15,7 +15,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/list_selector_2"
+    android:background="@drawable/itemshape_6"
     android:gravity="center"
     android:minWidth="280dp"
     android:orientation="vertical"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/backgroud_2"
+        android:background="#30000000"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="4dp" >

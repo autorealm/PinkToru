@@ -21,8 +21,11 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
 
 public class ImageUtils {
+	static String tag = "ImageUtils";
 	
 	/**
 	 * Drawable转换为Bitmap
@@ -63,6 +66,8 @@ public class ImageUtils {
 		try {
 			BitmapFactory.Options opts = new BitmapFactory.Options();
 			opts.inJustDecodeBounds = true;
+			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			
 			BitmapFactory.decodeFile(path, opts);
 			int srcWidth = opts.outWidth; //获取图片的原始宽度
 			int srcHeight = opts.outHeight; //获取图片原始高度
@@ -89,7 +94,7 @@ public class ImageUtils {
 			}
 			
 			BitmapFactory.Options newOpts = new BitmapFactory.Options();
-			newOpts.inSampleSize = (int) ratio + 1;
+			newOpts.inSampleSize = (int) (ratio + 0.5f);
 			newOpts.inJustDecodeBounds = false;
 			
 			newOpts.outHeight = destHeight;
@@ -104,7 +109,54 @@ public class ImageUtils {
 		
 		return null;
 	}
-	
+
+	/**
+	 * 压缩显示图案(长宽不超过最大限制)
+	 * @param uri 该图片的地址
+	 * @return 位图
+	 */
+	public static Bitmap compressBitmap(String uri, int MAX_IMAGE_SIZE) throws Exception {
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		
+		File file = new File(uri);
+		if (!file.exists()) {
+			file = new File(Uri.parse(uri).getPath());
+			if (!file.exists())
+				return BitmapFactory.decodeStream(new java.net.URL(uri).openStream());
+		}
+		
+		BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+		
+		int h = opts.outHeight;
+		int w = opts.outWidth;
+		
+		float ratio = 1f;
+		if (w >= h && w > MAX_IMAGE_SIZE) {
+			ratio = (float) w / MAX_IMAGE_SIZE;
+		} else if (w < h && h > MAX_IMAGE_SIZE) {
+			ratio = (float) h / MAX_IMAGE_SIZE;
+		}
+
+		if (ratio < 1) {
+			ratio = 1f;
+		} else if (ratio > 1) {
+			ratio = (float) ((Math.ceil(ratio)) * 2);
+		}
+		
+		opts.inJustDecodeBounds = false;
+		opts.inSampleSize = (int) ratio;
+		
+		Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+		
+		Log.i(tag, "inSampleSize:" + ratio + " w- " + w + " h- " + h + " @" + file.getName());
+		//return bmp;
+		
+		return new java.lang.ref.WeakReference<Bitmap>(bmp).get();
+		
+	}
+
 	/**
 	 * 保存图片数据到文件
 	 * @param bitmap 图片

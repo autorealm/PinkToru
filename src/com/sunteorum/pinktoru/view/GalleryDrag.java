@@ -1,6 +1,7 @@
 package com.sunteorum.pinktoru.view;
 
 import com.sunteorum.pinktoru.util.ImageUtils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +17,14 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -52,6 +60,8 @@ public class GalleryDrag extends Gallery {
 	private Bitmap bm;
 	private Handler mHandler = new Handler();
 	private ImageView itemView;
+	
+	private int perx, pery;
 	
 	
     public GalleryDrag(Context context) {
@@ -186,10 +196,12 @@ public class GalleryDrag extends Gallery {
     */ 
     private void startDrag(Bitmap bm, int x, int y) {
     	stopDrag();
+    	perx = x - (int) (bm.getWidth() / 2 + 0.5f);
+    	pery = y - (int) (bm.getHeight() / 2 + 0.5f);
 		windowParams = new WindowManager.LayoutParams();
 	    windowParams.gravity = Gravity.TOP | Gravity.LEFT;
-	    windowParams.x = x - (bm.getWidth() / 2);
-	    windowParams.y = y - (bm.getHeight() / 2);
+	    windowParams.x = perx;
+	    windowParams.y = pery;
 	    windowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
 	    windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 	
@@ -220,8 +232,8 @@ public class GalleryDrag extends Gallery {
 	    
 	    if (dragImageView != null) {
 		    windowParams.alpha = 0.5f;// 透明度 
-		    windowParams.x = x - (dragImageView.getWidth() / 2);
-		    windowParams.y = y - (dragImageView.getHeight() / 2);
+		    windowParams.x = x - (int) (dragImageView.getWidth() / 2 + 0.5f);
+		    windowParams.y = y - (int) (dragImageView.getHeight() / 2 +0.5f);
 		    windowManager.updateViewLayout(dragImageView, windowParams);// 时时移动.
 		    //Log.i("onDrag", "x:" + windowParams.x + " - y:" + windowParams.y);
 	    }
@@ -281,7 +293,27 @@ public class GalleryDrag extends Gallery {
 
     }
     
-	private boolean isTouchInItem(View dragView, int x, int y){
+    public void animReturn() {
+    	if (dragImageView == null) return;
+    	AnimationSet animset = new AnimationSet(true);
+    	Animation mAnimation;
+		
+		animset.setDuration(400);
+		animset.setInterpolator(new OvershootInterpolator());
+		animset.setFillAfter(true);
+		
+		mAnimation = new TranslateAnimation(windowParams.x, perx, windowParams.y, pery);
+		mAnimation.setInterpolator(new DecelerateInterpolator());
+		animset.addAnimation(mAnimation);
+		
+		mAnimation = new AlphaAnimation(1.0f, 0f);
+		mAnimation.setInterpolator(new LinearInterpolator());
+		animset.addAnimation(mAnimation);
+		
+		dragImageView.setAnimation(animset);
+    }
+    
+	private boolean isTouchInItem(View dragView, int x, int y) {
 	    if(dragView == null){
 	        return false;
 	    }
@@ -303,7 +335,7 @@ public class GalleryDrag extends Gallery {
     
 	}
 	
-    class CheckForLongPress implements Runnable {
+    private class CheckForLongPress implements Runnable {
         private int mOriginalWindowAttachCount;
         
         @Override

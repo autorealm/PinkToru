@@ -4,12 +4,16 @@ package com.sunteorum.pinktoru;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.sunteorum.pinktoru.db.DataBean;
+import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
 import com.sunteorum.pinktoru.util.AppUtils;
@@ -22,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
@@ -35,19 +40,21 @@ public class PinkToru extends Application {
 	final String APP_DIR = "FADWorks/PinkToru";
 	final String APP_CACHE_DIR = "Cache";
 	final String APP_IMAGE_DIR = "Image";
+	final int MAX_IMAGE_SIZE = 1280;
 	
+	private DataBean db;
 	private UserEntity user;
-	protected ArrayList<LevelEntity> games;
-	//protected PrizeEntity pe;
-	protected boolean offline = false;	//是否离线游戏模式，测试用
+	protected boolean offline = true;	//是否离线游戏模式，测试用
+	
 	final int INACCURACY = 12;	//判断拼合的距离
 	
-	private int gamePass = 1;	//当前游戏的关数(第几关)，非游戏难度等级
+	private int gameStage = 1;	//当前游戏的关数(第几关)，非游戏难度等级
 	private long gameTime = 0;	//同一游戏累计时间
 	
 	private boolean absinmove = true;	//是否移动时进行拼合判断
 	
-	private int gameMode = 0;	//游戏模式
+	private int gameMode = 1;	//游戏模式
+	
 	private int pieceCutFlag = 0;	//碎片分割方式
 	private int pieceRenderFlag = 1;	//碎片渲染方式
 	private int pieceEdgeWidth = 16;	//碎片边缘宽度
@@ -55,6 +62,8 @@ public class PinkToru extends Application {
 	private int pieceShadowColor = Color.DKGRAY;	//碎片阴影颜色
 	private int pieceKochCurveN = 2;
 	
+	/** 异步任务列表  */
+	protected List<AsyncTask<Void, String, Boolean>> mAsyncTasks = new ArrayList<AsyncTask<Void, String, Boolean>>();
 	private PTReceiver mReceiver = null;
 	
 	@Override
@@ -63,13 +72,15 @@ public class PinkToru extends Application {
 		super.onCreate();
 		CrashHandler.getInstance().init(getApplicationContext());
 		
-		
+		db = DataBean.getInstance(getApplicationContext());
 	}
 
 	@Override
 	public void onTerminate() {
 		// TODO Auto-generated method stub
 		super.onTerminate();
+		
+		if (db != null) db.close();
 		if (mReceiver != null) unregisterReceiver(mReceiver);
 		this.saveConfig("last_exit_time", System.currentTimeMillis());
 	}
@@ -101,8 +112,8 @@ public class PinkToru extends Application {
 		
 	}
 
-	public void setGames(String json) {
-		games = new ArrayList<LevelEntity>();
+	public ArrayList<LevelEntity> getGames(String json) {
+		ArrayList<LevelEntity> games = new ArrayList<LevelEntity>();
 		try {
 			//System.out.println(json);
 			JSONArray jso = new JSONArray(json);
@@ -114,36 +125,26 @@ public class PinkToru extends Application {
 			e.printStackTrace();
 		}
 		
+		return games;
 	}
 	
-	public LevelEntity getGameAtIndex(int index) {
-		if (games == null || games.size() < index + 1) return null;
-		LevelEntity ge = games.get(index);
-		return ge;
+	public GameEntity getGameById(int id) {
+		return db.queryGame(id);
 	}
 	
-	public String getGameImageAtIndex(int index) {
-		if (games == null || games.size() < index + 1) return null;
-		LevelEntity le = games.get(index);
-		return le.getImageUrl();
-	}
-	
-	public void setGameModeAtIndex(int index) {
-		if (games == null || games.size() < index + 1) return; //this.gameMode = 0;
-		LevelEntity ge = games.get(index);
-		this.gameMode = ge.getGameMode() - 1;
-		System.out.println("GameMode:" + this.gameMode);
+	public LevelEntity getLevelById(int id) {
+		return db.queryLevel(id);
 	}
 	
 	public Class<?> getGameClass(int gameMode) {
-		Class<?> GAME = null;
+		Class<?> GAME = PintuGameActivity.class;
 		if (gameMode == 1) {
 			GAME = PintuGameActivity.class;
-		}  else if (gameMode == 2) {
+		} else if (gameMode == 2) {
 			GAME = FillGameActivity.class;
-		}  else if (gameMode == 3) {
+		} else if (gameMode == 3) {
 			GAME = SwapGameActivity.class;
-		} else {
+		} else if (gameMode == 10) {
 			GAME = PokeGameActivity.class;
 		}
 		
@@ -183,12 +184,12 @@ public class PinkToru extends Application {
 		this.user = user;
 	}
 
-	public int getGamePass() {
-		return gamePass;
+	public int getGameStage() {
+		return gameStage;
 	}
 
-	public void setGamePass(int gamePass) {
-		this.gamePass = gamePass;
+	public void setGameStage(int gameStage) {
+		this.gameStage = gameStage;
 	}
 
 	public boolean isAbsinmove() {
@@ -282,8 +283,14 @@ public class PinkToru extends Application {
 	}
 	
 	public String getCacheImagePath(String imageUrl) {
-		File cacheDir = getAppCacheDir();
-		File f = new File(cacheDir, this.getCacheImageName(imageUrl));
+		File f = null;
+		
+		if (imageUrl.toLowerCase(Locale.getDefault()).startsWith("file://")) {
+			f = new File(Uri.parse(imageUrl).getPath());
+			if (f.exists()) return f.getAbsolutePath();
+		}
+		
+		f = new File(this.getAppCacheDir(), this.getCacheImageName(imageUrl));
 		String imagePath = f.getAbsolutePath();
 		if (!f.exists()) {
 			return null;
@@ -297,7 +304,24 @@ public class PinkToru extends Application {
 		
 		return name;
 	}
-	
+
+	protected void putAsyncTask(AsyncTask<Void, String, Boolean> asyncTask) {
+		mAsyncTasks.add(asyncTask.execute());
+		
+	}
+
+	protected void clearAsyncTask() {
+		Iterator<AsyncTask<Void, String, Boolean>> iterator = mAsyncTasks.iterator();
+		while (iterator.hasNext()) {
+			AsyncTask<Void, String, Boolean> asyncTask = iterator.next();
+			if (asyncTask != null && !asyncTask.isCancelled()) {
+				asyncTask.cancel(true);
+			}
+		}
+		
+		mAsyncTasks.clear();
+	}
+
 	protected void downloadReceiver(String fileUrl) {
 	    DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 		

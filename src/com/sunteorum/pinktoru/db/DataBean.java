@@ -105,8 +105,17 @@ public class DataBean {
 		
 	}
 	
-	public Cursor getEntry(String table, String where){
-		String sql = " select * from " + table + " " + where + " ; ";
+	public int getEntryCount(String table, String where) {
+		String sql = " select * from " + table + " where " + where + " ; ";
+		Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+		int count = cursor.getCount();
+		cursor.close();
+		return count;
+	}
+	
+	public Cursor getEntry(String table, String where) {
+		String sql = " select * from " + table + " where " + where + " ; ";
+		
 		return mSQLiteDatabase.rawQuery(sql, null);
 	}
 
@@ -175,7 +184,7 @@ public class DataBean {
 		return recordList;
 	}
 	
-	public boolean addGame(GameEntity ge) {
+	public boolean insertGame(GameEntity ge) {
 		Cursor cursor = null;
 		boolean success = false;
 		try {
@@ -203,11 +212,55 @@ public class DataBean {
 		return success;
 	}
 	
+	public boolean insertLevel(LevelEntity le) {
+		Cursor cursor = null;
+		boolean success = false;
+		try {
+			ContentValues values = new ContentValues();
+			
+			values.put("level_id", le.getLevelId());
+			values.put("piece_row", le.getPieceRow());
+			values.put("piece_line", le.getPieceLine());
+			values.put("game_mode", le.getGameMode());
+			values.put("target_value", le.getTargetValue());
+			values.put("gift_pts", le.getGiftPoints());
+			values.put("ext_params", le.getExtParams());
+			values.put("image_id", le.getImageId());
+			values.put("image_uri", le.getImageUrl());
+			values.put("add_data", le.getAddData());
+			values.put("desc", le.getLevelDesc());
+			
+			long id = -1;
+			id = mSQLiteDatabase.insert(DBHelper.TABLE_LEVEL, null, values);
+			success = (id != -1 ? true : false);
+		} catch (Exception e) {
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+		
+		return success;
+	}
+	
 	public boolean delectGame(String whereClause, String[] whereArgs) {
 		boolean success = false;
 		try {
 			int count = 0;
 			count = mSQLiteDatabase.delete(DBHelper.TABLE_GAME, whereClause, whereArgs);
+			success = (count > 0 ? true : false);
+		} catch (Exception e) {
+		} finally {
+		}
+		
+		return success;
+	}
+	
+	public boolean delectLevel(String whereClause, String[] whereArgs) {
+		boolean success = false;
+		try {
+			int count = 0;
+			count = mSQLiteDatabase.delete(DBHelper.TABLE_LEVEL, whereClause, whereArgs);
 			success = (count > 0 ? true : false);
 		} catch (Exception e) {
 		} finally {
@@ -227,6 +280,85 @@ public class DataBean {
 		}
 		
 		return flag;
+	}
+	
+	public boolean updateLevel(ContentValues values, String whereClause, String[] whereArgs) {
+		boolean flag = false;
+		int count = 0;
+		try {
+			count = mSQLiteDatabase.update(DBHelper.TABLE_LEVEL, values, whereClause, whereArgs);
+			flag = (count > 0 ? true : false);
+		} catch (Exception e) {
+		} finally {
+		}
+		
+		return flag;
+	}
+	
+	public GameEntity queryGame(int id) {
+		GameEntity ge = new GameEntity();
+		Cursor cursor = getEntry(DBHelper.TABLE_GAME, "game_id=" + id);
+		if (cursor.getCount() != 1) return null;
+		
+		cursor.moveToFirst();
+		int game_id = cursor.getInt(cursor.getColumnIndexOrThrow("game_id"));
+		int image_id = cursor.getInt(cursor.getColumnIndexOrThrow("image_id"));
+		int reward_pts = cursor.getInt(cursor.getColumnIndexOrThrow("reward_pts"));
+		int price_pts = cursor.getInt(cursor.getColumnIndexOrThrow("price_pts"));
+		String game_name = cursor.getString(cursor.getColumnIndexOrThrow("game_name"));
+		String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
+		String icon_uri = cursor.getString(cursor.getColumnIndexOrThrow("icon_uri"));
+		String level = cursor.getString(cursor.getColumnIndexOrThrow("level"));
+		String desc = cursor.getString(cursor.getColumnIndexOrThrow("desc"));
+		
+		ge.setGameId(game_id);
+		ge.setGameImageId(image_id);
+		ge.setGameReward(reward_pts);
+		ge.setGamePrice(price_pts);
+		ge.setGameName(game_name);
+		ge.setGameImageUrl(image_uri);
+		ge.setGameIconUrl(icon_uri);
+		ge.setGameLevel(level);
+		ge.setGameDesc(desc);
+		
+		cursor.close();
+		
+		return ge;
+	}
+	
+	public LevelEntity queryLevel(int id) {
+		LevelEntity le = new LevelEntity();
+		Cursor cursor = getEntry(DBHelper.TABLE_LEVEL, "level_id=" + id);
+		if (cursor.getCount() != 1) return null;
+		
+		cursor.moveToFirst();
+		int level_id = cursor.getInt(cursor.getColumnIndexOrThrow("level_id"));
+		int piece_row = cursor.getInt(cursor.getColumnIndexOrThrow("piece_row"));
+		int piece_line = cursor.getInt(cursor.getColumnIndexOrThrow("piece_line"));
+		int game_mode = cursor.getInt(cursor.getColumnIndexOrThrow("game_mode"));
+		int target_value = cursor.getInt(cursor.getColumnIndexOrThrow("target_value"));
+		int gift_pts = cursor.getInt(cursor.getColumnIndexOrThrow("gift_pts"));
+		int image_id = cursor.getInt(cursor.getColumnIndexOrThrow("image_id"));
+		String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
+		String ext_params = cursor.getString(cursor.getColumnIndexOrThrow("ext_params"));
+		String add_data = cursor.getString(cursor.getColumnIndexOrThrow("add_data"));
+		String desc = cursor.getString(cursor.getColumnIndexOrThrow("desc"));
+
+		le.setLevelId(level_id);
+		le.setPieceRow(piece_row);
+		le.setPieceLine(piece_line);
+		le.setGameMode(game_mode);
+		le.setTargetValue(target_value);
+		le.setGiftPoints(gift_pts);
+		le.setExtParams(ext_params);
+		le.setImageId(image_id);
+		le.setImageUrl(image_uri);
+		le.setAddData(add_data);
+		le.setLevelDesc(desc);
+		
+		cursor.close();
+		
+		return le;
 	}
 	
 	public List<GameEntity> listGame(String selection, String[] selectionArgs) {

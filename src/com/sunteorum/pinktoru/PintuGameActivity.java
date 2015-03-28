@@ -8,11 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunteorum.pinktoru.entity.Piece;
@@ -32,26 +31,30 @@ public class PintuGameActivity extends BaseGameActivity {
 	public boolean onTouch(final View v, MotionEvent event) {
 		switch(event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			PieceView pib = (PieceView) v;
-			Bitmap bmp = pib.getDrawingCache();
+			PieceView pv = (PieceView) v;
+			Bitmap bmp = pv.getDrawingCache();
 			if (bmp != null && bmp.getPixel((int)event.getX(), (int)event.getY()) == 0) {
 				skip = true;
 				return false;
 			} else skip = false;
+			
 			lastX = (int) event.getRawX();
 			lastY = (int) event.getRawY();
 			
 			//把该视图置于其他所有子视图之上
 			//puzzle.bringChildToFront(v);
 			displayFront((PieceView)v);
+			
 			//如果开始了顶部栏则关闭它
 			if (drawer != null && drawer.isOpened()) drawer.animateClose();
 			
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (skip == true) return true;
-			int dx =(int)event.getRawX() - lastX;
-			int dy =(int)event.getRawY() - lastY;
+			
+			int dx =(int) event.getRawX() - lastX;
+			int dy =(int) event.getRawY() - lastY;
+			
 			movePieces.clear();
 			checkMove((PieceView)v, dx, dy, movePieces);
 			//setOpacity(movePieces);
@@ -70,7 +73,7 @@ public class PintuGameActivity extends BaseGameActivity {
 						absorb(firstPiece);
 					} else absorb((PieceView)v);
 					
-					displayLast(level);
+					displayLast(stage);
 				}
 				
 			});
@@ -88,7 +91,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			cleanPath();
 			absorb(firstPiece);
 			
-			displayLast(level);
+			displayLast(stage);
 			//吸附后，显示到前端
 			//displayFront(firstPiece);
 			
@@ -105,22 +108,21 @@ public class PintuGameActivity extends BaseGameActivity {
 	}
 
 	@SuppressWarnings("deprecation")
-	@SuppressLint("InflateParams")
 	@Override
 	void init() {
-		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game, null);
+		puzzle = (FrameLayout) View.inflate(this, R.layout.activity_game, null);
 		
 		setContentView(puzzle);
 		
 		space = (FrameLayout) findViewById(R.id.space);
-		//layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
+		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
 		drawer = (MultiDirectionSlidingDrawer) this.findViewById(R.id.drawer);
 		handle = (View) this.findViewById(R.id.handle);
 		tvGameLevel = ((TextView) findViewById(R.id.tvGameLevel));
 		tvGameTime = ((TextView) findViewById(R.id.tvGameTime));
 		tvGameStatus = ((TextView) findViewById(R.id.tvGameStatus));
 		
+		handle.setBackgroundResource(R.drawable.backgroud_2);
 		puzzle.setBackgroundDrawable(background_drawalbe);
 		puzzle.setKeepScreenOn(true);
 	}
@@ -160,7 +162,7 @@ public class PintuGameActivity extends BaseGameActivity {
 
 
 	@Override
-	void OnCreatePuzzle(PieceView pib, int index) {
+	void OnCreatePiece(PieceView pib, int index) {
 		pib.setVisibility(8);
 		puzzle.addView(pib);
 		
@@ -252,6 +254,7 @@ public class PintuGameActivity extends BaseGameActivity {
 		*/
     	
 		//curPIB.layout(l, t, r, b);
+    	
     	movePieces.add(curPIB);
     	
 		int id = curPIB.getId();
@@ -306,18 +309,22 @@ public class PintuGameActivity extends BaseGameActivity {
 	 */
 	private void moveSomePieces(final ArrayList<PieceView> absorbPieces) {
 		
-		for (int i=0; i<absorbPieces.size(); i++) {
+		for (int i = 0; i < absorbPieces.size(); i++) {
 			
 			PieceView piece = (PieceView) absorbPieces.get(i);
 			Point loc = piece.getLocation();
+			
 			piece.layout(loc.x, loc.y, loc.x + piece.getWidth(), loc.y + piece.getHeight());
 			
-			FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) piece.getLayoutParams();
-			alp.gravity = Gravity.TOP|Gravity.LEFT;
-			alp.leftMargin = loc.x;
-			alp.topMargin = loc.y;
-			piece.setLayoutParams(alp);
+			if (piece.getParent() instanceof FrameLayout) {
+				FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) piece.getLayoutParams();
+				alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
+				alp.leftMargin = loc.x;
+				alp.topMargin = loc.y;
+				piece.setLayoutParams(alp);
+			}
 			
+			piece.postInvalidate();
 		}
 		
 	}
@@ -329,16 +336,19 @@ public class PintuGameActivity extends BaseGameActivity {
     private void absorb(PieceView curPiece) {
     	Point curMinp = curPiece.getMinp();
     	Point curLoc = curPiece.getLocation();
+    	
     	curPiece.layout(curLoc.x, curLoc.y, curLoc.x + curPiece.getWidth(), curLoc.y + curPiece.getHeight());
     	
-    	FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) curPiece.getLayoutParams();
-    	alp.gravity = Gravity.TOP|Gravity.LEFT;
-		alp.leftMargin = curLoc.x;
-		alp.topMargin = curLoc.y;
-		curPiece.setLayoutParams(alp);
-		
+    	if (curPiece.getParent() instanceof FrameLayout) {
+	    	FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) curPiece.getLayoutParams();
+	    	alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
+			alp.leftMargin = curLoc.x;
+			alp.topMargin = curLoc.y;
+			curPiece.setLayoutParams(alp);
+    	}
+    	
+    	curPiece.postInvalidate();
 		puzzle.bringChildToFront(curPiece);   //把该视图置于其他所有子视图之上
-		curPiece.postInvalidate();
 		
     	int id = curPiece.getId();
     	int curRow = id / line;
@@ -561,14 +571,14 @@ public class PintuGameActivity extends BaseGameActivity {
     
     @SuppressLint("NewApi")
     private void setOpacity(ArrayList<PieceView> pieces) {
-    	if (android.os.Build.VERSION.SDK_INT < 11) return; 
+    	if (android.os.Build.VERSION.SDK_INT < 16) return; 
     	for (int i=0; i<allPieces.size(); i++) {
     		PieceView piece = (PieceView) allPieces.get(i);
     		if (pieces.contains(piece) || piece.isTraverse()) {
-    			piece.setAlpha(255);
+    			piece.setImageAlpha(255);
     			//piece.setAlpha(1f);
     		} else {
-    			piece.setAlpha(210);
+    			piece.setImageAlpha(210);
     			//piece.setAlpha(0.95f);
     		}
         	

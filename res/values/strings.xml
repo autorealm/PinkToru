@@ -28,6 +28,7 @@
     <string name="event">活动</string>
     <string name="ranking">排行榜</string>
     <string name="refresh">刷新</string>
+    <string name="update_list">更新列表</string>
     <string name="no_item_in_list">无列表项目，请刷新重试</string>
     <string name="change_prize">更换奖品</string>
     <string name="message_box">信箱</string>

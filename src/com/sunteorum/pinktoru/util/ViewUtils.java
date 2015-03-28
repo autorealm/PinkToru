@@ -39,6 +39,16 @@ public class ViewUtils {
 	    void onTouch(View v, MotionEvent event);
 	}
 
+	public static int px2dip(Context context, float px) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int)(px / scale + 0.5f);
+	}
+	
+	public static int dip2px(Context context, float dip) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int)(dip * scale + 0.5f);
+	}
+	
 	public static class TouchGrowListener implements OnTouchListener {
 		public final int GROW_NONE = (1 << 0);
 		public final int GROW_LEFT = (1 << 1);
@@ -76,7 +86,7 @@ public class ViewUtils {
 				}
 				lctime = System.currentTimeMillis();
 				
-	    		edge = getHit(getViewScreenRect(arg0), arg1.getRawX(), arg1.getRawY());
+	    		edge = getHit(getViewRectInScreen(arg0), arg1.getRawX(), arg1.getRawY());
 	    		
 	    		mode = 0;
 	    	break;
@@ -257,22 +267,21 @@ public class ViewUtils {
 	}
 	
 	public static class TouchScaleListener implements OnTouchListener {
-
 		private PointF startPoint = new PointF();
-    	private Matrix matrix = new Matrix();
-    	private Matrix currentMaritx = new Matrix();
-
-    	private int mode = 0; // 用于标记模式 
-    	private static final int DRAG = 1; // 拖动 
-    	private static final int ZOOM = 2; // 放大 
-    	private float startDis = 0;
-    	private PointF midPoint; // 中心点 
-    	
-    	private onTouchCallBack callback;
-    	
-    	public TouchScaleListener(onTouchCallBack callback) {
-    		this.callback = callback;
-    	}
+		private Matrix matrix = new Matrix();
+		private Matrix currentMaritx = new Matrix();
+		
+		private int mode = 0; // 用于标记模式 
+		private static final int DRAG = 1; // 拖动 
+		private static final int ZOOM = 2; // 放大 
+		private float startDis = 0;
+		private PointF midPoint; // 中心点 
+		
+		private onTouchCallBack callback;
+		
+		public TouchScaleListener(onTouchCallBack callback) {
+			this.callback = callback;
+		}
     	
     	@Override 
     	public boolean onTouch(View v, MotionEvent event) {
@@ -369,8 +378,8 @@ public class ViewUtils {
 	    	break;
 	    	case MotionEvent.ACTION_MOVE: // 移动事件 
 		    	if (mode == DRAG) {
-			    	int dx = (int) (event.getX() - startPoint.x);
-			    	int dy = (int) (event.getY() - startPoint.y);
+			    	int dx = (int) (event.getX() - startPoint.x + 0.5f);
+			    	int dy = (int) (event.getY() - startPoint.y + 0.5f);
 			    	
 			    	if (v.getParent() instanceof FrameLayout) {
 				    	int left = v.getLeft() + dx;
@@ -432,25 +441,25 @@ public class ViewUtils {
 	}
 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            Log.i("setListViewHeightBasedOnChildren", "NULL");
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        if (params.height < (height - 12) || params.height > (height + 12)) {
-        	params.height = height;
-        	listView.setLayoutParams(params);
-        }
-        
+	    ListAdapter listAdapter = listView.getAdapter();
+	    if (listAdapter == null) {
+	        Log.i("setListViewHeightBasedOnChildren", "NULL");
+	        return;
+	    }
+	    int totalHeight = 0;
+	    for (int i = 0; i < listAdapter.getCount(); i++) {
+	        View listItem = listAdapter.getView(i, null, listView);
+	        listItem.measure(0, 0);
+	        totalHeight += listItem.getMeasuredHeight();
+	    }
+	    
+	    ViewGroup.LayoutParams params = listView.getLayoutParams();
+	    int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+	    if (params.height < (height - 12) || params.height > (height + 12)) {
+	    	params.height = height;
+	    	listView.setLayoutParams(params);
+	    }
+	    
 	}
 
 	@SuppressWarnings("deprecation")
@@ -477,20 +486,20 @@ public class ViewUtils {
 	}
 	
 	private static float distance(MotionEvent event) {
-    	// 两根线的距离 
-    	float dx = event.getX(1) - event.getX(0);
-    	float dy = event.getY(1) - event.getY(0);
-    	return FloatMath.sqrt(dx * dx + dy * dy);
-	}
-
-	private static PointF mid(MotionEvent event) {
-		//计算两点之间中心点的距离 
-    	float midx = event.getX(1) + event.getX(0);
-    	float midy = event.getY(1) - event.getY(0);
-    	
-    	return new PointF(midx / 2, midy / 2);
+		// 两根线的距离 
+		float dx = event.getX(1) - event.getX(0);
+		float dy = event.getY(1) - event.getY(0);
+		return FloatMath.sqrt(dx * dx + dy * dy);
 	}
 	
+	private static PointF mid(MotionEvent event) {
+		//计算两点之间中心点的距离 
+		float midx = event.getX(1) + event.getX(0);
+		float midy = event.getY(1) - event.getY(0);
+		
+		return new PointF(midx / 2, midy / 2);
+	}
+
     /**
      * 改变View的Z轴
      * @param v View (注意父Layout)
@@ -517,72 +526,119 @@ public class ViewUtils {
     		view.bringToFront();
     	}
     	
-    	flay.invalidate();
+    	flay.postInvalidate();
+    }
+    
+    public static void layout(View v, int dx, int dy) {
+    	int l = v.getLeft() + dx;
+		int t = v.getTop() + dy;
+		int r = l + v.getWidth();
+		int b = t + v.getHeight();
+		
+		v.layout(l, t, r, b);
+		v.postInvalidate();
     }
     
     /**
-     * 移动View至指定坐标（布局是FrameLayout）
+     * 移动View至指定坐标
      * @param v View
      * @param left 顶点X坐标
      * @param top 顶点Y坐标
      */
     public static void moveView(final View v, int left, int top) {
-    	FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) v.getLayoutParams();
-        if (left > -1) lp.leftMargin = left;
-        if (top > -1) lp.topMargin = top;
-        lp.gravity = Gravity.TOP|Gravity.LEFT;
-        
-        v.setLayoutParams(lp);
-        
+    	if (v.getParent() instanceof FrameLayout) {
+	    	FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) v.getLayoutParams();
+	        if (left > -1) lp.leftMargin = left;
+	        if (top > -1) lp.topMargin = top;
+	        lp.gravity = Gravity.TOP|Gravity.LEFT;
+	        
+	        v.setLayoutParams(lp);
+    	} else {
+    		ViewGroup.LayoutParams vlp = v.getLayoutParams();
+    		int w = vlp.width;
+    		int h = vlp.height;
+    		
+    		v.layout(left, top, w + left, top - h);
+			v.postInvalidate();
+    	}
     }
 
+    /**
+     * 缩放View
+     * @param v
+     * @param scale 缩放率
+     */
 	public static void zoomView(View v, float scale) {
-		FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) v.getLayoutParams();
-		int w = rlp.width;
-		int h = rlp.height;
+		ViewGroup.LayoutParams vlp = v.getLayoutParams();
+		int w = vlp.width;
+		int h = vlp.height;
 		if (w == 0) w = 1;
 		if (h == 0) h = 1;
-		int w1 = (int) ((float)w * scale);
-		int h1 = (int) ((float)h * scale);
-		if (checkRect(w1, w) && checkRect(h1, h)) {
-			rlp.width = w1;
-			rlp.height = h1;
-			rlp.leftMargin = rlp.leftMargin + (w - rlp.width) / 2;
-			rlp.topMargin = rlp.topMargin + (h - rlp.height) / 2;
-			v.setLayoutParams(rlp);
-			v.destroyDrawingCache();
+		int w1 = (int) ((float)w * scale + 0.5);
+		int h1 = (int) ((float)h * scale + 0.5);
+		
+		if (v.getParent() instanceof FrameLayout) {
+			FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) v.getLayoutParams();
 			
+			if (checkRect(w1, w) && checkRect(h1, h)) {
+				rlp.width = w1;
+				rlp.height = h1;
+				rlp.leftMargin = (int) Math.round(rlp.leftMargin + (float) ((w - rlp.width) / 2));
+				rlp.topMargin = (int) Math.round(rlp.topMargin + (float) ((h - rlp.height) / 2));
+				v.setLayoutParams(rlp);
+				v.destroyDrawingCache();
+				
+			}
+		} else {
+			if (checkRect(w1, w) && checkRect(h1, h)) {
+				float dx = (float) ((w - w1) / 2);
+				float dy = (float) ((h - h1) / 2);
+				int l = (int) Math.round(v.getLeft() + dx);
+				int t = (int) Math.round( v.getTop() + dy);
+				int r = (int) Math.round(v.getRight() - dx);
+				int b = (int) Math.round( v.getBottom() - dy);
+				v.layout(l, t, r, b);
+				v.postInvalidate();
+			}
 		}
 	}
 
     /**
      * 使图案View居中显示
-     * @param flay 父布局
      * @param view View
      * @param fill 是否使View适应布局区域显示
      */
-    public static void setAlignCenter(FrameLayout flay, View view, boolean fill) {
-    	int sheight = flay.getHeight();
-    	int swidth = flay.getWidth();
+    public static void alignCenter(View view, boolean fill) {
+    	ViewGroup.LayoutParams vlp = view.getLayoutParams();
+    	int sheight = vlp.height;
+    	int swidth = vlp.width;
     	int h = view.getHeight();
     	int w = view.getWidth();
     	if (fill) {
 	    	if ((float) (w * ((float) sheight / swidth)) > h) {
-	    		h = (int) ((float)swidth * h / w + 0.5);
+	    		h = (int) ((float)swidth * h / w + 0.5f);
 	    		w = swidth;
 	    	} else {
-	    		w = (int) ((float)sheight * w / h + 0.5);
+	    		w = (int) ((float)sheight * w / h + 0.5f);
 	    		h = sheight;
 	    	}
     	}
+    	int left = (int) ((swidth - w) / 2 + 0.5f);
+    	int top = (int) ((sheight - h) / 2 + 0.5f);
     	
-		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
-        lp.leftMargin = (swidth - w) / 2;
-        lp.topMargin = (sheight - h) / 2;
-        lp.gravity = Gravity.TOP|Gravity.LEFT;
-        
-        view.setLayoutParams(lp);
-        view.destroyDrawingCache();
+    	if (view.getParent() instanceof FrameLayout) {
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
+	        lp.leftMargin = left;
+	        lp.topMargin = top;
+	        lp.gravity = Gravity.TOP|Gravity.LEFT;
+	        
+	        view.setLayoutParams(lp);
+	        view.destroyDrawingCache();
+    	} else {
+    		
+    		view.layout(left, top, w + left, top - h);
+			view.postInvalidate();
+    	}
     }
     
     /**
@@ -603,7 +659,7 @@ public class ViewUtils {
 	    		w = a * w;
 	    	} else {
 	    		s = (float) width / w;
-	    		h = (int) ((float)width * h / w + 0.5);
+	    		h = (int) ((float)width * h / w + 0.5f);
 	    		w = width;
 	    	}
     	} else {
@@ -613,7 +669,7 @@ public class ViewUtils {
 	    		w = a * w;
 	    	} else {
 	    		s = (float) height / h;
-	    		w = (int) ((float)height * w / h + 0.5);
+	    		w = (int) ((float)height * w / h + 0.5f);
 	    		h = height;
 	    	}
     	}
@@ -621,7 +677,11 @@ public class ViewUtils {
     	return s;
     }
 
-	public static Rect getViewScreenRect(View v) {
+    public static float getSpaceScale(Rect pr, Rect sr, int a) {
+    	return getSpaceScale(pr.width(), pr.height(), sr.width(), sr.height(), a);
+    }
+    
+	public static Rect getViewRectInScreen(View v) {
 		final int w = v.getWidth();
 		final int h = v.getHeight();
 		Rect r = new Rect();
@@ -662,8 +722,8 @@ public class ViewUtils {
 		//if (d < 48 || d > 2048) return false;
 		return true;
 	}
-
-    public static int getTouchViewPostion(int x, int y, View[] vs) {
+	
+	public static int getTouchViewPosition(int x, int y, View[] vs) {
 		if (vs == null || vs.length < 2) return 0;
 		
 		for (int i = 0; i < vs.length; i++) {

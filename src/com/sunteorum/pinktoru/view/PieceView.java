@@ -1,8 +1,6 @@
 package com.sunteorum.pinktoru.view;
 
 import com.sunteorum.pinktoru.entity.Piece;
-import com.sunteorum.pinktoru.util.ImageUtils;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,13 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.widget.ImageView;
 
-public class PieceView extends SurfaceView implements SurfaceHolder.Callback {
+public class PieceView extends ImageView {
 	protected SurfaceHolder holder;
 	protected Piece piece;
 	
@@ -47,40 +44,19 @@ public class PieceView extends SurfaceView implements SurfaceHolder.Callback {
 	public PieceView(Context context, Piece piece) {
 		super(context);
 		this.piece = piece;
-		holder = this.getHolder();
-		holder.addCallback(this);
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		// TODO Auto-generated method stub
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		
 	}
 
 	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
-		new Thread(new GameThread()).start();
+	public void setImageBitmap(Bitmap bm) {
+		super.setImageBitmap(bm);
 		
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
-	public void setImageBitmap(Bitmap bmp) {
-		this.mBitmap = bmp;
-	}
-
-	public Bitmap getImageBitmap(Bitmap bmp) {
-		return mBitmap;
-	}
-	
-	public void setImageDrawable(Drawable draw) {
-		this.mBitmap = ImageUtils.DrawableToBitmap(draw);
+		this.mBitmap = bm;
 	}
 
 	public class GameThread extends Thread {
@@ -105,21 +81,21 @@ public class PieceView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		if (p == null) {
 			p = new Paint();
-	        p.setColor(Color.GREEN);
-	        p.setStyle(Paint.Style.STROKE);
-	        p.setStrokeWidth(16f);
-	        p.setAntiAlias(true);
+			p.setColor(Color.GREEN);
+			p.setStyle(Paint.Style.STROKE);
+			p.setStrokeWidth(16f);
+			p.setAntiAlias(true);
 		}
+
+		Bitmap bitmap = Bitmap.createBitmap(b.getWidth(), b.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		canvas.drawBitmap(b.extractAlpha(), 0, 0, p);
 		
-        Bitmap bitmap = Bitmap.createBitmap(b.getWidth(), b.getHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(b.extractAlpha(), 0, 0, p);
-        
-        StateListDrawable sld = new StateListDrawable();
-        sld.addState(new int[]{android.R.attr.state_pressed}, new BitmapDrawable(this.getResources(), bitmap));
-        sld.addState(new int[]{-android.R.attr.state_pressed}, new BitmapDrawable(this.getResources(), b));
-        
-        this.setImageDrawable(sld);
+		StateListDrawable sld = new StateListDrawable();
+		sld.addState(new int[]{android.R.attr.state_pressed}, new BitmapDrawable(this.getResources(), bitmap));
+		sld.addState(new int[]{-android.R.attr.state_pressed}, new BitmapDrawable(this.getResources(), b));
+		
+		this.setImageDrawable(sld);
     }
 
 	
@@ -182,6 +158,6 @@ public class PieceView extends SurfaceView implements SurfaceHolder.Callback {
 	public void setTraverse(boolean traverse) {
 		this.traverse = traverse;
 	}
-	
+
 	
 }

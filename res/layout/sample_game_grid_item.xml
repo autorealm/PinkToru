@@ -43,6 +43,7 @@
             android:layout_height="64dp"
             android:contentDescription="@string/label_game_image"
             android:padding="4dp"
+            android:scaleType="centerInside"
             android:src="@drawable/umlc_m1" />
 
         <LinearLayout

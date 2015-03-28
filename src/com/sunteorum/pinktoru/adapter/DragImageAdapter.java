@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import com.sunteorum.pinktoru.R;
 import com.sunteorum.pinktoru.entity.Piece;
+import com.sunteorum.pinktoru.util.ViewUtils;
 import com.sunteorum.pinktoru.view.GalleryDrag;
 
 import android.content.Context;
@@ -64,10 +65,12 @@ public class DragImageAdapter extends BaseAdapter {
 		if (convertView == null) {
 			iv = new ImageView(mContext);
 			iv.setAdjustViewBounds(true);
-			iv.setLayoutParams(new GalleryDrag.LayoutParams(parent.getHeight() - 16, parent.getHeight() - 16));
+			int wh = parent.getHeight() - ViewUtils.dip2px(mContext, 8);
+			iv.setLayoutParams(new GalleryDrag.LayoutParams(wh, wh));
 			iv.setImageBitmap(mImageList.get(position).getBmpPiece());
 			iv.setBackgroundResource(R.drawable.itemshape_1);
-			iv.setPadding(4, 4, 4, 4);
+			int sc = ViewUtils.dip2px(mContext, 2);
+			iv.setPadding(sc, sc, sc, sc);
 			convertView = iv;
 		} else {
 			iv = (ImageView) convertView;

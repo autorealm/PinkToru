@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TABLE_LEVEL = "pt_level";
 	public static final String TABLE_GAME = "pt_game";
 	public static final String TABLE_RECORD = "pt_record";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	private static final String KEY_ID = "_id";
 	
@@ -62,25 +62,25 @@ public class DBHelper extends SQLiteOpenHelper {
 		String GAME_TABLE_CREATE_SQL = "create table if not exists " + TABLE_GAME + " (" +
 				KEY_ID + " integer primary key autoincrement, " +
 				"game_id integer not null, " +
-				"game_name tinytext not null, " +
+				"game_name varchar(64) not null, " +
 				"level text not null, " +
 				"reward_pts integer default 2, " +
 				"price_pts integer default 0, " +
 				"image_id integer default 0, " +
-				"image_uri tinytext default null, " +
-				"icon_uri tinytext default null, " +
+				"image_uri varchar(255) default null, " +
+				"icon_uri varchar(255) default null, " +
 				"desc text ); ";
 		String LEVEL_TABLE_CREATE_SQL = "create table if not exists " + TABLE_LEVEL + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
 				"level_id integer not null, " +
-				"piece_row tinyint not null, " +
-				"piece_line tinyint not null, " +
-				"game_mode tinyint default null, " +
+				"piece_row smallint not 3, " +
+				"piece_line smallint not 3, " +
+				"game_mode smallint default 1, " +
 				"target_value integer default null, " +
 				"gift_pts integer default 1, " +
 				"image_id integer default 0, " +
-				"image_uri tinytext default null, " +
-				"cut_params tinytext default null, " +	//cut_flag,cut_alt,render_flag,edge_width,shadow_offset
+				"image_uri text default null, " +
+				"ext_params text default null, " +	//cut_flag,cut_alt,render_flag,edge_width,shadow_offset
 				"add_data text default null, " +
 				"desc text ); ";
 		String RECORD_TABLE_CREATE_SQL = "create table if not exists " + TABLE_RECORD + " (" + 
@@ -122,6 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put("level_id", le.getLevelId());
 			values.put("piece_row", le.getPieceRow());
 			values.put("piece_line", le.getPieceLine());
+			values.put("game_mode", le.getGameMode());
 			values.put("desc", le.getLevelDesc());
 			db.insertOrThrow(TABLE_LEVEL, null, values);
 		}
