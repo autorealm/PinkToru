@@ -23,7 +23,7 @@ public class Piece {
 	private ArrayList<Point> apLeft = new ArrayList<Point>(4);
 
 	private Bitmap bmpPiece;
-	private Bitmap bmpEdge;
+	private Bitmap obmPiece;
 	
 	private int x = 0, y = 0;
 	private PieceGroup group = null;
@@ -132,12 +132,12 @@ public class Piece {
 		this.bmpPiece = bmpPiece;
 	}
 
-	public Bitmap getBmpEdge() {
-		return bmpEdge;
+	public Bitmap getObmPiece() {
+		return obmPiece;
 	}
 
-	public void setBmpEdge(Bitmap bmpEdge) {
-		this.bmpEdge = bmpEdge;
+	public void setObmPiece(Bitmap bmp) {
+		this.obmPiece = bmp;
 	}
 
 	public int getX() {

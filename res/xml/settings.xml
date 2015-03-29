@@ -6,6 +6,14 @@
 			android:title="移动判断"
 			android:summary="是否在碎片移动时进行拼合判断" >
 		</CheckBoxPreference>
+		<CheckBoxPreference android:key="trainmove"
+			android:title="移动透明"
+			android:summary="是否在移动时透明显示其他碎片" >
+		</CheckBoxPreference>
+		<CheckBoxPreference android:key="withquad"
+			android:title="曲线风格"
+			android:summary="是否以曲线方式分割碎片" >
+		</CheckBoxPreference>
 		<CheckBoxPreference android:key="showedge"
 			android:title="显示边框"
 			android:summary="是否显示碎片的虚线边框" >
@@ -16,7 +24,7 @@
 			android:key="gamemode"
 			android:title="游戏模式"
 			android:dialogTitle="选择游戏模式"
-			android:defaultValue="0"
+			android:defaultValue="1"
 			android:entries="@array/game_mode_key"
 			android:entryValues="@array/game_mode_value" >
 		</ListPreference>
@@ -54,14 +62,8 @@
         <EditTextPreference android:key="pieceshadowoffset"
 			android:title="碎片阴影范围"
 			android:summary="请输入碎片阴影范围（0-10）"
-			android:defaultValue="5"
+			android:defaultValue="3"
 			android:dialogTitle="输入范围值">
-        </EditTextPreference>
-        <EditTextPreference android:key="pieceshadowcolor"
-			android:title="碎片阴影颜色"
-			android:summary="请输入碎片颜色值（-?-?）"
-			android:defaultValue="-12303292"
-			android:dialogTitle="输入颜色值">
         </EditTextPreference>
 	</PreferenceCategory>
 	

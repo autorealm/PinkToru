@@ -34,7 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	protected DBHelper (Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		mDatabase = this.getReadableDatabase();
+		mDatabase = this.getWritableDatabase();
 		
 	}
 	
@@ -73,9 +73,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		String LEVEL_TABLE_CREATE_SQL = "create table if not exists " + TABLE_LEVEL + " (" + 
 				KEY_ID + " integer primary key autoincrement, " +
 				"level_id integer not null, " +
-				"piece_row smallint not 3, " +
-				"piece_line smallint not 3, " +
-				"game_mode smallint default 1, " +
+				"piece_row smallint default 3, " +
+				"piece_line smallint default 3, " +
+				"game_mode smallint default 0, " +
 				"target_value integer default null, " +
 				"gift_pts integer default 1, " +
 				"image_id integer default 0, " +

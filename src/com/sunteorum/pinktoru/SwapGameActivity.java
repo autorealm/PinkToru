@@ -124,7 +124,8 @@ public class SwapGameActivity extends BaseGameActivity {
 		handle.setBackgroundResource(R.drawable.bannershape_1);
 		
 		//强制使用纯矩形分图方式
-		app.setPieceCutFlag(0);
+		//app.setPieceCutFlag(0);
+		//app.setPieceEdgeWidth(1);
 		INACCURACY = 0;
 		
 		Log.i(tag, String.format("", System.currentTimeMillis()));

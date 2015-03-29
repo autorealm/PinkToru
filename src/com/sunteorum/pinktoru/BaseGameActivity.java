@@ -200,7 +200,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 				if (Piece.class.isInstance(p.getTag())) {
 					Piece piece = (Piece) p.getTag();
 					if (!piece.getBmpPiece().isRecycled()) piece.getBmpPiece().recycle();
-					if (!piece.getBmpEdge().isRecycled()) piece.getBmpEdge().recycle();
+					//if (!piece.getBmpEdge().isRecycled()) piece.getBmpEdge().recycle();
 				}
 			}
 			allPieces.clear();
@@ -605,7 +605,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			pv.setTag(piece);
 			
 			pv.setPadding(0, 0, 0, 0);
-			pv.setScaleType(android.widget.ImageView.ScaleType.FIT_XY);
+			//pv.setScaleType(android.widget.ImageView.ScaleType.FIT_XY);
 			
 			pv.setImageBitmap(piece.getBmpPiece());
 			if (pv.getBackground() != null)

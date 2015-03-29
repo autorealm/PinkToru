@@ -24,15 +24,21 @@ public class PintuGameActivity extends BaseGameActivity {
 	ArrayList<PieceView> movePieces = new ArrayList<PieceView>();
 	int lastX;
 	int lastY;
+	int lastId = 0;
+	boolean duoMove = false;
 	boolean skip = false;
-	
+	boolean trainmove = true;
 	
 	@Override
 	public boolean onTouch(final View v, MotionEvent event) {
-		switch(event.getAction() & MotionEvent.ACTION_MASK) {
+		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
+			
+			if (lastId == 0)  lastId = v.getId();
+			
 			PieceView pv = (PieceView) v;
 			Bitmap bmp = pv.getDrawingCache();
+			
 			if (bmp != null && bmp.getPixel((int)event.getX(), (int)event.getY()) == 0) {
 				skip = true;
 				return false;
@@ -50,14 +56,17 @@ public class PintuGameActivity extends BaseGameActivity {
 			
 			break;
 		case MotionEvent.ACTION_MOVE:
-			if (skip == true) return true;
+			int dx = 0, dy = 0;
 			
-			int dx =(int) event.getRawX() - lastX;
-			int dy =(int) event.getRawY() - lastY;
+			if (skip == true) return false;
+			
+			dx =(int) event.getRawX() - lastX;
+			dy =(int) event.getRawY() - lastY;
+			
 			
 			movePieces.clear();
 			checkMove((PieceView)v, dx, dy, movePieces);
-			//setOpacity(movePieces);
+			if (trainmove) setOpacity(movePieces);
 			
 			runOnUiThread(new Runnable() {
 
@@ -83,7 +92,10 @@ public class PintuGameActivity extends BaseGameActivity {
 			
 			break;
 		case MotionEvent.ACTION_UP:
-			if (skip == true) return true;
+			lastId = 0;
+			
+			if (skip == true) return false;
+			
 			//先取得碎片吸附的路径，然后移动碎片
 			cleanPath();
 			
@@ -95,12 +107,22 @@ public class PintuGameActivity extends BaseGameActivity {
 			//吸附后，显示到前端
 			//displayFront(firstPiece);
 			
-			//setOpacity(allPieces);
+			if (trainmove) setOpacity(allPieces);
 			
 			//判断是否完成
 			hasComplete();
 			
-			break;        		
+			break;
+		case MotionEvent.ACTION_POINTER_DOWN:
+			duoMove = true;
+			
+			return false;
+			
+		case MotionEvent.ACTION_POINTER_UP:
+			duoMove = false;
+			
+			return false;
+			
 		}
 
 		return true;
@@ -125,6 +147,8 @@ public class PintuGameActivity extends BaseGameActivity {
 		handle.setBackgroundResource(R.drawable.backgroud_2);
 		puzzle.setBackgroundDrawable(background_drawalbe);
 		puzzle.setKeepScreenOn(true);
+		
+		trainmove = app.isTrainmove();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -259,9 +283,8 @@ public class PintuGameActivity extends BaseGameActivity {
 			b = screenHeight;
 			t = b - curPIB.getHeight();
 		}
-		*/
-    	
-		//curPIB.layout(l, t, r, b);
+		
+		curPIB.layout(l, t, r, b);*/
     	
     	movePieces.add(curPIB);
     	
@@ -549,9 +572,11 @@ public class PintuGameActivity extends BaseGameActivity {
     		}
 
     	}
+    	
     	if (firstPiece == null) {
     		firstPiece = v;
     	}
+    	
     	return firstPiece;
     	
     }
@@ -562,7 +587,7 @@ public class PintuGameActivity extends BaseGameActivity {
      */
     private void displayLast(int num) {
     	int last = row * line;
-    	for (int i=0; i<allPieces.size(); i++) {
+    	for (int i = 0; i < allPieces.size(); i++) {
     		PieceView piece = (PieceView) allPieces.get(i);
     		if (piece.isTraverse()) {
     			
@@ -571,8 +596,8 @@ public class PintuGameActivity extends BaseGameActivity {
     			
     		}
     	}
-    	if (last <= Math.round(row * line * 1/3)) {
-    		for (int i=0; i<allPieces.size(); i++) {
+    	if (last <= Math.round(row * line * 1/5)) {
+    		for (int i = 0; i < allPieces.size(); i++) {
     			PieceView piece = (PieceView) allPieces.get(i);
         		if (!piece.isTraverse()) {
         			puzzle.bringChildToFront(piece);   //把该视图置于其他所有子视图之上
@@ -586,15 +611,17 @@ public class PintuGameActivity extends BaseGameActivity {
     
     @SuppressLint("NewApi")
     private void setOpacity(ArrayList<PieceView> pieces) {
-    	if (android.os.Build.VERSION.SDK_INT < 16) return; 
+    	
     	for (int i=0; i<allPieces.size(); i++) {
     		PieceView piece = (PieceView) allPieces.get(i);
     		if (pieces.contains(piece) || piece.isTraverse()) {
-    			piece.setImageAlpha(255);
-    			//piece.setAlpha(1f);
+    			if (android.os.Build.VERSION.SDK_INT < 11)
+    			piece.setPieceAlpha(255); //piece.setImageAlpha(255);
+    			else piece.setAlpha(1f);
     		} else {
-    			piece.setImageAlpha(210);
-    			//piece.setAlpha(0.95f);
+    			if (android.os.Build.VERSION.SDK_INT < 11)
+    			piece.setPieceAlpha(200); //piece.setImageAlpha(200);
+    			else piece.setAlpha(0.92f);
     		}
         	
     	}

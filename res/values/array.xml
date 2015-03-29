@@ -26,10 +26,10 @@
 	</string-array>
 	
 	<string-array name="piece_cut_key">
-	    <item>矩形切图方式</item>
-		<item>普通凹凸切图方式</item>
-		<item>雪花状切图方式</item>
-		<item>积木状切图方式</item>
+	    <item>矩形</item>
+		<item>普通凹凸</item>
+		<item>雪花状</item>
+		<item>积木状</item>
 	</string-array>
 
 	<string-array name="piece_render_value">
@@ -38,8 +38,8 @@
 	</string-array>
 	
 	<string-array name="piece_render_key">
-		<item>像素填充渲染算法</item>
-		<item>路径切图渲染算法</item>
+		<item>像素填充算法</item>
+		<item>路径切图算法</item>
 	</string-array>
 
 </resources>

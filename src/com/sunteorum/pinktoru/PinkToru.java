@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -52,7 +51,9 @@ public class PinkToru extends Application {
 	private long gameTime = 0;	//同一游戏累计时间
 	
 	private boolean absinmove = true;	//是否移动时进行拼合判断
-	private boolean showedge = false;
+	private boolean trainmove = false;	//是否移动时透明其他碎片
+	private boolean showedge = false;	//是否显示碎片的虚线边框
+	private boolean withquad = true;	//碎片曲线分割方式
 	
 	private int gameMode = 1;	//游戏模式
 	
@@ -60,7 +61,6 @@ public class PinkToru extends Application {
 	private int pieceRenderFlag = 1;	//碎片渲染方式
 	private int pieceEdgeWidth = 16;	//碎片边缘宽度
 	private int pieceShadowOffset = 3;	//碎片阴影偏移量
-	private int pieceShadowColor = Color.DKGRAY;	//碎片阴影颜色
 	private int pieceKochCurveN = 2;
 	
 	/** 异步任务列表  */
@@ -96,17 +96,18 @@ public class PinkToru extends Application {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
 		absinmove = prefs.getBoolean("absinmove", true);
+		trainmove = prefs.getBoolean("trainmove", false);
 		showedge = prefs.getBoolean("showedge", false);
+		withquad = prefs.getBoolean("withquad", true);
 		
 		try {
-			gameMode = Integer.parseInt(prefs.getString("gamemode", "0"));
+			gameMode = Integer.parseInt(prefs.getString("gamemode", "1"));
 			pieceCutFlag = Integer.parseInt(prefs.getString("piececutflag", "0"));
 			pieceRenderFlag = Integer.parseInt(prefs.getString("piecerenderflag", "1"));
 			
 			pieceKochCurveN = Integer.parseInt(prefs.getString("piecekochcurven", "2"));
 			pieceEdgeWidth = Integer.parseInt(prefs.getString("pieceedgewidth", "16"));
 			pieceShadowOffset = Integer.parseInt(prefs.getString("pieceshadowoffset", "3"));
-			pieceShadowColor = Integer.parseInt(prefs.getString("pieceshadowcolor", "" + Color.DKGRAY));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,6 +141,8 @@ public class PinkToru extends Application {
 	
 	public Class<?> getGameClass(int gameMode) {
 		Class<?> GAME = PintuGameActivity.class;
+		if (gameMode == 0) gameMode = this.gameMode;
+		
 		if (gameMode == 1) {
 			GAME = PintuGameActivity.class;
 		} else if (gameMode == 2) {
@@ -149,6 +152,8 @@ public class PinkToru extends Application {
 		} else if (gameMode == 10) {
 			GAME = PokeGameActivity.class;
 		}
+		
+		this.gameMode = gameMode;
 		
 		return GAME;
 	}
@@ -202,12 +207,28 @@ public class PinkToru extends Application {
 		this.absinmove = absinmove;
 	}
 
+	public boolean isTrainmove() {
+		return trainmove;
+	}
+
+	public void setTrainmove(boolean trainmove) {
+		this.trainmove = trainmove;
+	}
+
 	public boolean isShowedge() {
 		return showedge;
 	}
 
 	public void setShowedge(boolean showedge) {
 		this.showedge = showedge;
+	}
+
+	public boolean isWithquad() {
+		return withquad;
+	}
+
+	public void setWithquad(boolean withquad) {
+		this.withquad = withquad;
 	}
 
 	public int getGameMode() {
@@ -219,6 +240,9 @@ public class PinkToru extends Application {
 	}
 
 	public int getPieceCutFlag() {
+		if (this.gameMode == 3)
+			return 0; //组图模式 强制矩形
+		
 		return pieceCutFlag;
 	}
 
@@ -235,6 +259,9 @@ public class PinkToru extends Application {
 	}
 
 	public int getPieceEdgeWidth() {
+		if (this.gameMode == 3)
+			return 1; //组图模式强制边框
+		
 		return pieceEdgeWidth;
 	}
 
@@ -248,14 +275,6 @@ public class PinkToru extends Application {
 
 	public void setPieceShadowOffset(int pieceShadowOffset) {
 		this.pieceShadowOffset = pieceShadowOffset;
-	}
-
-	public int getPieceShadowColor() {
-		return pieceShadowColor;
-	}
-
-	public void setPieceShadowColor(int pieceShadowColor) {
-		this.pieceShadowColor = pieceShadowColor;
 	}
 
 	public int getPieceKochCurveN() {

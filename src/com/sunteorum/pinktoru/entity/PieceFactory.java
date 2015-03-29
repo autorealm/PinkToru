@@ -25,13 +25,15 @@ public class PieceFactory {
 	Context mContext;
 	private int PIECE_CUT_FLAG = 0;
 	private int SHADOW_OFFSET = 3;
-	private int SHADOW_COLOR = Color.DKGRAY;
 	private int RENDER_FLAG = 1;
 	private int PIECE_EDGE_WIDTH = 16;
 	private int KOCH_CURVE_N = 2;
+	private boolean QUAD_WAY = true;
 	
 	private int _D = 12; //比率系数，默认12
-	private int _W = 6; //碎片凹凸系数，占边界长度的百分比，默认4
+	private int _W = 4; //碎片凹凸系数，占边界长度的百分比，默认4
+	
+	private int SHADOW_COLOR = Color.argb(120, 60, 60, 60);
 	
 	public enum Place {
 		Right, Feet;
@@ -88,6 +90,11 @@ public class PieceFactory {
 		_row = row;
 		_line = line;
 		
+		if (PIECE_CUT_FLAG == 1) {
+			if (KOCH_CURVE_N > 2) _W = 6;
+			else _W = 4;
+		}
+		
 		bitmapCut();
 	}
 	
@@ -99,7 +106,7 @@ public class PieceFactory {
 		_pieceOW = minWH / _W;
 		_pieceOH = minWH / _W;
 		
-		noPicPaint.setColor(Color.GRAY);
+		noPicPaint.setColor(Color.DKGRAY);
 		noPicPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 		noPicPaint.setStyle(Paint.Style.FILL_AND_STROKE);  //实心填充
 		noPicPaint.setStrokeWidth(1f); //外框宽度
@@ -112,14 +119,14 @@ public class PieceFactory {
 		edgePaint.setColor(Color.LTGRAY);
 		//edgePaint.setARGB(120, 60, 60, 60);
 		edgePaint.setStyle(Paint.Style.STROKE);
-		edgePaint.setStrokeWidth((PIECE_CUT_FLAG != 1)?0:PIECE_EDGE_WIDTH);
+		edgePaint.setStrokeWidth(PIECE_EDGE_WIDTH);
 		edgePaint.setAntiAlias(true);
 		if (RENDER_FLAG != 0) edgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
 		else edgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));
 		
 		//alphaPaint.setPathEffect(new CornerPathEffect(10));
-		alphaPaint.setColor(Color.DKGRAY);
-		alphaPaint.setStyle(Paint.Style.STROKE);
+		alphaPaint.setColor(Color.TRANSPARENT);
+		alphaPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		alphaPaint.setStrokeWidth(1f);
 		alphaPaint.setAntiAlias(true);
 		
@@ -172,8 +179,6 @@ public class PieceFactory {
 				setMinAndMaxPoint(piece);
 				
 				setPieceBitmap(piece);
-				
-				if (RENDER_FLAG == 0) fillPieceWithBitmap(piece);
 				
 				//addEdge(piece);
 			}
@@ -560,10 +565,13 @@ public class PieceFactory {
 	/**
 	 * 给每个piece蒙版填充像素，得到拼图碎片piece
 	 */
-	private void fillPieceWithBitmap(Piece piece) {
-		Bitmap pieceEdge = piece.getBmpEdge();
-		Bitmap pieceBit = piece.getBmpPiece();
+	private void fillPieceWithBitmap(Piece piece, Bitmap pieceBit) {
+		//Bitmap pieceBit = piece.getBmpPiece();
 		Point minp = piece.getMinp();
+		Point maxp = piece.getMaxp();
+		
+		int w = maxp.x - minp.x;
+		int h = maxp.y - minp.y;
 		
 		//拼图碎片的宽高
 		int tpieceW = pieceBit.getWidth();
@@ -571,25 +579,31 @@ public class PieceFactory {
 		
 		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1) ? 1 : SHADOW_OFFSET;
 		
-		for (int i = _d; i < tpieceW; i++) {
-			for (int j = _d; j < tpieceH; j++) {
-				if (pieceBit.getPixel(i, j) == Color.GRAY) {
-					int mBitPicPixelColor = mBitmap.getPixel(minp.x + i-_d, minp.y + j-_d);
-					if (pieceEdge.getPixel(i, j) == Color.LTGRAY) {
-						mBitPicPixelColor = changeColorToLight(mBitPicPixelColor, 0.7, 100);
-					} else if(pieceEdge.getPixel(i, j) == Color.DKGRAY) {
-						mBitPicPixelColor = Color.DKGRAY;
+		//绘制碎片的边缘
+		Bitmap pieceEdge = Bitmap.createBitmap(tpieceW, tpieceH, Config.ARGB_8888);
+		canvas.setBitmap(pieceEdge);
+		canvas.drawPath(dotPath, edgePaint);
+		canvas.save(Canvas.ALL_SAVE_FLAG);
+		canvas.restore();
+		
+		for (int i = 0; i < w - 0; i++) {
+			for (int j = 0; j < h - 0; j++) {
+				try {
+				if (pieceBit.getPixel(i + _d, j + _d) == Color.DKGRAY) {
+					int mBitPicPixelColor = mBitmap.getPixel(minp.x + i, minp.y + j);
+					
+					if (pieceEdge.getPixel(i + _d, j + _d) == Color.LTGRAY) {
+						mBitPicPixelColor = changeColorToLight(mBitPicPixelColor, 0.6, 80);
 					}
 					
-					pieceBit.setPixel(i, j, mBitPicPixelColor);
+					pieceBit.setPixel(i + _d, j + _d, mBitPicPixelColor);
+				}
+				} catch (Exception e) {
 				}
 				
 			}
 		}
         
-		piece.setBmpPiece(pieceBit);
-		piece.setPieceHeight(pieceBit.getHeight());
-		piece.setPieceWidth(pieceBit.getWidth());
 		
 	}
 	
@@ -619,6 +633,7 @@ public class PieceFactory {
 		ArrayList<Point> left = piece.getApLeft();
 		changeDotPath(left, dotPath, diff);
 		
+		
 		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 0) ? 0 : SHADOW_OFFSET;
 		dotPath.offset(_d, _d);
 		
@@ -633,32 +648,34 @@ public class PieceFactory {
 			canvas.clipPath(dotPath, Op.REPLACE);//使用路径剪切画布  
 			canvas.drawBitmap(mBitmap, new Rect(minp.x, minp.y, maxp.x, maxp.y), new Rect(_d, _d, w + _d, h + _d), noPicPaint); 
 			canvas.drawPath(dotPath, edgePaint);
+			
 		}
-		
+
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
+		
+		if (RENDER_FLAG == 0) {
+			fillPieceWithBitmap(piece, pieceBitmap);
+		}
 		
 		piece.setBmpPiece(pieceBitmap);
 		piece.setPieceHeight(pieceBitmap.getHeight());
 		piece.setPieceWidth(pieceBitmap.getWidth());
 		
-		//绘制碎片的边缘
-		Bitmap edge = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
-		canvas.setBitmap(edge);
-		canvas.drawPath(dotPath, edgePaint);
-		//canvas.drawPath(dotPath, alphaPaint);
-		canvas.save(Canvas.ALL_SAVE_FLAG);
-		canvas.restore();
-		
-		piece.setBmpEdge(edge);
 		
 		return diff;   //返回点位相差距离
 		
 	}
 	
-	//根据minp点，将绝对点位转化为相对点位
+	/**
+	 * 根据minp点，将绝对点位转化为相对点位
+	 * @param dotList
+	 * @param dotPath
+	 * @param diff
+	 */
 	private void changeDotPath(ArrayList<Point> dotList, Path dotPath, Point diff) {
 		int len = dotList.size();
+		float cx, cy;
 		ArrayList<Point> tempDot = dotList;
 		
 		for (int i = 0; i < len; i++) {
@@ -668,7 +685,19 @@ public class PieceFactory {
 			} else if (i + 1 < tempDot.size()) {
 				Point p0 = (Point) tempDot.get(i);
 				Point p1 = (Point) tempDot.get(i+1);
-				dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, p1.x-diff.x, p1.y-diff.y);
+				if (QUAD_WAY) {
+					if (i + 1 == tempDot.size() - 1) {
+						//直接连接终点
+						dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, p1.x-diff.x, p1.y-diff.y);
+					} else {
+						//以中间为控制点画曲线
+						cx = (p0.x + p1.x) / 2;
+			            cy = (p0.y + p1.y) / 2;
+			            dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, cx-diff.x, cy-diff.y);
+					}
+				} else {
+					dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, p1.x-diff.x, p1.y-diff.y);
+				}
 			}
 		}
 		
@@ -686,10 +715,10 @@ public class PieceFactory {
 	public void setPintuValue(PinkToru app) {
 		PIECE_CUT_FLAG = app.getPieceCutFlag();
 		SHADOW_OFFSET = app.getPieceShadowOffset();
-		SHADOW_COLOR = app.getPieceShadowColor();
 		RENDER_FLAG = app.getPieceRenderFlag();
 		PIECE_EDGE_WIDTH = app.getPieceEdgeWidth();
 		KOCH_CURVE_N = app.getPieceKochCurveN();
+		QUAD_WAY = app.isWithquad();
 	}
 	
 	public void setPieceCutFlag(int flag) {
@@ -716,4 +745,7 @@ public class PieceFactory {
 		KOCH_CURVE_N = n;
 	}
 	
+	public void setQuadWay(boolean q) {
+		QUAD_WAY = q;
+	}
 }

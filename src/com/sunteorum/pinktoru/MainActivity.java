@@ -45,8 +45,9 @@ public class MainActivity extends BaseActivity {
 
 		public void onAnimationEnd(Animation animation) {
 			// TODO Auto-generated method stub
-    		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    		
     		startActivity(intent);
+    		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     		
     		finish();
 		}
