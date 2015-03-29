@@ -53,7 +53,7 @@ import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer.OnDrawerScrollLis
 import com.sunteorum.pinktoru.view.PieceView;
 
 
-abstract class BaseGameActivity extends BaseActivity implements OnTouchListener {
+abstract class BaseGameActivity extends BaseActivity implements OnTouchListener, IPintuGame {
 
 	final private String tag = "GameActivity";
 	protected PinkToru app;
@@ -111,8 +111,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 		gameId = bundle.containsKey("imageId") ? bundle.getInt("gameId") : 1;
 		levelId = bundle.containsKey("levelId") ? bundle.getInt("levelId") : 0;
 		stage = bundle.containsKey("stage") ? bundle.getInt("stage") : 1;
-		row = bundle.containsKey("row") ? bundle.getInt("row") : 3;
-		line = bundle.containsKey("line") ? bundle.getInt("line") : 2;
+		row = bundle.containsKey("row") ? bundle.getInt("row") : 3 + (stage-1)*2;
+		line = bundle.containsKey("line") ? bundle.getInt("line") : 2 + (stage-1)*2;
 		imageUri = bundle.getString("imageUri");
 		
 		app = (PinkToru) getApplication();
@@ -250,7 +250,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	/**
 	 * 初始化，setContentView 设置内容界面，findViewById 找出控件
 	 */
-	abstract void init ();
+	public abstract void init ();
 	
 	protected void process() {
 		//显示正在准备游戏的进度提示框
@@ -349,7 +349,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	/**
 	 * 游戏完全加载完成时
 	 */
-	abstract void onStartGame();
+	public abstract void onStartGame();
 	
 	private void setDrawer() {
 		
@@ -525,7 +525,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	 * 正在加载游戏，进行分图处理
 	 * @param pieces
 	 */
-	abstract void onNewGame(Vector<Piece> pieces);
+	public abstract void onNewGame(Vector<Piece> pieces);
 	
 	protected void newPuzzle(String imagePath, int row, int line) {
 		Bitmap wallpaper = BitmapFactory.decodeFile(imagePath);
@@ -545,10 +545,10 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	
 	/**
 	 * 已创建一碎片
-	 * @param pib
+	 * @param pv
 	 * @param index
 	 */
-	abstract void OnCreatePiece(PieceView pib, int index);
+	public abstract void OnCreatePiece(PieceView pv, int index);
 	
 	@SuppressLint("ClickableViewAccessibility")
 	private void createPuzzle() {
@@ -562,11 +562,13 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 			Point loc = new Point(autoX, autoY);
 			pv.setLocation(loc);
 			
-			//FrameLayout.LayoutParams.WRAP_CONTENT
 			FrameLayout.LayoutParams autoParams = new FrameLayout.LayoutParams
-					(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
+					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					//(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
 			autoParams.leftMargin = (autoX);
 			autoParams.topMargin = (autoY);
+			autoParams.height =  pv.getPiece().getPieceHeight();
+			autoParams.width = pv.getPiece().getPieceWidth();
 			autoParams.gravity = Gravity.TOP|Gravity.LEFT;
 			
 			pv.setLayoutParams(autoParams);
@@ -593,7 +595,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	}
     
 	private void createAllPieceView(Vector<Piece> pieces) {
-		for(int i=0; i < pieces.size(); i++){
+		for (int i = 0; i < pieces.size(); i++) {
 			Piece piece = (Piece) pieces.get(i);
 			PieceView pv = new PieceView(this, piece);
 			
@@ -604,10 +606,13 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 			
 			pv.setPadding(0, 0, 0, 0);
 			pv.setScaleType(android.widget.ImageView.ScaleType.FIT_XY);
+			
 			pv.setImageBitmap(piece.getBmpPiece());
 			if (pv.getBackground() != null)
 				pv.getBackground().setAlpha(0);
 			
+			if (app.isShowedge())
+				pv.setBackgroundResource(R.drawable.itemshape_5);
 			
 			allPieces.add(pv);
 		}
@@ -645,7 +650,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	}
     
 	protected int getNextGameLevel() {
-		int max_level = 8;
+		int max_level = 9;
 		//如果已经是最大难度，则没有下一关
 		if (games != null) max_level = games.size();
 		int next_level = stage + 1;
@@ -708,7 +713,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener 
 	/**
 	 * 拼图完成时，跳转到成绩界面
 	 */
-	protected void onCompleted() {
+	public void onCompleted() {
 		Intent i = new Intent(BaseGameActivity.this, ScoreActivity.class);
 		i.setAction("GAME_COMPLETE_ACTION");
 		

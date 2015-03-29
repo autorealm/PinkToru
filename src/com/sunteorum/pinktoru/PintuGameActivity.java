@@ -109,7 +109,7 @@ public class PintuGameActivity extends BaseGameActivity {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	void init() {
+	public void init() {
 		puzzle = (FrameLayout) View.inflate(this, R.layout.activity_game, null);
 		
 		setContentView(puzzle);
@@ -129,7 +129,7 @@ public class PintuGameActivity extends BaseGameActivity {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	void onStartGame() {
+	public void onStartGame() {
 		
 		//将背景模糊处理
 		Drawable dg = puzzle.getBackground();
@@ -155,16 +155,24 @@ public class PintuGameActivity extends BaseGameActivity {
 	}
 
 	@Override
-	void onNewGame(Vector<Piece> pieces) {
+	public void onNewGame(Vector<Piece> pieces) {
 		// TODO Auto-generated method stub
 
 	}
 
 
 	@Override
-	void OnCreatePiece(PieceView pib, int index) {
-		pib.setVisibility(8);
-		puzzle.addView(pib);
+	public void OnCreatePiece(PieceView pv, int index) {
+		//pv.setPadding(4, 4, 4, 4);
+		pv.setVisibility(8);
+		
+		puzzle.addView(pv);
+		
+	}
+
+	@Override
+	public void onFailed() {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -314,15 +322,18 @@ public class PintuGameActivity extends BaseGameActivity {
 			PieceView piece = (PieceView) absorbPieces.get(i);
 			Point loc = piece.getLocation();
 			
-			piece.layout(loc.x, loc.y, loc.x + piece.getWidth(), loc.y + piece.getHeight());
-			
 			if (piece.getParent() instanceof FrameLayout) {
 				FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) piece.getLayoutParams();
 				alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
 				alp.leftMargin = loc.x;
 				alp.topMargin = loc.y;
+				alp.width = piece.getWidth();
+				alp.height = piece.getHeight();
+				
 				piece.setLayoutParams(alp);
 			}
+			
+			piece.layout(loc.x, loc.y, loc.x + piece.getWidth(), loc.y + piece.getHeight());
 			
 			piece.postInvalidate();
 		}
@@ -337,15 +348,19 @@ public class PintuGameActivity extends BaseGameActivity {
     	Point curMinp = curPiece.getMinp();
     	Point curLoc = curPiece.getLocation();
     	
-    	curPiece.layout(curLoc.x, curLoc.y, curLoc.x + curPiece.getWidth(), curLoc.y + curPiece.getHeight());
-    	
     	if (curPiece.getParent() instanceof FrameLayout) {
 	    	FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) curPiece.getLayoutParams();
 	    	alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
 			alp.leftMargin = curLoc.x;
 			alp.topMargin = curLoc.y;
+			alp.width = curPiece.getWidth();
+			alp.height = curPiece.getHeight();
+			
 			curPiece.setLayoutParams(alp);
     	}
+    	
+    	curPiece.layout(curLoc.x, curLoc.y, curLoc.x + curPiece.getWidth(),
+    			curLoc.y + curPiece.getHeight());
     	
     	curPiece.postInvalidate();
 		puzzle.bringChildToFront(curPiece);   //把该视图置于其他所有子视图之上

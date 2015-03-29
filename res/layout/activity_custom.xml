@@ -52,7 +52,7 @@
 					<EditText
 					    android:id="@+id/edt_game_name"
 					    android:layout_width="0dip"
-					    android:layout_height="36dp"
+					    android:layout_height="40dp"
 					    android:layout_weight="1"
 					    android:ems="10"
 					    android:hint="@string/label_game_name"
@@ -63,7 +63,7 @@
 					    android:id="@+id/btn_game_mode"
 					    style="?android:attr/buttonStyleSmall"
 					    android:layout_width="48dp"
-					    android:layout_height="36dp"
+					    android:layout_height="40dp"
 					    android:drawableLeft="@drawable/ic_book_white_18dp"
 					    android:paddingLeft="4dp" />
 
@@ -96,8 +96,14 @@
             android:layout_height="0dip"
             android:layout_weight="1"
             android:gravity="center"
+            android:horizontalSpacing="2dp"
+            android:listSelector="@android:color/transparent"
             android:minHeight="128dp"
-            android:numColumns="3" >
+            android:numColumns="3"
+            android:padding="6dp"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2dp" >
 
         </com.sunteorum.pinktoru.view.DragGridView>
 

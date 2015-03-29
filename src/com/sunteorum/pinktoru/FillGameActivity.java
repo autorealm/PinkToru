@@ -47,7 +47,7 @@ public class FillGameActivity extends BaseGameActivity {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("InflateParams")
 	@Override
-	void init() {
+	public void init() {
 		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
 		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game_fill, null);
 		
@@ -86,7 +86,7 @@ public class FillGameActivity extends BaseGameActivity {
 	}
 
 	@Override
-	void onNewGame(final Vector<Piece> pieces) {
+	public void onNewGame(final Vector<Piece> pieces) {
 		adapter = new DragImageAdapter(this, pieces);
         gallery = (GalleryDrag) findViewById(R.id.gallery_piece_list);
         gallery.setAdapter(adapter);
@@ -176,14 +176,14 @@ public class FillGameActivity extends BaseGameActivity {
 
 
 	@Override
-	void OnCreatePiece(PieceView pib, int index) {
+	public void OnCreatePiece(PieceView pib, int index) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	void onStartGame() {
+	public void onStartGame() {
 		Drawable dg = puzzle.getBackground();
 		Bitmap blurbg = ImageUtils.fastBlur(ImageUtils.DrawableToBitmap(dg), 8);
 		int dominantColor = Color.LTGRAY, themeColor = Color.BLACK;
@@ -223,6 +223,12 @@ public class FillGameActivity extends BaseGameActivity {
 		}
 		
 		return pos;
+	}
+
+	@Override
+	public void onFailed() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

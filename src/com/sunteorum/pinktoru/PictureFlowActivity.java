@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.sunteorum.pinktoru.adapter.FlowImageAdapter;
-import com.sunteorum.pinktoru.db.DataBean;
 import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.entity.UserEntity;
@@ -136,32 +135,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			uri = data.getData();
 			String s = Common.getUriFilePath(PictureFlowActivity.this, uri);
 			System.out.println(s);
-			Intent i = new Intent(PictureFlowActivity.this, app.getGameClass(1));
-			i.setAction("NEW_GAME_ACTION");
-			
-			Bundle bundle = new Bundle();
-			bundle.putInt("imageId", 0);
-			bundle.putString("imagePath", s);
-			
-			i.putExtras(bundle);
-			startActivity(i);
-    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+			gotoPlayTheGame(new GameEntity(1, 1, "", s));
     		
-    		finish();
 			break;
 		case 2:
-			Intent i2 = new Intent(PictureFlowActivity.this, app.getGameClass(1));
-			i2.setAction("NEW_GAME_ACTION");
 			
-			Bundle bundle2 = new Bundle();
-			bundle2.putInt("imageId", Math.abs(capimgPath.hashCode()));
-			bundle2.putString("imagePath", capimgPath);
+			gotoPlayTheGame(new GameEntity(1, 3, "", capimgPath));
 			
-			i2.putExtras(bundle2);
-			startActivity(i2);
-    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    		
-    		finish();
 			break;
 		case 3:
 			uri = data.getData();
@@ -182,9 +163,9 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			Bitmap bmp = data.getParcelableExtra("data");
 			
 			if (bmp == null) {
-				//startUploadPic(new File(capimgPath));
+				addImageToGallery(new File(capimgPath));
 			} else {
-				Common.showTip(this, "", "");
+				Common.showTip(this, null, "read bitmap data error!");
 			}
 			
 			break;
@@ -196,8 +177,8 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO Auto-generated method stub
 		String imgpath = imageList.get(position);
+		gotoPlayTheGame(new GameEntity(1, app.getGameMode(), "默认本地图片游戏", imgpath));
 		
-		gotoPlayTheGame(new GameEntity(1, 3, "默认本地图片游戏", imgpath));
 	}
 
 	@Override
@@ -243,20 +224,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 				
 				return;
 			}
-			new AlertDialog.Builder(this)
-			.setTitle("")
-			.setIcon(android.R.drawable.ic_menu_gallery)
-			.setPositiveButton("" ,new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog,int which) {
-					startPickIntent(3);
-				}
-			})
-			.setNegativeButton("", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog,int which) {
-					startCropIntent(4);
-				}
-			})
-			.create().show();
+			
 		}
 		
 	}
@@ -273,8 +241,11 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 					imageList.clear();
 					
 					File dir = android.os.Environment.getExternalStorageDirectory();
-					dir = new File(dir, "图片");
 					
+					dir = new File(dir, "图片");
+					listLocalImages(dir.getAbsolutePath());
+					
+					dir = app.getAppImageDir();
 					listLocalImages(dir.getAbsolutePath());
 					
 					adpater = new FlowImageAdapter(app, imageList);
@@ -338,8 +309,21 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		if (!((PinkToru) getApplication()).offline) finish();
 	}
 	
-	protected void addMore() {
-		
+	public void addMore(View view) {
+		new AlertDialog.Builder(this)
+			.setTitle("添加图片")
+			.setIcon(android.R.drawable.ic_menu_gallery)
+			.setPositiveButton("相册选取" ,new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int which) {
+					startPickIntent(3);
+				}
+			})
+			.setNegativeButton("拍照获取", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int which) {
+					startCropIntent(4);
+				}
+			})
+			.create().show();
 	}
 	
 	protected String getUriFilePath(Uri uri) {
@@ -371,6 +355,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		Time time = new Time();
 		time.setToNow();
 		String name = "" + time.hashCode() + ".jpg";
+		
 		File f = new File(app.getAppImageDir(), "camera");
 		if (!f.exists()) f.mkdirs();
 		
@@ -416,7 +401,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		return false;
 	}
 
-	protected void startUploadPic(final File imgfile, final String url) {
+	protected void addImageToGallery(final File imgfile) {
 		if (imgfile == null || !imgfile.exists()) {
 			Toast.makeText(this, "文件未找到！", Toast.LENGTH_SHORT).show();
 			return;
@@ -427,20 +412,19 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		imgItem.setImageURI(Uri.fromFile(imgfile));
 		
 		new AlertDialog.Builder(this)
-		.setTitle("是否开始上传该图片？")
+		.setTitle("是否将该图片放入图库？")
 		.setView(view)
 		.setIcon(android.R.drawable.ic_input_add)
-		.setPositiveButton("" ,new DialogInterface.OnClickListener() {
+		.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				try {
-					final ProgressDialog progd = ProgressDialog.show(PictureFlowActivity.this, null, "", true, true);
+					final ProgressDialog progd = ProgressDialog.show(PictureFlowActivity.this, null, "请稍后...", true, true);
 					new Thread(new Runnable() {
 
 						@Override
 						public void run() {
-							//String result = "";
 							try {
-								//Thread.sleep(5000);
+								Thread.sleep(1200);
 								
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -451,12 +435,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 						
 					}).start();
 					
+					loadImageList();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
 			}
-		}).setNegativeButton("",new DialogInterface.OnClickListener() {
+		}).setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				
 				

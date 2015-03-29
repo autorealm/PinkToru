@@ -7,7 +7,6 @@ import com.sunteorum.pinktoru.R;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -62,12 +61,14 @@ public class DragGridAdapter extends BaseAdapter {
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = LayoutInflater.from(context).inflate(R.layout.sample_game_item, null);
-		item_text = (TextView) view.findViewById(R.id.text_game_title);
+		//if (convertView == null)
+			convertView = View.inflate(context, R.layout.sample_stage_item, null);
+		
+		item_text = (TextView) convertView.findViewById(R.id.txt_title);
 		Map<String, Object> channel = getItem(position);
 		item_text.setText(channel.get("name").toString());
 		if ((position == 0) || (position == 1)){
-//			item_text.setTextColor(context.getResources().getColor(R.color.black));
+			//item_text.setTextColor(context.getResources().getColor(R.color.black));
 			item_text.setEnabled(false);
 		}
 		if (isChanged && (position == holdPosition) && !isItemShow) {
@@ -84,21 +85,22 @@ public class DragGridAdapter extends BaseAdapter {
 		if(remove_position == position){
 			item_text.setText("");
 		}
-		return view;
+		
+		return convertView;
 	}
 
-	/** 添加频道列表 */
+	/** 添加列表 */
 	public void addItem(Map<String, Object> channel) {
 		mList.add(channel);
 		isListChanged = true;
 		notifyDataSetChanged();
 	}
 
-	/** 拖动变更频道排序 */
+	/** 拖动变更排序 */
 	public void exchange(int dragPostion, int dropPostion) {
 		holdPosition = dropPostion;
 		Map<String, Object> dragItem = getItem(dragPostion);
-		Log.d(TAG, "startPostion=" + dragPostion + ";endPosition=" + dropPostion);
+		Log.d(TAG, "startPostion=" + dragPostion + "; endPosition=" + dropPostion);
 		if (dragPostion < dropPostion) {
 			mList.add(dropPostion + 1, dragItem);
 			mList.remove(dragPostion);
@@ -111,7 +113,7 @@ public class DragGridAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 	
-	/** 获取频道列表 */
+	/** 获取列表 */
 	public List<Map<String, Object>> getChannnelLst() {
 		return mList;
 	}
@@ -122,7 +124,7 @@ public class DragGridAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-	/** 删除频道列表 */
+	/** 删除列表 */
 	public void remove() {
 		mList.remove(remove_position);
 		remove_position = -1;
@@ -130,7 +132,7 @@ public class DragGridAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 	
-	/** 设置频道列表 */
+	/** 设置列表 */
 	public void setListDate(List<Map<String, Object>> list) {
 		mList = list;
 	}
@@ -149,8 +151,10 @@ public class DragGridAdapter extends BaseAdapter {
 	public void setVisible(boolean visible) {
 		isVisible = visible;
 	}
+
 	/** 显示放下的ITEM */
 	public void setShowDropItem(boolean show) {
 		isItemShow = show;
 	}
+
 }

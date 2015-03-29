@@ -153,8 +153,8 @@ public class PieceFactory {
 		//透明模板
 		//Bitmap copyBitPic = Bitmap.createBitmap(_imageW, _imageH, Config.ARGB_8888);
 		
-		for(int i=0; i<_row; i++){
-			for(int j=0; j<_line; j++){
+		for (int i=0; i<_row; i++) {
+			for (int j=0; j<_line; j++) {
 				Piece piece = new Piece();
 				
 				Point id = new Point(i, j);  //保存碎片的矩阵点
@@ -166,12 +166,13 @@ public class PieceFactory {
 				piece.setRowHeight(_pieceHeight);
 
 				//得出碎片的关键边界点
-				getAllDotArray(piece);
+				setAllDotArray(piece);
 				
 				//得出左上角点位和右下角点位，用于切取小块碎片图片
-				getMinAndMaxPoint(piece);
+				setMinAndMaxPoint(piece);
 				
-				getPieceBitmap(piece);
+				setPieceBitmap(piece);
+				
 				if (RENDER_FLAG == 0) fillPieceWithBitmap(piece);
 				
 				//addEdge(piece);
@@ -183,15 +184,15 @@ public class PieceFactory {
 
 	private boolean isNearPoint(ArrayList<Point> dotArray, Point p) {
 		boolean isnear = false;
-    	for (int i = 0; i < dotArray.size(); i++) {
-    		Point dot = (Point) dotArray.get(i);
-    		if (Math.abs(dot.x - p.x) < 5 && Math.abs(dot.y - p.y) < 5) {
-    			isnear = true;
-    			break;
-    		}
-    			
-    	}
-    	return isnear;
+		for (int i = 0; i < dotArray.size(); i++) {
+			Point dot = (Point) dotArray.get(i);
+			if (Math.abs(dot.x - p.x) < 5 && Math.abs(dot.y - p.y) < 5) {
+				isnear = true;
+				break;
+			}
+				
+		}
+		return isnear;
 	}
 	
 	private void kochCurve(Point point, double angle, double length, int n, ArrayList<Point> dotArray) {
@@ -403,7 +404,7 @@ public class PieceFactory {
 		return circleDotArray;
 	}
 	
-	private void getAllDotArray(Piece piece) {
+	private void setAllDotArray(Piece piece) {
 		//ArrayList<Point> allDotArray = new ArrayList<Point>();
 		//top,right,feet,left四面
 		ArrayList<Point> top = new ArrayList<Point>();
@@ -473,12 +474,13 @@ public class PieceFactory {
 		piece.setApRight(right);
 		piece.setApFeet(feet);
 		piece.setApLeft(left);
+		
 		allPiece.add(piece);
 
 	}
 	
 	//得出碎片的左上角和右下角坐标点位
-	private void getMinAndMaxPoint(Piece piece) {
+	private void setMinAndMaxPoint(Piece piece) {
 		int minx = _imageWidth;
 		int miny = _imageHeight;
 		int maxx = 0;
@@ -493,7 +495,7 @@ public class PieceFactory {
 		}
 		
 		ArrayList<Point> top = piece.getApTop();
-		for(int i=0; i<top.size(); i++){
+		for (int i=0; i<top.size(); i++){
 			Point tp = (Point) top.get(i);
 			if(tp.y < miny){
 				miny = tp.y;
@@ -567,17 +569,18 @@ public class PieceFactory {
 		int tpieceW = pieceBit.getWidth();
 		int tpieceH = pieceBit.getHeight();
 		
-		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1)?1:SHADOW_OFFSET;
+		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1) ? 1 : SHADOW_OFFSET;
 		
-		for(int i=_d; i<tpieceW; i++){
-			for(int j=_d; j<tpieceH; j++){
-				if(pieceBit.getPixel(i, j) == Color.GRAY){
-					int mBitPicPixelColor = mBitmap.getPixel(minp.x+i-_d, minp.y+j-_d);
-					if(pieceEdge.getPixel(i, j) == Color.LTGRAY){
+		for (int i = _d; i < tpieceW; i++) {
+			for (int j = _d; j < tpieceH; j++) {
+				if (pieceBit.getPixel(i, j) == Color.GRAY) {
+					int mBitPicPixelColor = mBitmap.getPixel(minp.x + i-_d, minp.y + j-_d);
+					if (pieceEdge.getPixel(i, j) == Color.LTGRAY) {
 						mBitPicPixelColor = changeColorToLight(mBitPicPixelColor, 0.7, 100);
-					} else if(pieceEdge.getPixel(i, j) == Color.DKGRAY){
+					} else if(pieceEdge.getPixel(i, j) == Color.DKGRAY) {
 						mBitPicPixelColor = Color.DKGRAY;
 					}
+					
 					pieceBit.setPixel(i, j, mBitPicPixelColor);
 				}
 				
@@ -585,10 +588,13 @@ public class PieceFactory {
 		}
         
 		piece.setBmpPiece(pieceBit);
+		piece.setPieceHeight(pieceBit.getHeight());
+		piece.setPieceWidth(pieceBit.getWidth());
+		
 	}
 	
 	//获取每块切片的图形
-	private Point getPieceBitmap(Piece piece) {
+	private Point setPieceBitmap(Piece piece) {
 		dotPath.reset();
 		
 		Point minp = piece.getMinp();
@@ -599,7 +605,7 @@ public class PieceFactory {
 		int h = maxp.y - minp.y;
 		
 		Point key = (Point) piece.getKey();
-		dotPath.moveTo(key.x-diff.x, key.y-diff.y);
+		dotPath.moveTo(key.x - diff.x, key.y - diff.y);
 		
 		ArrayList<Point> top = piece.getApTop();
 		changeDotPath(top, dotPath, diff);
@@ -613,12 +619,12 @@ public class PieceFactory {
 		ArrayList<Point> left = piece.getApLeft();
 		changeDotPath(left, dotPath, diff);
 		
-		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 0)?0:SHADOW_OFFSET;
+		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 0) ? 0 : SHADOW_OFFSET;
 		dotPath.offset(_d, _d);
 		
 		/////根据碎片的大小，创建透明图片，在画布上每次绘制一个碎片，然后保存
-		Bitmap pieceBit = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
-		canvas.setBitmap(pieceBit);
+		Bitmap pieceBitmap = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
+		canvas.setBitmap(pieceBitmap);
 		canvas.drawPath(dotPath, noPicPaint);
 		
 		if (RENDER_FLAG != 0) {
@@ -632,7 +638,9 @@ public class PieceFactory {
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
 		
-		piece.setBmpPiece(pieceBit);
+		piece.setBmpPiece(pieceBitmap);
+		piece.setPieceHeight(pieceBitmap.getHeight());
+		piece.setPieceWidth(pieceBitmap.getWidth());
 		
 		//绘制碎片的边缘
 		Bitmap edge = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
@@ -641,6 +649,7 @@ public class PieceFactory {
 		//canvas.drawPath(dotPath, alphaPaint);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
+		
 		piece.setBmpEdge(edge);
 		
 		return diff;   //返回点位相差距离
@@ -652,7 +661,7 @@ public class PieceFactory {
 		int len = dotList.size();
 		ArrayList<Point> tempDot = dotList;
 		
-		for (int i=0; i<len; i++) {
+		for (int i = 0; i < len; i++) {
 			if(tempDot.size() == 2) {
 				Point p0 = (Point)tempDot.get(i);
 				dotPath.lineTo(p0.x-diff.x, p0.y-diff.y);

@@ -52,10 +52,11 @@ public class PinkToru extends Application {
 	private long gameTime = 0;	//同一游戏累计时间
 	
 	private boolean absinmove = true;	//是否移动时进行拼合判断
+	private boolean showedge = false;
 	
 	private int gameMode = 1;	//游戏模式
 	
-	private int pieceCutFlag = 0;	//碎片分割方式
+	private int pieceCutFlag = 1;	//碎片分割方式
 	private int pieceRenderFlag = 1;	//碎片渲染方式
 	private int pieceEdgeWidth = 16;	//碎片边缘宽度
 	private int pieceShadowOffset = 3;	//碎片阴影偏移量
@@ -95,6 +96,7 @@ public class PinkToru extends Application {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
 		absinmove = prefs.getBoolean("absinmove", true);
+		showedge = prefs.getBoolean("showedge", false);
 		
 		try {
 			gameMode = Integer.parseInt(prefs.getString("gamemode", "0"));
@@ -198,6 +200,14 @@ public class PinkToru extends Application {
 
 	public void setAbsinmove(boolean absinmove) {
 		this.absinmove = absinmove;
+	}
+
+	public boolean isShowedge() {
+		return showedge;
+	}
+
+	public void setShowedge(boolean showedge) {
+		this.showedge = showedge;
 	}
 
 	public int getGameMode() {

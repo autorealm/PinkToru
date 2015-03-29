@@ -98,8 +98,14 @@ public class FlowImageAdapter extends BaseAdapter {
 						System.out.println("X : " + url);
 						return;
 					}
-					final Bitmap current = ImageUtils.createReflectedImage(bmp);
-					if (!bmp.isRecycled()) bmp.recycle();
+					
+					Bitmap current = null;
+					if (bmp.getWidth() > bmp.getHeight() * 1.2f) {
+						current = ImageUtils.createReflectedImage(bmp);
+						if (!bmp.isRecycled()) bmp.recycle();
+						
+					} else current = bmp;
+					
 					if (current == null) Log.i("FlowImageAdapter_getView_" + position, "Bitmap == NULL");
 					if (imgcache != null)
 						imgcache.put(url, new SoftReference<Bitmap>(current));

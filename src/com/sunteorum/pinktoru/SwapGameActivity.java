@@ -56,8 +56,8 @@ public class SwapGameActivity extends BaseGameActivity {
 			
 			int left = v.getLeft() + dx;
             int top = v.getTop() + dy;
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) (v.getLayoutParams());
-            //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
+            //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) (v.getLayoutParams());
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
             lp.leftMargin = left;
             lp.topMargin = top;
             lp.gravity = Gravity.TOP|Gravity.LEFT;
@@ -102,7 +102,7 @@ public class SwapGameActivity extends BaseGameActivity {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("InflateParams")
 	@Override
-	void init() {
+	public void init() {
 		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
 		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game_swap, null);
 		
@@ -132,7 +132,7 @@ public class SwapGameActivity extends BaseGameActivity {
 
 
 	@Override
-	void OnCreatePiece(PieceView pv, int i) {
+	public void OnCreatePiece(PieceView pv, int i) {
 		Point p = mPoints.get(i);
 		int autoX = p.x;
 		int autoY = p.y;
@@ -152,7 +152,7 @@ public class SwapGameActivity extends BaseGameActivity {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	void onStartGame() {
+	public void onStartGame() {
 		Drawable dg = puzzle.getBackground();
 		Bitmap blurbg = Bitmap.createBitmap(space.getWidth(), space.getHeight(), Config.RGB_565);
 		blurbg = ImageUtils.drawGridInBitmap(blurbg, line, row, Color.LTGRAY);
@@ -170,7 +170,7 @@ public class SwapGameActivity extends BaseGameActivity {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	void onNewGame(Vector<Piece> pieces) {
+	public void onNewGame(Vector<Piece> pieces) {
 		mPoints = new ArrayList<Point>();
 		Point p = null;
 		
@@ -192,13 +192,24 @@ public class SwapGameActivity extends BaseGameActivity {
 		
 	}
 
+	@Override
+	public void onFailed() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	/**
+	 * 
+	 * @param pv
+	 * @param x
+	 * @param y
+	 */
     public void drop(PieceView pv, int x, int y) {
 		Point p = new Point(x, y);
 		
 		int left, top, left2, top2;
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-				(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
+				(pv.getWidth(), pv.getHeight());
 		left = pv.getLocation().x;
 		top = pv.getLocation().y;
 		
@@ -212,7 +223,7 @@ public class SwapGameActivity extends BaseGameActivity {
 		}
 		
 		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams
-				(pv.getPiece().getPieceWidth(), pv.getPiece().getPieceHeight());
+				(pv.getWidth(), pv.getHeight());
 		left2 = pib2.getLocation().x;
 		top2 = pib2.getLocation().y;
 		

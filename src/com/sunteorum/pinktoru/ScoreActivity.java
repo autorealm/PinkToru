@@ -91,7 +91,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			line = games.get(stage -1).getPieceLine();
 			imageUri = games.get(stage -1).getImageUrl();
 		} else {
-			LevelEntity le = app.getLevelById((levelId > 0) ? levelId : stage);
+			LevelEntity le = app.getLevelById((levelId > 99) ? levelId : stage);
 			if (le != null) {
 				mode = le.getGameMode();
 				row = le.getPieceRow();
@@ -117,8 +117,11 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			bundle.putInt("imageId", imageId);
 			bundle.putString("imageUri", imageUri);
 			bundle.putInt("levelId", levelId);
+			bundle.putInt("gameId", gameId);
+			bundle.putInt("stage", stage);
 			bundle.putInt("row", row);
 			bundle.putInt("line", line);
+			bundle.putParcelableArrayList("games", games);
 			
 			//读取该级别的分配
 			if (app.offline) {

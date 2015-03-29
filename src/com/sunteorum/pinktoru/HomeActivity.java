@@ -86,6 +86,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			
 			break;
 		case 3:
+			startActivity(new Intent(HomeActivity.this, SystemSetting.class));
 			
 			break;
 		case 11:

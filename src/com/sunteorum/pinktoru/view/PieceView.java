@@ -44,6 +44,8 @@ public class PieceView extends ImageView {
 	public PieceView(Context context, Piece piece) {
 		super(context);
 		this.piece = piece;
+		this.minp = piece.getMinp();
+		
 	}
 
 	@Override

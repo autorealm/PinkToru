@@ -1,6 +1,5 @@
 package com.sunteorum.pinktoru.view;
 
-import com.sunteorum.pinktoru.R;
 import com.sunteorum.pinktoru.adapter.DragGridAdapter;
 
 import android.content.Context;
@@ -20,7 +19,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class DragGridView extends GridView {
 	/** 点击时候的X位置 */
@@ -144,6 +142,7 @@ public class DragGridView extends GridView {
 				stopDrag();
 				onDrop(x, y);
 				requestDisallowInterceptTouchEvent(false);
+				
 				break;
 
 			default:
@@ -199,9 +198,9 @@ public class DragGridView extends GridView {
 					return false;
 				}
 				ViewGroup dragViewGroup = (ViewGroup) getChildAt(dragPosition - getFirstVisiblePosition());
-				TextView dragTextView = (TextView)dragViewGroup.findViewById(R.id.text_game_title);
-				dragTextView.setSelected(true);
-				dragTextView.setEnabled(false);
+				//TextView dragTextView = (TextView) dragViewGroup.findViewById(R.id.txt_title);
+				//dragTextView.setSelected(true);
+				//dragTextView.setEnabled(false);
 				itemHeight = dragViewGroup.getHeight();
 				itemWidth = dragViewGroup.getWidth();
 				itemTotalCount = DragGridView.this.getCount();

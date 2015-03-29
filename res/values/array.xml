@@ -7,27 +7,29 @@
 	</string-array>
 	
 	<string-array name="game_mode_value">
-		<item>0</item>
 		<item>1</item>
 		<item>2</item>
+		<item>3</item>
 	</string-array>
 	
 	<string-array name="game_mode_key">
 		<item>拼图模式</item>
 		<item>填图模式</item>
-		<item>组合模式</item>
+		<item>组图模式</item>
 	</string-array>
 
 	<string-array name="piece_cut_value">
 		<item>0</item>
 		<item>1</item>
 		<item>2</item>
+		<item>3</item>
 	</string-array>
 	
 	<string-array name="piece_cut_key">
+	    <item>矩形切图方式</item>
 		<item>普通凹凸切图方式</item>
 		<item>雪花状切图方式</item>
-		<item>矩形切图方式</item>
+		<item>积木状切图方式</item>
 	</string-array>
 
 	<string-array name="piece_render_value">

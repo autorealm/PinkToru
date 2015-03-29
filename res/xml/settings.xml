@@ -6,6 +6,10 @@
 			android:title="移动判断"
 			android:summary="是否在碎片移动时进行拼合判断" >
 		</CheckBoxPreference>
+		<CheckBoxPreference android:key="showedge"
+			android:title="显示边框"
+			android:summary="是否显示碎片的虚线边框" >
+		</CheckBoxPreference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="模式设置">        
 		<ListPreference 
