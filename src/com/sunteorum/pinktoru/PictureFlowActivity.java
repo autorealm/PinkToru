@@ -66,6 +66,8 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
         btnReturn = (Button)findViewById(R.id.button_return);
         btnReturn.setOnClickListener(this);
         
+        ((Button)findViewById(R.id.button_review)).setOnClickListener(this);
+        
         this.setTitle("本地图片库");
         
         loadImageList();
@@ -177,7 +179,11 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO Auto-generated method stub
 		String imgpath = imageList.get(position);
-		gotoPlayTheGame(new GameEntity(1, app.getGameMode(), "默认本地图片游戏", imgpath));
+		
+		Intent itn = new Intent(this, ReviewActivity.class);
+		itn.putExtra("review_file", imageList.get(galleryFlow.getSelectedItemPosition()));
+		startActivity(itn);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		
 	}
 
@@ -186,6 +192,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		int currentViewID = ((Button)v).getId();
 		
 		switch (currentViewID) {
+		case R.id.button_review:
+			Intent itn = new Intent(this, ReviewActivity.class);
+			itn.putExtra("review_file", imageList.get(galleryFlow.getSelectedItemPosition()));
+			startActivity(itn);
+    		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    		
+			break;
 		case R.id.button_ok:
 			if (imageList == null || imageList.size() == 0) {
 				
@@ -193,12 +206,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			}
 			String imgpath = imageList.get(galleryFlow.getSelectedItemPosition());
 			
-			gotoPlayTheGame(new GameEntity(1, 1, "默认本地图片游戏", imgpath));
+			gotoPlayTheGame(new GameEntity(1, app.getGameMode(), "默认本地图片游戏", imgpath));
 			
 			break;
 		case R.id.button_return:
 			startActivity(new Intent(this, HomeActivity.class));
     		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    		
 			finish();
 			
 			break;

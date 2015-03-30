@@ -6,10 +6,12 @@ import java.util.Locale;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +34,7 @@ public class FillGameActivity extends BaseGameActivity {
 
 	private DragImageAdapter adapter;
 	private GalleryDrag gallery;
+	private Vibrator mVibrator;
 	
 	private int ett = 0;//提示次数
 	private int step = 0;//步数
@@ -52,6 +55,7 @@ public class FillGameActivity extends BaseGameActivity {
 		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game_fill, null);
 		
 		setContentView(puzzle);
+		mVibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		
 		space = (FrameLayout) findViewById(R.id.space);
 		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
@@ -66,17 +70,20 @@ public class FillGameActivity extends BaseGameActivity {
 		FrameLayout.LayoutParams _params = new FrameLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		_params.gravity = Gravity.TOP|Gravity.LEFT;
+		FrameLayout.LayoutParams _params_ = new FrameLayout.LayoutParams
+				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		_params_.gravity = Gravity.TOP|Gravity.LEFT;
 		imgWrong.setLayoutParams(_params);
-		imgWrong.setImageResource(0);
+		imgWrong.setImageResource(R.drawable.btn_cancel);
 		imgWrong.setVisibility(8);
-		imgRight.setLayoutParams(_params);
-		imgRight.setImageResource(0);
+		imgRight.setLayoutParams(_params_);
+		imgRight.setImageResource(R.drawable.btn_selected);
 		imgRight.setVisibility(8);
 		puzzle.addView(imgWrong);
 		puzzle.addView(imgRight);
 		
 		puzzle.setBackgroundDrawable(background_drawalbe);
-		puzzle.setKeepScreenOn(true);
+		puzzle.setKeepScreenOn(app.isKeepon());
 		puzzle.getChildAt(0).setVisibility(4);
 		
 		handle.setBackgroundResource(R.drawable.bannershape_1);
@@ -99,15 +106,18 @@ public class FillGameActivity extends BaseGameActivity {
 				Point p = new Point(x, y);
 				Piece pie =  pieces.get(pos);//((Piece)allImagePieces.get(pos).getTag());
 				Point pm = pie.getMinp();
-				pm = new Point(pm.x + dx + pie.getPieceWidth() / 2, pm.y + dx + pie.getPieceHeight() / 2);
+				
+				pm = new Point(pm.x + dx + pie.getPieceWidth() / 2, pm.y + dy + pie.getPieceHeight() / 2);
 				
 				FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams) imgWrong.getLayoutParams();
 				flp.leftMargin = x - dx;
-				flp.topMargin = y - dx;
+				flp.topMargin = y - dy;
+				//imgWrong.setLayoutParams(flp);
 				
 				FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) imgRight.getLayoutParams();
 				rlp.leftMargin = pm.x - dx;
-				rlp.topMargin = pm.y - dx;
+				rlp.topMargin = pm.y - dy;
+				//imgRight.setLayoutParams(rlp);
 				
 				if (drawer != null && drawer.isOpened()) drawer.animateClose();
 				step++;
@@ -116,7 +126,7 @@ public class FillGameActivity extends BaseGameActivity {
 				//Log.i("drop-pointer",x + " - " + y);
 				if (distance(p, pm, INACCURACY)) {
 	    			//Log.i("drop", "XXXXXXXXXXXXXXXXXXXXXXXXXX");
-	    			PieceView pib = (PieceView) allPieces.get(getPieceImageButtonPos(pie));
+	    			PieceView pib = (PieceView) allPieces.get(getPieceViewPos(pie));
 	    			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
 	    					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	    			params.leftMargin = pie.getMinp().x;
@@ -125,7 +135,7 @@ public class FillGameActivity extends BaseGameActivity {
 	    			pib.setLayoutParams(params);
 	    			pib.setFocusable(false);
 	    			space.addView(pib);
-	    			
+	    			gallery.stopDrag();
 	    			pieces.remove(pos);
 	    			adapter.notifyDataSetChanged();
 	    			
@@ -145,6 +155,9 @@ public class FillGameActivity extends BaseGameActivity {
 	    			}
 
 	    		} else {
+	    			gallery.stopDrag(0, 0);
+	    			mVibrator.vibrate(50);
+	    			
 	    			ett++;//次数自增
 	    			if (ett > ERR_TIP_TIMES) return;
 	    			
@@ -159,7 +172,7 @@ public class FillGameActivity extends BaseGameActivity {
 							imgRight.setVisibility(8);
 						}
 	    				
-	    			}, 500);
+	    			}, 600);
 	    			
 	    		}
 				
@@ -212,7 +225,7 @@ public class FillGameActivity extends BaseGameActivity {
 		
 	}
 
-	private int getPieceImageButtonPos(Piece piece) {
+	private int getPieceViewPos(Piece piece) {
 		int pos = -1;
 		for (int i = 0; i< allPieces.size(); i++) {
 			Piece pie = (Piece) allPieces.get(i).getPiece();

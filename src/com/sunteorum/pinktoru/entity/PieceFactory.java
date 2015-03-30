@@ -33,7 +33,7 @@ public class PieceFactory {
 	private int _D = 12; //比率系数，默认12
 	private int _W = 4; //碎片凹凸系数，占边界长度的百分比，默认4
 	
-	private int SHADOW_COLOR = Color.argb(120, 60, 60, 60);
+	private int SHADOW_COLOR = Color.argb(60, 60, 60, 60);
 	
 	public enum Place {
 		Right, Feet;
@@ -578,6 +578,7 @@ public class PieceFactory {
 		int tpieceH = pieceBit.getHeight();
 		
 		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1) ? 1 : SHADOW_OFFSET;
+		_d = 0;
 		
 		//绘制碎片的边缘
 		Bitmap pieceEdge = Bitmap.createBitmap(tpieceW, tpieceH, Config.ARGB_8888);
@@ -634,8 +635,13 @@ public class PieceFactory {
 		changeDotPath(left, dotPath, diff);
 		
 		
-		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 0) ? 0 : SHADOW_OFFSET;
+		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1) ? 1 : SHADOW_OFFSET;
+		_d = 0;
 		dotPath.offset(_d, _d);
+		
+		//以百分比分配边宽度
+		if (PIECE_EDGE_WIDTH > 1)
+			edgePaint.setStrokeWidth(Math.min(_pieceWidth, _pieceHeight) / 2 * PIECE_EDGE_WIDTH / 100);
 		
 		/////根据碎片的大小，创建透明图片，在画布上每次绘制一个碎片，然后保存
 		Bitmap pieceBitmap = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);

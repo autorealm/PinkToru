@@ -1,8 +1,10 @@
 package com.sunteorum.pinktoru;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunteorum.pinktoru.entity.Piece;
+import com.sunteorum.pinktoru.inc.ColorThief;
 import com.sunteorum.pinktoru.util.ImageUtils;
 import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer;
 import com.sunteorum.pinktoru.view.PieceView;
@@ -117,7 +120,8 @@ public class SwapGameActivity extends BaseGameActivity {
 		tvGameStatus = ((TextView) findViewById(R.id.tvGameStatus));
 		
 		puzzle.setBackgroundDrawable(background_drawalbe);
-		puzzle.setKeepScreenOn(true);
+		puzzle.setKeepScreenOn(app.isKeepon());
+		
 		puzzle.getChildAt(0).setVisibility(4);
 		puzzle.getChildAt(1).setVisibility(4);
 		
@@ -155,6 +159,19 @@ public class SwapGameActivity extends BaseGameActivity {
 	@Override
 	public void onStartGame() {
 		Drawable dg = puzzle.getBackground();
+		
+		int dominantColor = Color.LTGRAY, themeColor = Color.BLACK;
+		try {
+			List<int[]> result = ColorThief.compute(ImageUtils.DrawableToBitmap(dg), 3);
+			int[] dc1 = result.get(0), dc2 = result.get(1);
+			float f = 0.8f;
+			dominantColor = Color.argb(180, (int) (dc1[0] * f), (int) (dc1[1] * f), (int) (dc1[2] * f));
+			themeColor = Color.rgb((int) (dc2[0] * f), (int) (dc2[1] * f), (int) (dc2[2] * f));
+			space.setBackgroundColor(themeColor);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		Bitmap blurbg = Bitmap.createBitmap(space.getWidth(), space.getHeight(), Config.RGB_565);
 		blurbg = ImageUtils.drawGridInBitmap(blurbg, line, row, Color.LTGRAY);
 		if (blurbg != null) dg = ImageUtils.BitmapToDrawable(this, blurbg);
@@ -164,7 +181,7 @@ public class SwapGameActivity extends BaseGameActivity {
 			space.postInvalidate();
 		}
 		
-		puzzle.setBackgroundColor(Color.LTGRAY);
+		puzzle.setBackgroundColor(dominantColor);
 		puzzle.getChildAt(0).setVisibility(0);
 		puzzle.getChildAt(1).setVisibility(0);
 	}

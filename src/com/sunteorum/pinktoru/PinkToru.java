@@ -54,6 +54,7 @@ public class PinkToru extends Application {
 	private boolean trainmove = false;	//是否移动时透明其他碎片
 	private boolean showedge = false;	//是否显示碎片的虚线边框
 	private boolean withquad = true;	//碎片曲线分割方式
+	private boolean keepon = true;	//游戏时保持屏幕常亮
 	
 	private int gameMode = 1;	//游戏模式
 	
@@ -99,6 +100,7 @@ public class PinkToru extends Application {
 		trainmove = prefs.getBoolean("trainmove", false);
 		showedge = prefs.getBoolean("showedge", false);
 		withquad = prefs.getBoolean("withquad", true);
+		keepon = prefs.getBoolean("keepon", true);
 		
 		try {
 			gameMode = Integer.parseInt(prefs.getString("gamemode", "1"));
@@ -231,6 +233,14 @@ public class PinkToru extends Application {
 		this.withquad = withquad;
 	}
 
+	public boolean isKeepon() {
+		return keepon;
+	}
+
+	public void setKeepon(boolean keepon) {
+		this.keepon = keepon;
+	}
+
 	public int getGameMode() {
 		return gameMode;
 	}
@@ -259,8 +269,8 @@ public class PinkToru extends Application {
 	}
 
 	public int getPieceEdgeWidth() {
-		if (this.gameMode == 3)
-			return 1; //组图模式强制边框
+		//if (this.gameMode == 3)
+			//return 1; //组图模式强制边框
 		
 		return pieceEdgeWidth;
 	}

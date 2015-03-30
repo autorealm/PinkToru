@@ -16,11 +16,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowAnimationFrameStats;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LayoutAnimationController.AnimationParameters;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.Transformation;
@@ -52,7 +55,8 @@ public class GalleryDrag extends Gallery {
 	private final static int step = 1;// ListView 滑动步伐.
 
 	private int current_Step;// 当前步伐.
-
+	private int wpflag = 1;
+	
 	private onDropListener mDropListener;
 	public boolean mHasPerformedLongPress = false; 
 	private CheckForLongPress mPendingCheckForLongPress;
@@ -60,9 +64,8 @@ public class GalleryDrag extends Gallery {
 	private Bitmap bm;
 	private Handler mHandler = new Handler();
 	private ImageView itemView;
-	
 	private int perx, pery;
-	
+	private boolean inreturn = false;
 	
     public GalleryDrag(Context context) {
             super(context);
@@ -86,7 +89,7 @@ public class GalleryDrag extends Gallery {
     		
     		
         }
-    	System.out.println("MotionEvent:" + ev.getAction());
+    	//System.out.println("MotionEvent:" + ev.getAction());
     	switch (ev.getAction()) {
 	        case MotionEvent.ACTION_DOWN:
 	        	mme = ev;
@@ -101,7 +104,7 @@ public class GalleryDrag extends Gallery {
 	    		
 	    		// 获取当前位置的视图(可见状态)
 	    	    itemView = (ImageView) getChildAt(dragPosition - getFirstVisiblePosition());
-	    	
+	    	    
 	    	    // 获取到的dragPoint其实就是在你点击指定item项中的高度.
 	    	    dragPointX = x - itemView.getLeft();
 	    	    dragPointY = y - itemView.getTop();
@@ -112,7 +115,7 @@ public class GalleryDrag extends Gallery {
 	    		
 	    	    upScrollBounce = getHeight() / 3;// 取得向上滚动的边际，大概为该控件的1/3
 	    	    downScrollBounce = getHeight() * 2 / 3;// 取得向下滚动的边际，大概为该控件的2/3
-	    	
+	    	    
 	    	    itemView.setDrawingCacheEnabled(true);// 开启cache.
 	    	    bm = Bitmap.createBitmap(ImageUtils.DrawableToBitmap(itemView.getDrawable()));// 根据cache创建一个新的bitmap对象.
 	    	    
@@ -155,7 +158,7 @@ public class GalleryDrag extends Gallery {
 			    case MotionEvent.ACTION_UP:
 			    	int upX = (int) ev.getRawX();
 				    int upY = (int) ev.getRawY();
-				    stopDrag();
+				    //stopDrag();
 				    onDrop(upX, upY);
 				    
 			    break;
@@ -209,10 +212,12 @@ public class GalleryDrag extends Gallery {
 		    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE// 不需接受触摸事件 
 		    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON// 保持设备常开，并保持亮度不变。
 		    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;// 窗口占满整个屏幕，忽略周围的装饰边框（例如状态栏）。此窗口需考虑到装饰边框的内容。
-	
+	    if (wpflag > 0)
+	    	windowParams.flags = windowParams.flags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;//窗口之后的内容变暗。
+	    
 	    windowParams.format = PixelFormat.TRANSLUCENT;// 默认为不透明，这里设成透明效果.
 	    windowParams.windowAnimations = android.R.style.Animation_Dialog;// 窗口所使用的动画设置 
-	
+	    
 	    ImageView imageView = new ImageView(getContext());
 	    imageView.setPadding(0, 0, 0, 0);
 	    imageView.setImageBitmap(bm);
@@ -233,7 +238,7 @@ public class GalleryDrag extends Gallery {
 	    if (dragImageView != null) {
 		    windowParams.alpha = 0.5f;// 透明度 
 		    windowParams.x = x - (int) (dragImageView.getWidth() / 2 + 0.5f);
-		    windowParams.y = y - (int) (dragImageView.getHeight() / 2 +0.5f);
+		    windowParams.y = y - (int) (dragImageView.getHeight() / 2 + 0.5f);
 		    windowManager.updateViewLayout(dragImageView, windowParams);// 时时移动.
 		    //Log.i("onDrag", "x:" + windowParams.x + " - y:" + windowParams.y);
 	    }
@@ -251,12 +256,38 @@ public class GalleryDrag extends Gallery {
 	    }
     }
 
+    public void stopDrag(int tx, int ty) {
+    	if (dragImageView != null) {
+    		int sx = windowParams.x;
+    		int sy = windowParams.y;
+    		windowParams.x = tx;
+    		windowParams.y = ty;
+    		if (itemView != null) {
+    			windowParams.width = itemView.getWidth();
+    			windowParams.height = itemView.getHeight();
+    		}
+    		if (tx == 0 & ty == 0) {
+    			windowParams.x = perx;
+    			windowParams.y = pery;
+    			
+    		}
+    		
+		    windowManager.updateViewLayout(dragImageView, windowParams);
+		    stopDrag();
+	    }
+    }
+    
     public void setOnDropListener(onDropListener listener) {
         mDropListener = listener;
     }
     
     public interface onDropListener {
     	void drop(int pos, int x, int y);
+    }
+    
+    public void setDimFlag(boolean flag) {
+    	if (flag) wpflag = 1;
+    	else wpflag = 0;
     }
     
     /**
@@ -293,24 +324,58 @@ public class GalleryDrag extends Gallery {
 
     }
     
+    /**
+     * 不执行？
+     */
     public void animReturn() {
     	if (dragImageView == null) return;
     	AnimationSet animset = new AnimationSet(true);
-    	Animation mAnimation;
+    	Animation tAnimation, mAnimation;
 		
-		animset.setDuration(400);
+		animset.setDuration(300);
 		animset.setInterpolator(new OvershootInterpolator());
 		animset.setFillAfter(true);
 		
-		mAnimation = new TranslateAnimation(windowParams.x, perx, windowParams.y, pery);
-		mAnimation.setInterpolator(new DecelerateInterpolator());
-		animset.addAnimation(mAnimation);
+		tAnimation = new TranslateAnimation(windowParams.x, perx, windowParams.y, pery);
+				/*(Animation.RELATIVE_TO_SELF, 0.0F,
+				Animation.RELATIVE_TO_SELF, perx,
+				Animation.RELATIVE_TO_SELF, 0.0F,
+				Animation.RELATIVE_TO_SELF, pery);*/
+		tAnimation.setDuration(300);
+		tAnimation.setInterpolator(new DecelerateInterpolator());
+		animset.addAnimation(tAnimation);
 		
 		mAnimation = new AlphaAnimation(1.0f, 0f);
+		mAnimation.setDuration(300);
 		mAnimation.setInterpolator(new LinearInterpolator());
 		animset.addAnimation(mAnimation);
 		
-		dragImageView.setAnimation(animset);
+		animset.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				inreturn = false;
+				stopDrag();
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				inreturn = true;
+				System.out.println("onAnimationStart");
+			}
+			
+		});
+		
+		dragImageView.startAnimation(animset);
+		System.out.println("startAnimation");
     }
     
 	private boolean isTouchInItem(View dragView, int x, int y) {
@@ -345,7 +410,7 @@ public class GalleryDrag extends Gallery {
                 if (performLongClick()) {
                     mHasPerformedLongPress = false;
                 }
-                System.out.println("--performedLongPress--");
+                //System.out.println("--performedLongPress--");
                 performedLongPress(mme);
             }
         }

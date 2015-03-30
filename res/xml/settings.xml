@@ -18,6 +18,10 @@
 			android:title="显示边框"
 			android:summary="是否显示碎片的虚线边框" >
 		</CheckBoxPreference>
+		<CheckBoxPreference android:key="keepon"
+			android:title="屏幕常亮"
+			android:summary="是否在游戏时保持屏幕常亮" >
+		</CheckBoxPreference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="模式设置">        
 		<ListPreference 
@@ -49,13 +53,13 @@
 	<PreferenceCategory android:title="参数设置">
 	    <EditTextPreference android:key="pieceedgewidth"
 			android:title="碎片边缘宽度"
-			android:summary="请输入碎片边缘宽度（0-24）"
+			android:summary="请输入碎片边缘宽度比率（0-100）"
 			android:defaultValue="16"
 			android:dialogTitle="输入宽度值">
         </EditTextPreference>
         <EditTextPreference android:key="piecekochcurven"
 			android:title="碎片多边切图参数"
-			android:summary="请输入碎片雪花状切图参数（0-6）"
+			android:summary="请输入碎片切图参数（0-6）"
 			android:defaultValue="2"
 			android:dialogTitle="输入参数值">
         </EditTextPreference>

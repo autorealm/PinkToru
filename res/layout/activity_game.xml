@@ -3,8 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top|left"
-    android:background="#fff"
+    android:background="@drawable/backgroud_1"
     android:orientation="vertical" >
+
+    <include layout="@layout/include_layout" />
 
     <FrameLayout
 	    android:id="@id/space"
@@ -12,8 +14,6 @@
 	    android:layout_height="match_parent" >
 	
 	</FrameLayout>
-
-	<include layout="@layout/include_layout" />
 
 
 </FrameLayout>

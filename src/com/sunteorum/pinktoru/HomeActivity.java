@@ -271,6 +271,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 		//final Handler mHandler = new Handler();
 		final PopupWindow mPop = new PopupWindow(layout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		mPop.setAnimationStyle(android.R.style.Animation_Dialog);
+		
 		mPop.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_selector_3));
 	 	mPop.setOutsideTouchable(true);
 	 	mPop.setFocusable(true);

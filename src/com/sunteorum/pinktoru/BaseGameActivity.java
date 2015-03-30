@@ -62,7 +62,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	protected Drawable background_drawalbe;
 	
 	protected int INACCURACY = 12;//判断拼合的距离
-	protected int ERR_TIP_TIMES = 9;//错误提示次数
+	protected int ERR_TIP_TIMES = 3;//错误提示次数
 	
 	protected ArrayList<PieceView> allPieces = new ArrayList<PieceView>();
 	
@@ -325,8 +325,6 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 				
 				progd.dismiss();
 				
-				dx = (puzzle.getWidth() - space.getWidth()) / 2;
-				dy = (puzzle.getHeight() - space.getHeight()) / 2;
 				start_time = System.currentTimeMillis();
 				
 				//延迟显示顶部状态条
@@ -337,6 +335,14 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 						setDrawer();
 						setGameTime();
 						setGameStatus();
+						
+						final int[] location = new int[2];   
+						space.getLocationOnScreen(location);
+						dx = location[0];
+						dy = location[1];
+						
+						//dx = (int) ((float) (puzzle.getWidth() - space.getWidth()) / 2 + 0.5f);
+						//dy = (int) ((float) (puzzle.getHeight() - space.getHeight()) / 2 + 0.5f);
 						
 					}
 				}, 800);

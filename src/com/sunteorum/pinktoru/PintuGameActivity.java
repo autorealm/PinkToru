@@ -146,7 +146,7 @@ public class PintuGameActivity extends BaseGameActivity {
 		
 		handle.setBackgroundResource(R.drawable.backgroud_2);
 		puzzle.setBackgroundDrawable(background_drawalbe);
-		puzzle.setKeepScreenOn(true);
+		puzzle.setKeepScreenOn(app.isKeepon());
 		
 		trainmove = app.isTrainmove();
 	}
@@ -165,7 +165,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			//puzzle.getBackground().setAlpha(120);
 		}
 		
-		puzzle.setBackgroundColor(Color.LTGRAY);
+		puzzle.setBackgroundColor(Color.DKGRAY);
 		//puzzle.getChildAt(0).setVisibility(0);
 		
 		//将碎片可视化
