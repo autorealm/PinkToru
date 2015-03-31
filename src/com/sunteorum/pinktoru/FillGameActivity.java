@@ -74,10 +74,10 @@ public class FillGameActivity extends BaseGameActivity {
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		_params_.gravity = Gravity.TOP|Gravity.LEFT;
 		imgWrong.setLayoutParams(_params);
-		imgWrong.setImageResource(R.drawable.btn_cancel);
+		imgWrong.setImageResource(R.drawable.ic_toast_post_fail);
 		imgWrong.setVisibility(8);
 		imgRight.setLayoutParams(_params_);
-		imgRight.setImageResource(R.drawable.btn_selected);
+		imgRight.setImageResource(R.drawable.ic_toast_post_ok);
 		imgRight.setVisibility(8);
 		puzzle.addView(imgWrong);
 		puzzle.addView(imgRight);
@@ -108,6 +108,7 @@ public class FillGameActivity extends BaseGameActivity {
 				Point pm = pie.getMinp();
 				
 				pm = new Point(pm.x + dx + pie.getPieceWidth() / 2, pm.y + dy + pie.getPieceHeight() / 2);
+				//pm.offset(-pie.getOffset(), -pie.getOffset());
 				
 				FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams) imgWrong.getLayoutParams();
 				flp.leftMargin = x - dx;
@@ -115,8 +116,8 @@ public class FillGameActivity extends BaseGameActivity {
 				//imgWrong.setLayoutParams(flp);
 				
 				FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) imgRight.getLayoutParams();
-				rlp.leftMargin = pm.x - dx;
-				rlp.topMargin = pm.y - dy;
+				rlp.leftMargin = pm.x - imgRight.getWidth() / 2;
+				rlp.topMargin = pm.y - imgRight.getHeight() / 2;
 				//imgRight.setLayoutParams(rlp);
 				
 				if (drawer != null && drawer.isOpened()) drawer.animateClose();
@@ -131,6 +132,8 @@ public class FillGameActivity extends BaseGameActivity {
 	    					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	    			params.leftMargin = pie.getMinp().x;
 	    			params.topMargin = pie.getMinp().y;
+	    			params.width = pie.getPieceWidth();
+	    			params.height = pie.getPieceHeight();
 	    			params.gravity = Gravity.TOP|Gravity.LEFT;
 	    			pib.setLayoutParams(params);
 	    			pib.setFocusable(false);
@@ -179,7 +182,7 @@ public class FillGameActivity extends BaseGameActivity {
 				String str = String.format(Locale.getDefault(), "%.1f",
     					(float) (allPieces.size() - pieces.size()) * 100 /allPieces.size());
     			
-				game_status = "²½Êý£º" + step + " (" + str + "%)";
+				game_status = "Step: " + step + " (" + str + "%)";
     			setGameStatus();
 				
 			}

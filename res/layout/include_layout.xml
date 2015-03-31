@@ -39,7 +39,7 @@
             android:id="@+id/tvGameLevel"
             android:layout_width="match_parent"
             android:layout_height="28dip"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"

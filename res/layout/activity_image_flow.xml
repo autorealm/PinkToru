@@ -72,7 +72,10 @@
 	     android:background="@drawable/backgroud_2"
 	     android:gravity="center"
 	     android:orientation="horizontal"
-	     android:paddingBottom="5dp" >
+	     android:paddingBottom="10dp"
+	     android:paddingLeft="8dp"
+	     android:paddingRight="8dp"
+	     android:paddingTop="12dp" >
 
 		 <Button
 		     android:id="@+id/button_review"
@@ -92,8 +95,8 @@
 		     android:layout_marginLeft="4dp"
 		     android:layout_marginRight="4dp"
 		     android:layout_weight="1"
-		     android:background="@drawable/menu_selector_1"
-		     android:text="@string/btn_ok" />
+		     android:background="@drawable/menu_selector_2"
+		     android:text="@string/new_game" />
 
 		 <Button
 		     android:id="@+id/button_return"

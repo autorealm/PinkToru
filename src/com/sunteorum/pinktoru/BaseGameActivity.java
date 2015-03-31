@@ -267,7 +267,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		final TextView txtName = (TextView) progd.findViewById(R.id.txtGameName);
 		TextView txtDesc = (TextView) progd.findViewById(R.id.txtGameDesc);
 		ImageButton btnClose = (ImageButton) progd.findViewById(R.id.btnGameClose);
-		txtName.setText("准备开始第 " + stage + " 关...");
+		txtName.setText("准备开始 Stage " + stage + " ...");
 		txtDesc.setText((le != null) ? le.getLevelDesc() : "");
 		
 		final FlippingImageView mFivIcon = (FlippingImageView) progd.findViewById(R.id.game_loading_icon);
@@ -318,7 +318,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 				onStartGame();
 				
 				try {
-					Thread.sleep(400);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -466,9 +466,10 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
 	
 	protected void setGameStatus() {
-		tvGameLevel.setText("第 " + stage + " 关");
-		tvGameTime.setText("共用时：" + game_time);
+		tvGameLevel.setText("Stage " + stage + " ");
+		tvGameTime.setText("Time: " + game_time);
 		tvGameStatus.setText(game_status);
+		
 	}
 
 	/**

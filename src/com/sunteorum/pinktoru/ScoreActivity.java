@@ -6,7 +6,10 @@ import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.helper.LoadImageThread;
 import com.sunteorum.pinktoru.util.ImageUtils;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -53,9 +56,14 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 		findViewById(R.id.btnContinue).setOnClickListener(this);
 		findViewById(R.id.btnExit).setOnClickListener(this);
 		
-		TextView tvTitle = (TextView)findViewById(R.id.txtTitle);
+		if (stage == 1) {
+			findViewById(R.id.btnContinue).setVisibility(8);
+			((TextView) findViewById(R.id.btnContinue)).setText("");
+		}
+		
+		TextView tvTitle = (TextView) findViewById(R.id.txtTitle);
         tvTitle.setText(title);
-        TextView tvScore = (TextView)findViewById(R.id.txtScore);
+        TextView tvScore = (TextView) findViewById(R.id.txtScore);
         Time t = new Time();
         t.set(score);
         tvScore.setText(t.format("%M:%S")); //String.format("%M:%S", score);
@@ -150,6 +158,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 					public void onGetImage(Bitmap bmp, String url) {
 						progdlg.dismiss();
 						startActivity(intent);
+						
 			    		finish();
 					}
 					
@@ -163,7 +172,18 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			
 			break;
 		case R.id.btnExit:
-			finish();
+			if (stage == 1) finish();
+			else new AlertDialog.Builder(this)
+				.setTitle("确定要退出当前的游戏吗？")
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				})
+				.setNegativeButton(R.string.btn_cancel, null)
+				.create().show();
+			
 			return;
 		default:
 			
@@ -174,6 +194,19 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 		finish();
 	}
 	
-	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		//System.out.println("requestCode: " + requestCode + " resultCode: " + resultCode);
+		if (resultCode != Activity.RESULT_OK) return;
+		if (requestCode == 101 && app.getUser() != null) {
+			System.out.println((data!=null)?data.toString():"result : nodata");
+			//startActivity(new Intent(PicView.this, WebViewer.class));
+			
+			//finish();
+		}
+		
+	}
 
 }

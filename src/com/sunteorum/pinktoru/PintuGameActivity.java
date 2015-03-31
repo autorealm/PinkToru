@@ -25,6 +25,7 @@ public class PintuGameActivity extends BaseGameActivity {
 	int lastX;
 	int lastY;
 	int lastId = 0;
+	int dsts = 0;
 	boolean duoMove = false;
 	boolean skip = false;
 	boolean trainmove = true;
@@ -63,6 +64,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			dx =(int) event.getRawX() - lastX;
 			dy =(int) event.getRawY() - lastY;
 			
+			dsts += (Math.abs(dx) + Math.abs(dy)) / 2;
 			
 			movePieces.clear();
 			checkMove((PieceView)v, dx, dy, movePieces);
@@ -108,6 +110,9 @@ public class PintuGameActivity extends BaseGameActivity {
 			//displayFront(firstPiece);
 			
 			if (trainmove) setOpacity(allPieces);
+			
+			game_status = " " + dsts + " ";
+			setGameStatus();
 			
 			//≈–∂œ «∑ÒÕÍ≥…
 			hasComplete();

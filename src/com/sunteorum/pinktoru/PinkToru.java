@@ -40,6 +40,8 @@ public class PinkToru extends Application {
 	final String APP_CACHE_DIR = "Cache";
 	final String APP_IMAGE_DIR = "Image";
 	final int MAX_IMAGE_SIZE = 1280;
+	final int DEF_HEIGHT = 960;
+	final int DEF_WITCH = 600;
 	
 	private DataBean db;
 	private UserEntity user;

@@ -3,7 +3,7 @@
 	<item android:state_pressed="true">
 		<shape>
 			<gradient
-				android:startColor="#0099CC"
+				android:startColor="#0099cc"
 				android:endColor="@android:color/white"
 				android:angle="270"/>
 			<stroke

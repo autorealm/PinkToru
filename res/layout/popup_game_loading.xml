@@ -65,7 +65,10 @@
         android:minHeight="64dp"
         android:padding="4dp"
         android:scrollbars="none"
-        android:textColor="#333"
+        android:shadowColor="#ccc"
+        android:shadowDx="0.3"
+        android:shadowDy="0.6"
+        android:shadowRadius="0.8"
         android:textSize="14sp"
         android:typeface="sans" />
 

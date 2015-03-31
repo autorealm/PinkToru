@@ -1,6 +1,7 @@
 package com.sunteorum.pinktoru;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -23,24 +24,30 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.format.Time;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 
-public class PictureFlowActivity extends BaseActivity implements OnItemClickListener, OnClickListener {
+public class PictureFlowActivity extends BaseActivity implements OnItemClickListener, 
+		OnItemLongClickListener, OnClickListener {
 	private Button btnOK = null;
 	private Button btnReturn = null;
 	
 	private GalleryFlow galleryFlow = null;
-	private FlowImageAdapter adpater = null;
+	private FlowImageAdapter adapter = null;
 	//private Integer[] imagesID = null;
 	
 	private ArrayList<String> imageList = new ArrayList<String>();
@@ -56,9 +63,10 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		app = (PinkToru) this.getApplication();
 		
 		galleryFlow = (GalleryFlow) findViewById(R.id.gallery_image_flow);
-        galleryFlow.setAdapter(adpater);
+        galleryFlow.setAdapter(adapter);
         galleryFlow.setOnItemClickListener(this);
         //galleryFlow.setOnItemSelectedListener(this);
+        galleryFlow.setOnCreateContextMenuListener(this);
         
         btnOK = (Button)findViewById(R.id.button_ok);
         btnOK.setOnClickListener(this);
@@ -78,14 +86,15 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		super.onResume();
 		((PinkToru) getApplication()).init();
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (adpater != null) adpater.clearCacheBitmap();
-		adpater = null;
+		if (adapter != null) adapter.clearCacheBitmap();
+		adapter = null;
 		imageList = null;
 		
 	}
@@ -126,6 +135,69 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		
+		menu.add(0, 1, 1, "打开为");
+		menu.add(0, 2, 2, "重命名");
+		menu.add(0, 3, 3, "删除");
+		menu.add(0, 4, 4, "属性");
+		
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();   
+		final int id = (int) info.id;
+		final File sfile = new File(Uri.parse(imageList.get(id)).getPath());
+		switch (item.getItemId()) {
+		case 1:
+			Uri uri = Uri.fromFile(sfile);
+			Intent it = new Intent(Intent.ACTION_VIEW);
+			it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			it.setDataAndType(uri, "image/*");
+			startActivity(Intent.createChooser(it, null));
+			
+			break;
+		case 2:
+			renameFile(sfile, id);
+			
+			break;
+		case 3:
+			new AlertDialog.Builder(this)
+			.setTitle("请确认")
+			.setIcon(android.R.drawable.ic_dialog_alert)
+			.setMessage("是否删除文件：" + sfile.getAbsolutePath() + " ？")
+			.setPositiveButton(R.string.btn_cancel, null)
+			.setNegativeButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+			
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (sfile.delete()) {
+						imageList.remove(id);
+						adapter.notifyDataSetChanged();
+					} else {
+						Toast.makeText(PictureFlowActivity.this, "删除文件 失败", Toast.LENGTH_SHORT).show();
+					}
+				}
+				
+			})
+			.show();
+			
+			break;
+		case 4:
+			showFileInfo(sfile);
+			
+			break;
+		default:
+			Toast.makeText(PictureFlowActivity.this, "未提供", Toast.LENGTH_SHORT).show();
+			
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_OK) return;
@@ -154,11 +226,11 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			ImageUtils.saveBitmap(bm, f, true, CompressFormat.JPEG);
 			capimgPath = f.getAbsolutePath();
 			
-			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, 540, 960), 9);
+			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, app.DEF_WITCH, app.DEF_WITCH), 9);
 			break;
 		case 4:
 			
-			startActivityForResult(Common.cropImageUri(Uri.fromFile(new File(capimgPath)), 3, 5, 540, 960), 9);
+			startActivityForResult(Common.cropImageUri(Uri.fromFile(new File(capimgPath)), 3, 5, app.DEF_WITCH, app.DEF_HEIGHT), 9);
 			
 			break;
 		case 9:
@@ -181,10 +253,18 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		String imgpath = imageList.get(position);
 		
 		Intent itn = new Intent(this, ReviewActivity.class);
-		itn.putExtra("review_file", imageList.get(galleryFlow.getSelectedItemPosition()));
+		itn.putExtra("review_file", imgpath);
 		startActivity(itn);
 		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		
+		return false;
 	}
 
 	@Override
@@ -253,18 +333,17 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 				@Override
 				public void run() {
 					imageList.clear();
+
+					listLocalImages(app.getAppImageDir().getAbsolutePath());
 					
 					File dir = android.os.Environment.getExternalStorageDirectory();
 					
 					dir = new File(dir, "图片");
 					listLocalImages(dir.getAbsolutePath());
 					
-					dir = app.getAppImageDir();
-					listLocalImages(dir.getAbsolutePath());
-					
-					adpater = new FlowImageAdapter(app, imageList);
-					adpater.setBackRes(R.drawable.itemshape_7);
-					galleryFlow.setAdapter(adpater);
+					adapter = new FlowImageAdapter(app, imageList);
+					adapter.setBackRes(R.drawable.itemshape_7);
+					galleryFlow.setAdapter(adapter);
 					
 					progd.dismiss();
 				}
@@ -463,6 +542,74 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			}
 		}).create().show();
 		
+	}
+
+	protected void renameFile(final File sfile, final int p) {
+		final EditText edt = new EditText(this);
+		edt.setText(sfile.getName());
+		edt.setInputType(InputType.TYPE_CLASS_TEXT);
+		
+		new AlertDialog.Builder(this)
+		.setTitle("重命名")
+		.setView(edt)
+		.setIcon(android.R.drawable.ic_menu_edit)
+		.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				File nfile = new File(sfile.getParent() + "/" + edt.getText().toString());
+				
+				if (sfile.renameTo(nfile)) {
+					imageList.get(p).replace(imageList.get(p), Uri.fromFile(nfile).toString());
+					
+					adapter.notifyDataSetChanged();
+				} else {
+					System.out.println("<rename error!> " + sfile.getName());
+				}
+			}})
+		.setNegativeButton("取消", null)
+		.show();
+		
+	}
+
+	protected void showFileInfo(final File sfile) {
+		new AlertDialog.Builder(this)
+		.setTitle("文件信息")
+		.setIcon(android.R.drawable.ic_dialog_info)
+		.setMessage(getFileInfo(sfile))
+		.show();
+		
+	}
+
+	protected String getFileInfo(File sfile) {
+		String info = "";
+		if (!sfile.exists()) return info;
+		Time t = new Time();
+		t.set(sfile.lastModified());
+		DecimalFormat fnum = new DecimalFormat("##0.00"); 
+		String ftype = "", flen = "";
+		if (sfile.isFile()) {ftype = "文件"; 
+			if (sfile.length() < 1024 * 1024)
+			flen = fnum.format((float)sfile.length() / 1024) + " KB";
+			else flen = fnum.format((float)sfile.length() / 1024 / 1024) + " MB";
+		}
+		else if (sfile.isDirectory()) {
+			File[] files = sfile.listFiles();
+			ftype = "文件夹";
+			if (files != null) flen = "包含  " + files.length + " 个内容";
+			else flen = "NULL";
+			}
+		
+		info = "名称： " + sfile.getName() + "\n" +
+			"类型： " + ftype + "\n" +
+			"路径： " + sfile.getParent() + "\n" +
+			"大小： " + flen + "\n" +
+			"修改时间： " + t.format("%Y-%m-%d %H:%M:%S") + "\n\n" +
+			"可读： " + (sfile.canRead()?"是":"否") + "\t" +
+			" 可写： " + (sfile.canWrite()?"是":"否") + "\n" +
+			"执行： " + (sfile.canExecute()?"是":"否") + "\t" +
+			" 隐藏： " + (sfile.isHidden()?"是":"否") + "\n";
+		
+		return info;
 	}
 
 }

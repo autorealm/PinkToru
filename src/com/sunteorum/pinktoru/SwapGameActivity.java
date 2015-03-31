@@ -268,7 +268,7 @@ public class SwapGameActivity extends BaseGameActivity {
 		else pv.setTraverse(false);
 		
 		step++;
-		game_status = "²½Êý£º" + String.valueOf(step);
+		game_status = "Step: " + String.valueOf(step);
     	setGameStatus();
 		hasComplete();
 		

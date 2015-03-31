@@ -3,6 +3,7 @@ package com.sunteorum.pinktoru.entity;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.graphics.Point;
 
 public class Piece {
@@ -10,6 +11,8 @@ public class Piece {
 	private Point key; //用于记录每块拼图的中心点，吸附判断使用
 	private Point minp;  //左上角的点位
 	private Point maxp;  //右下角的点位
+	
+	private int offset;  //图片偏移
 	
 	private int lineWidth;  //不包含凹凸的宽度
 	private int rowHeight;  //不包含凹凸的高度
@@ -24,6 +27,8 @@ public class Piece {
 
 	private Bitmap bmpPiece;
 	private Bitmap obmPiece;
+	
+	private Path piecePath; //碎片源图路径
 	
 	private int x = 0, y = 0;
 	private PieceGroup group = null;
@@ -58,6 +63,14 @@ public class Piece {
 
 	public void setMaxp(Point maxp) {
 		this.maxp = maxp;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 	public int getLineWidth() {
@@ -162,6 +175,14 @@ public class Piece {
 
 	public void setGroup(PieceGroup group) {
 		this.group = group;
+	}
+
+	public Path getPiecePath() {
+		return piecePath;
+	}
+
+	public void setPiecePath(Path piecePath) {
+		this.piecePath = piecePath;
 	}
 	
 	
