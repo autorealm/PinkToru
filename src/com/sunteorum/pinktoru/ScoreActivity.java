@@ -2,8 +2,10 @@ package com.sunteorum.pinktoru;
 
 import java.util.ArrayList;
 
+import com.sunteorum.pinktoru.entity.GameEntity;
 import com.sunteorum.pinktoru.entity.LevelEntity;
 import com.sunteorum.pinktoru.helper.LoadImageThread;
+import com.sunteorum.pinktoru.util.Common;
 import com.sunteorum.pinktoru.util.ImageUtils;
 
 import android.app.Activity;
@@ -100,6 +102,8 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 		Intent i = null;
 		int mode = 1, row, line;
 		if (games == null && gameId > 1) {
+			GameEntity ge = app.getGameById(gameId);
+			games = ge.getLevels();
 			
 		}
 		
@@ -108,8 +112,10 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			row = games.get(stage -1).getPieceRow();
 			line = games.get(stage -1).getPieceLine();
 			imageUri = games.get(stage -1).getImageUrl();
+			imageId = games.get(stage -1).getImageId();
+			levelId = games.get(stage -1).getLevelId();
 		} else {
-			LevelEntity le = app.getLevelById((levelId > 99) ? levelId : stage);
+			LevelEntity le = app.getLevelById(stage);
 			if (le != null) {
 				mode = le.getGameMode();
 				row = le.getPieceRow();
@@ -119,6 +125,8 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 				mode = app.getGameMode();
 				row = 12;
 				line = 9;
+				Common.showTip(this, "数据出错", "stage : " + stage + "\nmode : " + mode + "\nrow : " + row + "\nline : " + 9);
+				return;
 			}
 		}
 		
@@ -128,7 +136,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 		case R.id.btnContinue:
 
 			i = new Intent(ScoreActivity.this, GAME);
-			String action = "NEW_GAME_ACTION";
+			String action = "NEXT_GAME_STAGE_ACTION";
 			i.setAction(action);
 			
 			Bundle bundle = new Bundle();

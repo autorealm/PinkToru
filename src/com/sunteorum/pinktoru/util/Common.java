@@ -50,15 +50,15 @@ public class Common {
 		
 	}
 
-    public static void showTip(Context context, String title, String message) {
-    	new AlertDialog.Builder(context)
+	public static void showTip(Context context, String title, String message) {
+		new AlertDialog.Builder(context)
 			.setTitle(title)
 			.setMessage(message)
 			.setIcon(android.R.drawable.ic_menu_info_details)
 			.setPositiveButton("确定", null)
 			.create().show();
-    	
-    }
+		
+	}
 	
 	/**
 	 * 清空内存中缓存的图片数据
@@ -66,16 +66,16 @@ public class Common {
 	 */
 	public static void  clearCacheBitmap(Map<String, SoftReference<Bitmap>> ImgCache) {
 		if (ImgCache == null || ImgCache.isEmpty()) return;
-    	Object[] keys = ImgCache.keySet().toArray();
-    	for (int i = 0; i < keys.length; i++) {
-    		if (ImgCache.containsKey(keys[i]) && ImgCache.get(keys[i]).get() != null) {
-    			if (!ImgCache.get(keys[i]).get().isRecycled()) ImgCache.get(keys[i]).get().recycle();
-    		}
-    	}
-    	
-    	ImgCache.clear();
-    	
-    }
+		Object[] keys = ImgCache.keySet().toArray();
+		for (int i = 0; i < keys.length; i++) {
+			if (ImgCache.containsKey(keys[i]) && ImgCache.get(keys[i]).get() != null) {
+				if (!ImgCache.get(keys[i]).get().isRecycled()) ImgCache.get(keys[i]).get().recycle();
+			}
+		}
+		
+		ImgCache.clear();
+		
+	}
     
 	public static void closeStream(java.io.Closeable stream) {
 		try {
@@ -201,23 +201,23 @@ public class Common {
 		
 		StringBuffer hexValue = new StringBuffer();
 		for( int i = 0; i < md5Bytes.length; i++) {
-		    int val = ((int)md5Bytes[i])&0xff;
-		    if(val < 16) {
-		        hexValue.append("0");
-		    }
-		    hexValue.append(Integer.toHexString(val));
+			int val = ((int)md5Bytes[i])&0xff;
+			if(val < 16) {
+				hexValue.append("0");
+			}
+			hexValue.append(Integer.toHexString(val));
 		}
 		return hexValue.toString();
-    }
+	}
 
-    /**
-     * 以编码GB2312保存文本文件
-     * @param context
-     * @param filepath
-     * @param text
-     * @return
-     */
-    public static boolean saveTextFile(Context context, String filepath, String text) {
+	/**
+	 * 以编码GB2312保存文本文件
+	 * @param context
+	 * @param filepath
+	 * @param text
+	 * @return
+	 */
+	public static boolean saveTextFile(Context context, String filepath, String text) {
 		FileOutputStream outputStream;
 		
 		try {
@@ -232,7 +232,7 @@ public class Common {
 		return true;
 	}
 
-    /**
+	/**
 	 * 获取目录全部JPEG图片列表
 	 * @return 文件夹中的图片列表
 	 */
@@ -258,8 +258,8 @@ public class Common {
 		try {
 			for (String k:map.keySet()) {
 				if (disput != null && disput.contains(k)) continue;
-	        	json.put(k, map.get(k));
-	        }
+				json.put(k, map.get(k));
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -267,6 +267,6 @@ public class Common {
 		
 		return json.toString();
 	}
-	
-	
+
+
 }

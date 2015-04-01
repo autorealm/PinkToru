@@ -60,7 +60,7 @@ public class ViewUtils {
 		private PointF sPoint = new PointF();
 		private PointF ePoint = new PointF();
 		private float sDis = 0;
-    	private PointF mPoint;
+		private PointF mPoint;
 		private onTouchCallBack callback;
 		int edge = GROW_NONE;
 		int mode = 0;
@@ -73,11 +73,11 @@ public class ViewUtils {
 		@Override
 		public boolean onTouch(View arg0, MotionEvent arg1) {
 			
-	    	switch (arg1.getAction() & MotionEvent.ACTION_MASK) {
-	    	case MotionEvent.ACTION_DOWN:
-	    		sPoint.set(arg1.getX(), arg1.getY());
-	    		ePoint.set(arg1.getX(), arg1.getY());
-	    		if (lctime == 0) lctime = System.currentTimeMillis();
+			switch (arg1.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				sPoint.set(arg1.getX(), arg1.getY());
+				ePoint.set(arg1.getX(), arg1.getY());
+				if (lctime == 0) lctime = System.currentTimeMillis();
 				long lt = System.currentTimeMillis() - lctime;
 				if (lt > 100 && lt < 500) {
 					return false;
@@ -86,29 +86,29 @@ public class ViewUtils {
 				}
 				lctime = System.currentTimeMillis();
 				
-	    		edge = getHit(getViewRectInScreen(arg0), arg1.getRawX(), arg1.getRawY());
-	    		
-	    		mode = 0;
-	    	break;
-	    	case MotionEvent.ACTION_MOVE:
-	    		int dx = (int) (arg1.getX() - sPoint.x);
-		    	int dy = (int) (arg1.getY() - sPoint.y);
-		    	FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) arg0.getLayoutParams();
-		    	if (mode == 2) return true;
-		    	if (mode == 1) {
-		    		float eDis = distance(arg1);
-		    		if (eDis > 10f) {
-		    			int dw = (int)(arg0.getWidth() + eDis - sDis);
-		    			rlp.width = checkRect(dw, rlp.width)?dw:rlp.width;
-		    			int dh = (int)(arg0.getWidth() + eDis - sDis);
-		    			rlp.height = checkRect(dh, rlp.height)?dh:rlp.height;
-		    			rlp.leftMargin -= (int) ((eDis - sDis) / 2);
-		    			rlp.topMargin -= (int) ((eDis - sDis) / 2);
-		    			
-		    			arg0.setLayoutParams(rlp);
-		    			sDis = eDis;
-		    		}
-		    	} else if (edge == GROW_NONE) {
+				edge = getHit(getViewRectInScreen(arg0), arg1.getRawX(), arg1.getRawY());
+				
+				mode = 0;
+			break;
+			case MotionEvent.ACTION_MOVE:
+				int dx = (int) (arg1.getX() - sPoint.x);
+				int dy = (int) (arg1.getY() - sPoint.y);
+				FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) arg0.getLayoutParams();
+				if (mode == 2) return true;
+				if (mode == 1) {
+					float eDis = distance(arg1);
+					if (eDis > 10f) {
+						int dw = (int)(arg0.getWidth() + eDis - sDis);
+						rlp.width = checkRect(dw, rlp.width)?dw:rlp.width;
+						int dh = (int)(arg0.getWidth() + eDis - sDis);
+						rlp.height = checkRect(dh, rlp.height)?dh:rlp.height;
+						rlp.leftMargin -= (int) ((eDis - sDis) / 2);
+						rlp.topMargin -= (int) ((eDis - sDis) / 2);
+						
+						arg0.setLayoutParams(rlp);
+						sDis = eDis;
+					}
+				} else if (edge == GROW_NONE) {
 					return true;
 				} else if (edge == GROW_MOVE) {
 					
@@ -165,27 +165,27 @@ public class ViewUtils {
 					
 				}
 				
-	    		ePoint.set(arg1.getX(), arg1.getY());
-	    		if (callback != null) callback.onTouch(arg0, arg1);
-	    	break;
-	    	case MotionEvent.ACTION_UP:
-	    		mode = 0;
-	    		arg0.invalidate();
-	    		
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_UP:
-	    		mode = 2;
-	    		
-	    		
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_DOWN:
-		    	mode = 1;
-		    	sDis = distance(arg1);
-	    		if (sDis > 10f) mPoint = mid(arg1);
-	    	break;
-	    	
-	    	}
-	    	
+				ePoint.set(arg1.getX(), arg1.getY());
+				if (callback != null) callback.onTouch(arg0, arg1);
+			break;
+			case MotionEvent.ACTION_UP:
+				mode = 0;
+				arg0.invalidate();
+				
+			break;
+			case MotionEvent.ACTION_POINTER_UP:
+				mode = 2;
+				
+				
+			break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				mode = 1;
+				sDis = distance(arg1);
+				if (sDis > 10f) mPoint = mid(arg1);
+			break;
+			
+			}
+			
 			return true;
 		}
 
@@ -282,149 +282,149 @@ public class ViewUtils {
 		public TouchScaleListener(onTouchCallBack callback) {
 			this.callback = callback;
 		}
-    	
-    	@Override 
-    	public boolean onTouch(View v, MotionEvent event) {
-    		((ImageView) v).setScaleType(ScaleType.MATRIX);
-    		
-	    	switch (event.getAction() & MotionEvent.ACTION_MASK) {
-	    	case MotionEvent.ACTION_DOWN:
-	    		matrix.set(((ImageView) v).getImageMatrix());
-	    		currentMaritx.set(matrix);
-	            startPoint.set(event.getX(), event.getY());
-	            mode = DRAG;
-	            v.bringToFront();
-	    	break;
-	    	case MotionEvent.ACTION_MOVE: // 移动事件 
-		    	if (mode == DRAG) { // 图片拖动事件 
-			    	float dx = event.getX() - startPoint.x; // x轴移动距离 
-			    	float dy = event.getY() - startPoint.y;
-			    	matrix.set(currentMaritx); // 在当前的位置基础上移动 
-			    	matrix.postTranslate(dx, dy);
-			    	
-		    	} else if (mode == ZOOM) { // 图片放大事件 
-			    	float endDis = distance(event); // 结束距离 
-			    	if (endDis > 10f) {
-				    	float scale = endDis / startDis;// 放大倍数 
-				    	matrix.set(currentMaritx);
-				    	matrix.postScale(scale, scale, midPoint.x, midPoint.y);
-			    	}
-		    	}
-	    	break;
-	    	case MotionEvent.ACTION_UP:
-	    		mode = 0;
-	    	break;
-	    	// 有手指离开屏幕，但屏幕还有触点(手指)
-	    	case MotionEvent.ACTION_POINTER_UP:
-	    		mode = 0;
-	    	break;
-	    	// 当屏幕上已经有触点（手指）,再有一个手指压下屏幕 
-	    	case MotionEvent.ACTION_POINTER_DOWN:
-		    	mode = ZOOM;
-		    	startDis = distance(event);
-		    	if (startDis > 10f) {
-			    	midPoint = mid(event);
-			    	currentMaritx.set(((ImageView) v).getImageMatrix());// 记录当前的缩放倍数 
-		    	}
+		
+		@Override 
+		public boolean onTouch(View v, MotionEvent event) {
+			((ImageView) v).setScaleType(ScaleType.MATRIX);
+			
+			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				matrix.set(((ImageView) v).getImageMatrix());
+				currentMaritx.set(matrix);
+				startPoint.set(event.getX(), event.getY());
+				mode = DRAG;
+				v.bringToFront();
+			break;
+			case MotionEvent.ACTION_MOVE: // 移动事件 
+				if (mode == DRAG) { // 图片拖动事件 
+					float dx = event.getX() - startPoint.x; // x轴移动距离 
+					float dy = event.getY() - startPoint.y;
+					matrix.set(currentMaritx); // 在当前的位置基础上移动 
+					matrix.postTranslate(dx, dy);
+					
+				} else if (mode == ZOOM) { // 图片放大事件 
+					float endDis = distance(event); // 结束距离 
+					if (endDis > 10f) {
+						float scale = endDis / startDis;// 放大倍数 
+						matrix.set(currentMaritx);
+						matrix.postScale(scale, scale, midPoint.x, midPoint.y);
+					}
+				}
+			break;
+			case MotionEvent.ACTION_UP:
+				mode = 0;
+			break;
+			// 有手指离开屏幕，但屏幕还有触点(手指)
+			case MotionEvent.ACTION_POINTER_UP:
+				mode = 0;
+			break;
+			// 当屏幕上已经有触点（手指）,再有一个手指压下屏幕 
+			case MotionEvent.ACTION_POINTER_DOWN:
+				mode = ZOOM;
+				startDis = distance(event);
+				if (startDis > 10f) {
+					midPoint = mid(event);
+					currentMaritx.set(((ImageView) v).getImageMatrix());// 记录当前的缩放倍数 
+				}
 
-	    	break;
-	    	
-	    	}
-	    	
-	    	((ImageView) v).setImageMatrix(matrix);
-	    	if (callback != null) callback.onTouch(v, event);
-	    	
-	    	return true;
-    	}
+			break;
+			
+			}
+			
+			((ImageView) v).setImageMatrix(matrix);
+			if (callback != null) callback.onTouch(v, event);
+			
+			return true;
+		}
 
-    }
+	}
 
 	public static class TouchDragListener implements OnTouchListener {
 
 		private PointF startPoint = new PointF();
 
-    	private int mode = 0; // 用于标记模式 
-    	private static final int DRAG = 1; // 拖动 
-    	private static final int ZOOM = 2; // 放大 
-    	
-    	private onTouchCallBack callback;
-    	boolean skiptrans = true;
-    	
-    	public TouchDragListener(onTouchCallBack callback) {
-    		this.callback = callback;
-    	}
-    	
-    	@SuppressLint("ClickableViewAccessibility")
+		private int mode = 0; // 用于标记模式 
+		private static final int DRAG = 1; // 拖动 
+		private static final int ZOOM = 2; // 放大 
+		
+		private onTouchCallBack callback;
+		boolean skiptrans = true;
+		
+		public TouchDragListener(onTouchCallBack callback) {
+			this.callback = callback;
+		}
+		
+		@SuppressLint("ClickableViewAccessibility")
 		@Override
-    	public boolean onTouch(View v, MotionEvent event) {
-    		
-	    	switch (event.getAction() & MotionEvent.ACTION_MASK) {
-	    	case MotionEvent.ACTION_DOWN:
-	    		if (v instanceof ImageView) {
-	    			Bitmap bitmap = v.getDrawingCache();
-	    			if (skiptrans && bitmap != null && (bitmap.getWidth() >= event.getX())
-	    					&& (bitmap.getHeight() >= event.getY())
-		    				&& bitmap.getPixel((int)event.getX(), (int)event.getY()) == 0) {
-		    			
-		    			return false; 
-		    		}
-	    		}
-	    		
-	            startPoint.set(event.getX(), event.getY());
-	            mode = DRAG;
-	            v.bringToFront();
-	            v.requestFocus();
-	            
-	    	break;
-	    	case MotionEvent.ACTION_MOVE: // 移动事件 
-		    	if (mode == DRAG) {
-			    	int dx = (int) (event.getX() - startPoint.x + 0.5f);
-			    	int dy = (int) (event.getY() - startPoint.y + 0.5f);
-			    	
-			    	if (v.getParent() instanceof FrameLayout) {
-				    	int left = v.getLeft() + dx;
-		                int top = v.getTop() + dy;
-		                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
-		                lp.leftMargin = left;
-		                lp.topMargin = top;
-		                lp.gravity = Gravity.TOP|Gravity.LEFT;
-		                v.setLayoutParams(lp);
-			    	} else {
-			    		int l = v.getLeft() + dx;
+		public boolean onTouch(View v, MotionEvent event) {
+			
+			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				if (v instanceof ImageView) {
+					Bitmap bitmap = v.getDrawingCache();
+					if (skiptrans && bitmap != null && (bitmap.getWidth() >= event.getX())
+							&& (bitmap.getHeight() >= event.getY())
+							&& bitmap.getPixel((int)event.getX(), (int)event.getY()) == 0) {
+						
+						return false; 
+					}
+				}
+				
+				startPoint.set(event.getX(), event.getY());
+				mode = DRAG;
+				v.bringToFront();
+				v.requestFocus();
+				
+			break;
+			case MotionEvent.ACTION_MOVE: // 移动事件 
+				if (mode == DRAG) {
+					int dx = (int) (event.getX() - startPoint.x + 0.5f);
+					int dy = (int) (event.getY() - startPoint.y + 0.5f);
+					
+					if (v.getParent() instanceof FrameLayout) {
+						int left = v.getLeft() + dx;
+						int top = v.getTop() + dy;
+						FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
+						lp.leftMargin = left;
+						lp.topMargin = top;
+						lp.gravity = Gravity.TOP|Gravity.LEFT;
+						v.setLayoutParams(lp);
+					} else {
+						int l = v.getLeft() + dx;
 						int t = v.getTop() + dy;
 						int r = l + v.getWidth();
 						int b = t + v.getHeight();
 						
 						v.layout(l, t, r, b);
 						v.postInvalidate();
-			    	}
-		    	
-		    	} else if (mode == ZOOM) { // 放大事件 
-		    		
-		    	}
-		    	
-	    	break;
-	    	case MotionEvent.ACTION_UP:
-	    		mode = 0;
-	    		//v.clearFocus();
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_UP:
-	    		mode = 0;
-	    		//v.destroyDrawingCache();
-	    	break;
-	    	case MotionEvent.ACTION_POINTER_DOWN:
-		    	mode = ZOOM;
-		    	
-	    	break;
-	    	
-	    	}
-	    	
-	    	if (callback != null) callback.onTouch(v, event);
-	    	
-	    	return true;
-    	}
+					}
+				
+				} else if (mode == ZOOM) { // 放大事件 
+					
+				}
+				
+			break;
+			case MotionEvent.ACTION_UP:
+				mode = 0;
+				//v.clearFocus();
+			break;
+			case MotionEvent.ACTION_POINTER_UP:
+				mode = 0;
+				//v.destroyDrawingCache();
+			break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				mode = ZOOM;
+				
+			break;
+			
+			}
+			
+			if (callback != null) callback.onTouch(v, event);
+			
+			return true;
+		}
 
-    }
+	}
 	
 	public static void forceShowOverflowMenu(Context context) {
 		try {
@@ -441,25 +441,25 @@ public class ViewUtils {
 	}
 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
-	    ListAdapter listAdapter = listView.getAdapter();
-	    if (listAdapter == null) {
-	        Log.i("setListViewHeightBasedOnChildren", "NULL");
-	        return;
-	    }
-	    int totalHeight = 0;
-	    for (int i = 0; i < listAdapter.getCount(); i++) {
-	        View listItem = listAdapter.getView(i, null, listView);
-	        listItem.measure(0, 0);
-	        totalHeight += listItem.getMeasuredHeight();
-	    }
-	    
-	    ViewGroup.LayoutParams params = listView.getLayoutParams();
-	    int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-	    if (params.height < (height - 12) || params.height > (height + 12)) {
-	    	params.height = height;
-	    	listView.setLayoutParams(params);
-	    }
-	    
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) {
+			Log.i("setListViewHeightBasedOnChildren", "NULL");
+			return;
+		}
+		int totalHeight = 0;
+		for (int i = 0; i < listAdapter.getCount(); i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			listItem.measure(0, 0);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+		
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+		if (params.height < (height - 12) || params.height > (height + 12)) {
+			params.height = height;
+			listView.setLayoutParams(params);
+		}
+		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -471,8 +471,8 @@ public class ViewUtils {
 				view.getDrawingCache().getHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bmp);
 		Paint paint = new Paint();
-        paint.setAlpha(200);
-        
+		paint.setAlpha(200);
+		
 		String c = "FFFFFF";
 		if (backcolor != null && backcolor.length() > 0) c = backcolor;
 		canvas.drawColor(Color.parseColor("#" + c)); //"#" + Integer.toHexString(color)
@@ -500,74 +500,74 @@ public class ViewUtils {
 		return new PointF(midx / 2, midy / 2);
 	}
 
-    /**
-     * 改变View的Z轴
-     * @param v View (注意父Layout)
-     * @param front 是即前置,否则后置
-     */
-    public static void bringTo(View v, boolean front) {
-    	ViewGroup flay = (ViewGroup) v.getParent();
-    	if (front) {
-    		v.bringToFront();
-    		flay.invalidate();
-    		return;
-    	}
-    	
-    	//FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) flay.getLayoutParams();
-    	ArrayList<View> views = new ArrayList<View>();
-    	for (int i = 0; i < flay.getChildCount(); i++) {
-    		View view = flay.getChildAt(i);
-    		if (view.equals(v)) continue;
-    		views.add(view);
-    		//view.bringToFront();
-    	}
-    	
-    	for (View view:views) {
-    		view.bringToFront();
-    	}
-    	
-    	flay.postInvalidate();
-    }
-    
-    public static void layout(View v, int dx, int dy) {
-    	int l = v.getLeft() + dx;
+	/**
+	 * 改变View的Z轴
+	 * @param v View (注意父Layout)
+	 * @param front 是即前置,否则后置
+	 */
+	public static void bringTo(View v, boolean front) {
+		ViewGroup flay = (ViewGroup) v.getParent();
+		if (front) {
+			v.bringToFront();
+			flay.invalidate();
+			return;
+		}
+		
+		//FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) flay.getLayoutParams();
+		ArrayList<View> views = new ArrayList<View>();
+		for (int i = 0; i < flay.getChildCount(); i++) {
+			View view = flay.getChildAt(i);
+			if (view.equals(v)) continue;
+			views.add(view);
+			//view.bringToFront();
+		}
+		
+		for (View view:views) {
+			view.bringToFront();
+		}
+		
+		flay.postInvalidate();
+	}
+
+	public static void layout(View v, int dx, int dy) {
+		int l = v.getLeft() + dx;
 		int t = v.getTop() + dy;
 		int r = l + v.getWidth();
 		int b = t + v.getHeight();
 		
 		v.layout(l, t, r, b);
 		v.postInvalidate();
-    }
-    
-    /**
-     * 移动View至指定坐标
-     * @param v View
-     * @param left 顶点X坐标
-     * @param top 顶点Y坐标
-     */
-    public static void moveView(final View v, int left, int top) {
-    	if (v.getParent() instanceof FrameLayout) {
-	    	FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) v.getLayoutParams();
-	        if (left > -1) lp.leftMargin = left;
-	        if (top > -1) lp.topMargin = top;
-	        lp.gravity = Gravity.TOP|Gravity.LEFT;
-	        
-	        v.setLayoutParams(lp);
-    	} else {
-    		ViewGroup.LayoutParams vlp = v.getLayoutParams();
-    		int w = vlp.width;
-    		int h = vlp.height;
-    		
-    		v.layout(left, top, w + left, top - h);
-			v.postInvalidate();
-    	}
-    }
+	}
 
-    /**
-     * 缩放View
-     * @param v
-     * @param scale 缩放率
-     */
+	/**
+	 * 移动View至指定坐标
+	 * @param v View
+	 * @param left 顶点X坐标
+	 * @param top 顶点Y坐标
+	 */
+	public static void moveView(final View v, int left, int top) {
+		if (v.getParent() instanceof FrameLayout) {
+			FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) v.getLayoutParams();
+			if (left > -1) lp.leftMargin = left;
+			if (top > -1) lp.topMargin = top;
+			lp.gravity = Gravity.TOP|Gravity.LEFT;
+			
+			v.setLayoutParams(lp);
+		} else {
+			ViewGroup.LayoutParams vlp = v.getLayoutParams();
+			int w = vlp.width;
+			int h = vlp.height;
+			
+			v.layout(left, top, w + left, top - h);
+			v.postInvalidate();
+		}
+	}
+
+	/**
+	 * 缩放View
+	 * @param v
+	 * @param scale 缩放率
+	 */
 	public static void zoomView(View v, float scale) {
 		ViewGroup.LayoutParams vlp = v.getLayoutParams();
 		int w = vlp.width;
@@ -603,84 +603,84 @@ public class ViewUtils {
 		}
 	}
 
-    /**
-     * 使图案View居中显示
-     * @param view View
-     * @param fill 是否使View适应布局区域显示
-     */
-    public static void alignCenter(View view, boolean fill) {
-    	ViewGroup.LayoutParams vlp = view.getLayoutParams();
-    	int sheight = vlp.height;
-    	int swidth = vlp.width;
-    	int h = view.getHeight();
-    	int w = view.getWidth();
-    	if (fill) {
-	    	if ((float) (w * ((float) sheight / swidth)) > h) {
-	    		h = (int) ((float)swidth * h / w + 0.5f);
-	    		w = swidth;
-	    	} else {
-	    		w = (int) ((float)sheight * w / h + 0.5f);
-	    		h = sheight;
-	    	}
-    	}
-    	int left = (int) ((swidth - w) / 2 + 0.5f);
-    	int top = (int) ((sheight - h) / 2 + 0.5f);
-    	
-    	if (view.getParent() instanceof FrameLayout) {
+	/**
+	 * 使图案View居中显示
+	 * @param view View
+	 * @param fill 是否使View适应布局区域显示
+	 */
+	public static void alignCenter(View view, boolean fill) {
+		ViewGroup.LayoutParams vlp = view.getLayoutParams();
+		int sheight = vlp.height;
+		int swidth = vlp.width;
+		int h = view.getHeight();
+		int w = view.getWidth();
+		if (fill) {
+			if ((float) (w * ((float) sheight / swidth)) > h) {
+				h = (int) ((float)swidth * h / w + 0.5f);
+				w = swidth;
+			} else {
+				w = (int) ((float)sheight * w / h + 0.5f);
+				h = sheight;
+			}
+		}
+		int left = (int) ((swidth - w) / 2 + 0.5f);
+		int top = (int) ((sheight - h) / 2 + 0.5f);
+		
+		if (view.getParent() instanceof FrameLayout) {
 			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
-	        lp.leftMargin = left;
-	        lp.topMargin = top;
-	        lp.gravity = Gravity.TOP|Gravity.LEFT;
-	        
-	        view.setLayoutParams(lp);
-	        view.destroyDrawingCache();
-    	} else {
-    		
-    		view.layout(left, top, w + left, top - h);
+			lp.leftMargin = left;
+			lp.topMargin = top;
+			lp.gravity = Gravity.TOP|Gravity.LEFT;
+			
+			view.setLayoutParams(lp);
+			view.destroyDrawingCache();
+		} else {
+			
+			view.layout(left, top, w + left, top - h);
 			view.postInvalidate();
-    	}
-    }
-    
-    /**
-     * 获取匹配框架缩放率
-     * @param width 框架宽度
-     * @param height 框架高度
-     * @param w 源宽
-     * @param h 源高
-     * @param a 最大倍率
-     */
-    public static float getSpaceScale(int width, int height, int w, int h, int a) {
-    	float s = 1f;
-    	if (a < 1) a = 1;
-    	if ((float) w * (height / width) > h) {
-    		if (width > w * a) {
-	    		s = a;
-	    		h = a * h;
-	    		w = a * w;
-	    	} else {
-	    		s = (float) width / w;
-	    		h = (int) ((float)width * h / w + 0.5f);
-	    		w = width;
-	    	}
-    	} else {
-    		if (height > h * a) {
-	    		s = a;
-	    		h = a * h;
-	    		w = a * w;
-	    	} else {
-	    		s = (float) height / h;
-	    		w = (int) ((float)height * w / h + 0.5f);
-	    		h = height;
-	    	}
-    	}
-    	
-    	return s;
-    }
+		}
+	}
 
-    public static float getSpaceScale(Rect pr, Rect sr, int a) {
-    	return getSpaceScale(pr.width(), pr.height(), sr.width(), sr.height(), a);
-    }
-    
+	/**
+	 * 获取匹配框架缩放率
+	 * @param width 框架宽度
+	 * @param height 框架高度
+	 * @param w 源宽
+	 * @param h 源高
+	 * @param a 最大倍率
+	 */
+	public static float getSpaceScale(int width, int height, int w, int h, int a) {
+		float s = 1f;
+		if (a < 1) a = 1;
+		if ((float) w * (height / width) > h) {
+			if (width > w * a) {
+				s = a;
+				h = a * h;
+				w = a * w;
+			} else {
+				s = (float) width / w;
+				h = (int) ((float)width * h / w + 0.5f);
+				w = width;
+			}
+		} else {
+			if (height > h * a) {
+				s = a;
+				h = a * h;
+				w = a * w;
+			} else {
+				s = (float) height / h;
+				w = (int) ((float)height * w / h + 0.5f);
+				h = height;
+			}
+		}
+		
+		return s;
+	}
+
+	public static float getSpaceScale(Rect pr, Rect sr, int a) {
+		return getSpaceScale(pr.width(), pr.height(), sr.width(), sr.height(), a);
+	}
+
 	public static Rect getViewRectInScreen(View v) {
 		final int w = v.getWidth();
 		final int h = v.getHeight();

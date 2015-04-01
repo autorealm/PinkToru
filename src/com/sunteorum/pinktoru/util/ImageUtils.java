@@ -374,7 +374,7 @@ public class ImageUtils {
 
 		Paint paint = new Paint();
 		paint.setColor(color);
-		paint.setStrokeWidth(1.2f);
+		paint.setStrokeWidth(2f);
 		paint.setAntiAlias(true);
 		//paint.setAlpha(128);
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));

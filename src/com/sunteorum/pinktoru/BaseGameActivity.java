@@ -112,8 +112,12 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		final String action = this.getIntent().getAction();
 		Log.i(tag, "action = " + action);
 		
-		if (this.getIntent().hasExtra("games"))
+		if (this.getIntent().hasExtra("games")) {
 			games = getIntent().getParcelableArrayListExtra("games");
+		} else if (this.getIntent().hasExtra("level")) {
+			le = getIntent().getParcelableExtra("level");
+			//Log.i(tag, le.toJSONString());
+		}
 		
 		Bundle bundle = this.getIntent().getExtras();
 		imageId = bundle.containsKey("imageId") ? bundle.getInt("imageId") : 0;
@@ -132,9 +136,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 				Common.showTip(this, "程序出错", "游戏数据读取失败！");
 				return;
 			}
-			
 			le = games.get(stage - 1);
-		} else if (levelId > 99) {
+		} else if (levelId > 99 && le == null) {
 			le = app.getLevelById(levelId);
 		}
 		
@@ -161,8 +164,9 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			Common.showTip(this, "程序出错", "游戏图片资源读取失败！");
 			return;
 		}
-		
 
+		levelId = (levelId > 0) ? levelId : stage;
+		
 		if (le == null) {
 			le = new LevelEntity(levelId, row, line, imageUri);
 			
@@ -173,9 +177,10 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			le.setRenderFlag(app.getPieceRenderFlag());
 			le.setWithQuad((app.isWithquad()));
 			le.setAbsInMove(app.isAbsinmove());
-			
+			le.setGameMode(app.getGameModeByClass(this));
 		}
 		
+		Log.i(tag, "levelId : " + levelId + " line = " + line + " row = " + row + " mode = " + app.getGameModeByClass(this));
 		
 		mVibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -186,8 +191,19 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		background_drawalbe = ImageUtils.readDrawable(this, imagePath, screenWidth, screenHeight);
 		lctime = System.currentTimeMillis();
 		
+		//保存本地游戏进度
+		if (app.isAutosave() && games == null) {
+			app.saveCurrentGame(gameId, stage, le);
+		}
+		
+		//初始化
 		init();
 		process();
+		
+		
+		if (puzzle != null) puzzle.setKeepScreenOn(app.isKeepon());
+		if (stage > 3) ERR_TIP_TIMES += stage - 3;
+		
 		
 	}
 
@@ -237,6 +253,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			allPieces.clear();
 		}
 		
+		mVibrator = null;
 		background_drawalbe = null;
 		if (space != null) space.removeAllViews();
 		if (puzzle != null) puzzle.setBackgroundDrawable(null);
@@ -294,11 +311,16 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		new AlertDialog.Builder(BaseGameActivity.this)
 			.setTitle("退出当前的游戏吗？")
 			.setIcon(android.R.drawable.ic_dialog_alert)
-			.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+			.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					finish();
 				}
-			}).setNegativeButton("取消", null)
+			})
+			.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int which) {
+					ERR_TIP_TIMES++;
+				}
+			})
 			.create().show();
 	}
 

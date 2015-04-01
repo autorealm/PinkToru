@@ -1,5 +1,7 @@
 package com.sunteorum.pinktoru.entity;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,6 +88,22 @@ public class GameEntity implements Parcelable {
 		}
 		
 		return this.toString();
+	}
+	
+	/**
+	 * 
+	 * @param level
+	 * @return
+	 */
+	public ArrayList<LevelEntity> getLevels() {
+		ArrayList<LevelEntity> games = new ArrayList<LevelEntity>();
+		// TODO Auto-generated method stub
+		String level = this.getGameLevel();
+		if (android.text.TextUtils.isEmpty(level)) return null;
+		
+		
+		
+		return games;
 	}
 
 	@Override

@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
      android:title="游戏设置" >
      <PreferenceCategory android:title="常规设置">
+         <CheckBoxPreference android:key="autosave"
+			android:title="自动保存"
+			android:defaultValue="true"
+			android:summary="是否在退出游戏时自动保存进度" >
+		</CheckBoxPreference>
 		<CheckBoxPreference android:key="trainmove"
 			android:title="移动透明"
 			android:summary="是否在移动时透明显示其他碎片" >

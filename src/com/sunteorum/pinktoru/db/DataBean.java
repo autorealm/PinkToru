@@ -298,7 +298,7 @@ public class DataBean {
 	public GameEntity queryGame(int id) {
 		GameEntity ge = new GameEntity();
 		Cursor cursor = getEntry(DBHelper.TABLE_GAME, "game_id=" + id);
-		if (cursor.getCount() != 1) return null;
+		if (cursor.getCount() == 0) return null;
 		
 		cursor.moveToFirst();
 		int game_id = cursor.getInt(cursor.getColumnIndexOrThrow("game_id"));
@@ -329,7 +329,7 @@ public class DataBean {
 	public LevelEntity queryLevel(int id) {
 		LevelEntity le = new LevelEntity();
 		Cursor cursor = getEntry(DBHelper.TABLE_LEVEL, "level_id=" + id);
-		if (cursor.getCount() != 1) return null;
+		if (cursor.getCount() == 0) return null;
 		
 		cursor.moveToFirst();
 		int level_id = cursor.getInt(cursor.getColumnIndexOrThrow("level_id"));

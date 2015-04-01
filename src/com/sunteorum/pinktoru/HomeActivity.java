@@ -2,6 +2,8 @@ package com.sunteorum.pinktoru;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +27,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.sunteorum.pinktoru.util.AppUtils;
+import com.sunteorum.pinktoru.util.Common;
 import com.sunteorum.pinktoru.view.SlideLinearLayout;
 import com.sunteorum.pinktoru.view.SquareGridView;
 
@@ -86,7 +90,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			
 			break;
 		case 3:
-			startActivity(new Intent(HomeActivity.this, SystemSetting.class));
+			//startActivity(new Intent(HomeActivity.this, SystemSetting.class));
+			Common.showToast(this, "未提供");
 			
 			break;
 		case 11:
@@ -115,6 +120,17 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			
 			break;
 		case 12:
+			Map<String, String> map = AppUtils.getPhoneInfo(this);
+			String info = "";
+			Object[] keys = map.keySet().toArray();
+			Arrays.sort(keys);
+			for (int i = 0; i < keys.length - 1; i++) {
+				info += keys[i] + " : " + map.get(keys[i]) + "\n";
+			}
+			
+			Common.showTip(this, "关于 PinkToru", "" + AppUtils.getAppName(this) + "\n"
+					+ "Version : " + AppUtils.getVersionName(this) + "\n\n"
+					+ "" + info);
 			
 			break;
 		}

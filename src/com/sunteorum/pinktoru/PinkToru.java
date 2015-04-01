@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.sunteorum.pinktoru.db.DataBean;
 import com.sunteorum.pinktoru.entity.GameEntity;
@@ -43,6 +44,8 @@ public class PinkToru extends Application {
 	final int DEF_HEIGHT = 960;
 	final int DEF_WITCH = 600;
 	
+	final String LOC_SAVE_KEY = "loc_auto_save";
+	
 	private DataBean db;
 	private UserEntity user;
 	protected boolean offline = true;	//是否离线游戏模式，测试用
@@ -55,6 +58,7 @@ public class PinkToru extends Application {
 	private boolean absinmove = true;	//是否移动时进行拼合判断
 	private boolean withquad = true;	//碎片曲线分割方式
 	
+	private boolean autosave = true; //自动保存进度
 	private boolean trainmove = false;	//是否移动时透明其他碎片
 	private boolean showedge = false;	//是否显示碎片的虚线边框
 	private boolean keepon = false;	//游戏时保持屏幕常亮
@@ -100,10 +104,15 @@ public class PinkToru extends Application {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
 		absinmove = prefs.getBoolean("absinmove", absinmove);
+		autosave = prefs.getBoolean("autosave", autosave);
 		trainmove = prefs.getBoolean("trainmove", trainmove);
 		showedge = prefs.getBoolean("showedge", showedge);
 		withquad = prefs.getBoolean("withquad", withquad);
 		keepon = prefs.getBoolean("keepon", keepon);
+		
+		if (!autosave) {
+			saveConfig(LOC_SAVE_KEY, "");
+		}
 		
 		try {
 			gameMode = Integer.parseInt(prefs.getString("gamemode", "1"));
@@ -138,7 +147,7 @@ public class PinkToru extends Application {
 		
 		return games;
 	}
-	
+
 	public GameEntity getGameById(int id) {
 		return db.queryGame(id);
 	}
@@ -172,6 +181,19 @@ public class PinkToru extends Application {
 		this.gameMode = gameMode;
 		
 		return GAME;
+	}
+
+	public int getGameModeByClass(android.app.Activity cl) {
+		if (cl == null) return -1;
+		
+		if (cl instanceof PintuGameActivity) return 1;
+		if (cl instanceof FillGameActivity) return 2;
+		if (cl instanceof SwapGameActivity) return 3;
+		if (cl instanceof PushGameActivity) return 4;
+		
+		if (cl instanceof PokeGameActivity) return 10;
+		
+		return 0;
 	}
 	
 	public String getUUID() {
@@ -253,6 +275,14 @@ public class PinkToru extends Application {
 
 	public void setKeepon(boolean keepon) {
 		this.keepon = keepon;
+	}
+
+	public boolean isAutosave() {
+		return autosave;
+	}
+
+	public void setAutosave(boolean autosave) {
+		this.autosave = autosave;
 	}
 
 	public int getGameMode() {
@@ -373,6 +403,49 @@ public class PinkToru extends Application {
 		}
 		
 		mAsyncTasks.clear();
+	}
+
+	protected boolean saveCurrentGame(int gameId, int stage, LevelEntity le) {
+		JSONObject jso = new JSONObject();
+		
+		try {
+			jso.put("game_id", gameId);
+			jso.put("stage", stage);
+			jso.put("game_time", this.getGameTime());
+			
+			jso.put("level", new JSONObject(le.toJSONString()));
+			
+			//System.out.println(le.toJSONString());
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return saveConfig(LOC_SAVE_KEY, jso.toString());
+		
+	}
+
+	/**
+	 * # 获取保存的游戏进度数据
+	 * # key 为空时载入自动保存的游戏进度数据
+	 * @param key
+	 * @return 关键字段 : "game_id", "stage", "game_time", "level"
+	 */
+	public Map<String, Object> getSaveGameString(String key) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (android.text.TextUtils.isEmpty(key)) key = LOC_SAVE_KEY;
+		try {
+			JSONObject jso = new JSONObject(this.getConfig(key));
+			map.put("game_id", jso.get("game_id"));
+			map.put("stage", jso.get("stage"));
+			map.put("game_time", jso.get("game_time"));
+			
+			map.put("level", new LevelEntity(jso.get("level").toString()));
+			
+		} catch (Exception e) {
+			return null;
+		}
+		
+		return map;
 	}
 
 	protected void downloadReceiver(String fileUrl) {

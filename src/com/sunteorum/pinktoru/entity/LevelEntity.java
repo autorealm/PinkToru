@@ -40,7 +40,7 @@ public class LevelEntity implements Parcelable {
 	}
 	
 	public LevelEntity(int id, int row, int line, String uri) {
-		//游戏ID分类：0为预置，1～100为自定义，1000以上为下载内容
+		//游戏ID分类：0为预置，1～100为系统自定义，100～1000为用户自定义. 1000以上为下载内容
 		this.levelId = 0;
 		this.imageId = 0;
 		this.imageUrl = uri;
@@ -77,7 +77,7 @@ public class LevelEntity implements Parcelable {
 		try {
 			JSONObject jso = new JSONObject(lvJson);
 			int id = jso.getInt("id");
-			if (id < 101) id = 101;
+			
 			this.levelId = id;
 			this.imageId = jso.has("image_id")?jso.getInt("image_id"):0;
 			this.imageUrl = jso.getString("image_url");
@@ -86,6 +86,7 @@ public class LevelEntity implements Parcelable {
 			this.gameMode =  jso.has("mode")?jso.getInt("mode"):1;
 			if (jso.has("desc")) this.levelDesc = jso.getString("desc");
 			if (jso.has("add_data")) this.addData = jso.getString("add_data");
+			
 			if (jso.has("target")) this.targetValue = jso.getInt("target");
 			if (jso.has("gift_pts")) this.giftPoints = jso.getInt("gift_pts");
 			
@@ -94,6 +95,9 @@ public class LevelEntity implements Parcelable {
 			if (jso.has("render_flag")) this.renderFlag = jso.getInt("render_flag");
 			if (jso.has("edge_width")) this.edgeWidth = jso.getInt("edge_width");
 			if (jso.has("shadow_offset")) this.shadowOffset = jso.getInt("shadow_offset");
+			
+			if (jso.has("with_quad")) this.withQuad = jso.getBoolean("with_quad");
+			if (jso.has("abs_move")) this.absInMove = jso.getBoolean("abs_move");
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -121,6 +125,8 @@ public class LevelEntity implements Parcelable {
 			jso.put("add_data", this.addData);
 			
 			jso.put("desc", this.levelDesc);
+			jso.put("with_quad", this.withQuad);
+			jso.put("abs_move", this.absInMove);
 			
 			return jso.toString();
 		} catch (JSONException e) {

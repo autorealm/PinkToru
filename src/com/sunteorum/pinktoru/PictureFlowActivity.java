@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import com.sunteorum.pinktoru.adapter.FlowImageAdapter;
 import com.sunteorum.pinktoru.entity.GameEntity;
@@ -52,6 +53,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	
 	private ArrayList<String> imageList = new ArrayList<String>();
 	private String capimgPath = "";
+	private Map<String, Object> save_map;
 	
 	PinkToru app;
 	
@@ -85,7 +87,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
 		((PinkToru) getApplication()).init();
+		
+		save_map = app.getSaveGameString(null);
+		if (save_map != null) {
+			btnReturn.setText(R.string.continue_game);
+			
+		}
 		
 	}
 
@@ -290,10 +299,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			
 			break;
 		case R.id.button_return:
-			startActivity(new Intent(this, HomeActivity.class));
-    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    		
-			finish();
+			if (save_map == null) {
+				startActivity(new Intent(this, HomeActivity.class));
+	    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+	    		
+				finish();
+			} else {
+				gotoPlayTheGame(null);
+			}
 			
 			break;
 		case 0:
@@ -369,7 +382,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			if (tname.endsWith(".jpg") || tname.endsWith(".jpeg") || tname.endsWith(".png")
 					 || tname.endsWith(".bmp")) {
 				String f = Uri.fromFile(tfile).toString();
-				System.out.println(f);
+				//System.out.println(f);
 				imageList.add(f);
 				
 			}
@@ -378,23 +391,52 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	}
 	
 	public void gotoPlayTheGame(GameEntity ge) {
-		Intent i = new Intent(this, app.getGameClass(ge.getGameMode()));
-		i.setAction("NEW_GAME_ACTION");
+		Intent i = new Intent();
+		Bundle bundle = new Bundle();
 		
-		LevelEntity le = app.getLevelById(1);
-		if (le == null) {
-			Common.showToast(this, "数据出错了！");
+		if (ge != null) {
+			i.setClass(this, app.getGameClass(ge.getGameMode()));
+			i.setAction("NEW_GAME_ACTION");
+			
+			LevelEntity le = app.getLevelById(1);
+			if (le == null) {
+				Common.showToast(this, "数据出错了！");
+				return;
+			}
+			
+			bundle.putInt("gameId", 1);
+			bundle.putInt("levelId", 1);
+			bundle.putInt("stage", 1);
+			bundle.putInt("row", le.getPieceRow());
+			bundle.putInt("line", le.getPieceLine());
+			bundle.putInt("imageId", ge.getGameImageId());
+			bundle.putString("imageUri", ge.getGameImageUrl());
+		} else if (save_map != null) {
+			try {
+				LevelEntity le = (LevelEntity) save_map.get("level");
+				app.setGameTime(Long.valueOf(save_map.get("game_time").toString()));
+				
+				i.setClass(this, app.getGameClass(le.getGameMode()));
+				i.setAction("CONTINUE_GAME_ACTION");
+				i.putExtra("level", le);
+				
+				bundle.putInt("gameId", Integer.valueOf(save_map.get("game_id").toString()));
+				bundle.putInt("levelId", le.getLevelId());
+				bundle.putInt("stage", Integer.valueOf(save_map.get("stage").toString()));
+				bundle.putInt("row", le.getPieceRow());
+				bundle.putInt("line", le.getPieceLine());
+				bundle.putInt("imageId", le.getImageId());
+				bundle.putString("imageUri", le.getImageUrl());
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				Common.showToast(this, "数据载入出错了！");
+				return;
+			}
+		} else {
+			Common.showToast(this, "怎么回事？出错了！");
 			return;
 		}
-		
-		Bundle bundle = new Bundle();
-		bundle.putInt("gameId", 1);
-		bundle.putInt("levelId", 1);
-		bundle.putInt("stage", 1);
-		bundle.putInt("row", le.getPieceRow());
-		bundle.putInt("line", le.getPieceLine());
-		bundle.putInt("imageId", ge.getGameImageId());
-		bundle.putString("imageUri", ge.getGameImageUrl());
 		
 		i.putExtras(bundle);
 		startActivity(i);

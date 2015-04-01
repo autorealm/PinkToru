@@ -48,12 +48,12 @@ public class AppUtils {
 		String mPackageName = activity.getPackageName();
 		@SuppressWarnings("deprecation")
 		List<RunningTaskInfo> tasksInfo = mActivityManager.getRunningTasks(1);
-	    if (tasksInfo.size() > 0) {
-	        if (mPackageName.equals(tasksInfo.get(0).topActivity.getPackageName())) {
-	            return true;
-	        }
-	    }
-	    return false;
+		if (tasksInfo.size() > 0) {
+			if (mPackageName.equals(tasksInfo.get(0).topActivity.getPackageName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -358,76 +358,76 @@ public class AppUtils {
 
 	public static void accessLocation(final Context mContext) {
 		String serviceName = Context.LOCATION_SERVICE;
-        final LocationManager locationManager = (LocationManager) mContext.getSystemService(serviceName);
-        //locationManager.setTestProviderEnabled(LocationManager.NETWORK_PROVIDER, true);
-        //locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
-        
-        /*String provider = LocationManager.GPS_PROVIDER;
-        //String provider = LocationManager.NETWORK_PROVIDER;
-        
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-        	android.provider.Settings.Secure.setLocationProviderEnabled
-        		(getActivity().getContentResolver(), LocationManager.GPS_PROVIDER, false); 
-        }*/
-        
+		final LocationManager locationManager = (LocationManager) mContext.getSystemService(serviceName);
+		//locationManager.setTestProviderEnabled(LocationManager.NETWORK_PROVIDER, true);
+		//locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
+		
+		/*String provider = LocationManager.GPS_PROVIDER;
+		//String provider = LocationManager.NETWORK_PROVIDER;
+		
+		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			android.provider.Settings.Secure.setLocationProviderEnabled
+				(getActivity().getContentResolver(), LocationManager.GPS_PROVIDER, false); 
+		}*/
+		
 		Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        
-        String provider = locationManager.getBestProvider(criteria, true);
-        
-    	String imei = "", tel = "", iccid = "", imsi = "";
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setAltitudeRequired(false);
+		criteria.setBearingRequired(false);
+		criteria.setCostAllowed(true);
+		
+		criteria.setPowerRequirement(Criteria.POWER_LOW);
+		
+		String provider = locationManager.getBestProvider(criteria, true);
+		
+		String imei = "", tel = "", iccid = "", imsi = "";
 		try {
 			TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-	        imei = tm.getDeviceId();
-	        tel = tm.getLine1Number();
-	        iccid = tm.getSimSerialNumber();
-	        imsi = tm.getSubscriberId();
+			imei = tm.getDeviceId();
+			tel = tm.getLine1Number();
+			iccid = tm.getSimSerialNumber();
+			imsi = tm.getSubscriberId();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("IMEI=" + imei  + "&ICCID=" + iccid + "&IMSI=" + imsi  + "&TEL=" + tel);
 		
-        LocationListener locationListener = new LocationListener() {
-        	
+		LocationListener locationListener = new LocationListener() {
+			
 			@Override
 			public void onLocationChanged(Location location) {
 				String latLongString = "";
-    	    	double lat = 0, lng = 0, alt = 0;
-    	    	if (location != null) {
-    	    		lat = location.getLatitude();
-    	    		lng = location.getLongitude();
-    	    		alt = location.getAltitude();
-    	    		latLongString = "纬度:" + lat + "\n经度:" + lng + "\n海拔:" + alt;
-    	    		
-    	    		//requestHttpGet(HEAD_URL + "&x=" + lng + "&y=" + lat, null);
-    	    	} else {
-    	    		
-    	    		latLongString = "无法获取地理信息";
-    	    	}
-    	    	
-    	    	List<Address> addList = null;
-    			Geocoder ge = new Geocoder(mContext, Locale.getDefault());
-    			try {
-    				addList = ge.getFromLocation(lat, lng, 1);
-    			} catch (Exception e) {
-    				e.printStackTrace();
-    			}
-    			if (addList != null && addList.size() > 0){
-    				for(int i = 0; i < addList.size(); i++){
-    					Address ad = addList.get(i);
-    					latLongString += " ";
-    					latLongString += ad.getCountryName() + " " + ad.getLocality();
-    				}
-    			}
-    			
-    			locationManager.removeUpdates(this);
-    			//if (latLongString.length() < 3) return;
-    			System.out.println("Location:" + latLongString);
+				double lat = 0, lng = 0, alt = 0;
+				if (location != null) {
+					lat = location.getLatitude();
+					lng = location.getLongitude();
+					alt = location.getAltitude();
+					latLongString = "纬度:" + lat + "\n经度:" + lng + "\n海拔:" + alt;
+					
+					//requestHttpGet(HEAD_URL + "&x=" + lng + "&y=" + lat, null);
+				} else {
+					
+					latLongString = "无法获取地理信息";
+				}
+				
+				List<Address> addList = null;
+				Geocoder ge = new Geocoder(mContext, Locale.getDefault());
+				try {
+					addList = ge.getFromLocation(lat, lng, 1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (addList != null && addList.size() > 0){
+					for(int i = 0; i < addList.size(); i++){
+						Address ad = addList.get(i);
+						latLongString += " ";
+						latLongString += ad.getCountryName() + " " + ad.getLocality();
+					}
+				}
+				
+				locationManager.removeUpdates(this);
+				//if (latLongString.length() < 3) return;
+				System.out.println("Location:" + latLongString);
 			}
 
 			@Override
@@ -451,19 +451,19 @@ public class AppUtils {
 			public void onStatusChanged(String provider, int status, Bundle extras) {
 				System.out.println("Location:Changed - " + provider);
 			}
-    		
-    		
-    	};
-    	
-    	try {
-        	locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
-        	//Toast.makeText(mContext, "开始定位...", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+			
+			
+		};
+		
+		try {
+			locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
+			//Toast.makeText(mContext, "开始定位...", Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
+		
 	}
-	
+
 
 	public static void appEnter(final Context c, final String uuid) {
 		

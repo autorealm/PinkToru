@@ -4,6 +4,13 @@
     android:layout_height="fill_parent"
     android:layout_gravity="bottom" >
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/transparent" >
+
+    </LinearLayout>
+
 	<LinearLayout
 		android:layout_alignParentBottom="true"	
 		android:layout_width="fill_parent"
@@ -31,11 +38,11 @@
 			    android:gravity="center_vertical" >
 
 				<TextView
-				    android:layout_width="wrap_content"
+				    android:id="@+id/txt_pen_top"
+				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
 				    android:gravity="center"
-				    android:text="第一名：匿名用户"
+				    android:text=""
 				    android:textColor="#333" />
 
 			</LinearLayout>
@@ -47,11 +54,11 @@
 			    android:gravity="center_vertical" >
 
 				<TextView
-				    android:layout_width="wrap_content"
+				    android:id="@+id/txt_pen_mid"
+				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
 				    android:gravity="center"
-				    android:text="第二名：匿名用户"
+				    android:text=""
 				    android:textColor="#666" />
 
 			</LinearLayout>
@@ -63,11 +70,11 @@
 			    android:gravity="center_vertical" >
 
 				<TextView
-				    android:layout_width="wrap_content"
+				    android:id="@+id/txt_pen_btm"
+				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
 				    android:gravity="center"
-				    android:text="第三名：匿名用户"
+				    android:text=""
 				    android:textColor="#999" />
 
 			</LinearLayout>
