@@ -3,8 +3,6 @@ package com.sunteorum.pinktoru.entity;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import com.sunteorum.pinktoru.PinkToru;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,8 +28,8 @@ public class PieceFactory {
 	private int KOCH_CURVE_N = 2;
 	private boolean QUAD_WAY = true;
 	
-	private int _D = 12; //±ÈÂÊÏµÊı£¬Ä¬ÈÏ12
-	private int _W = 4; //ËéÆ¬°¼Í¹ÏµÊı£¬Õ¼±ß½ç³¤¶ÈµÄ°Ù·Ö±È£¬Ä¬ÈÏ4
+	private int _D = 12; //æ¯”ç‡ç³»æ•°ï¼Œé»˜è®¤12
+	private int _W = 4; //ç¢ç‰‡å‡¹å‡¸ç³»æ•°ï¼Œå è¾¹ç•Œé•¿åº¦çš„ç™¾åˆ†æ¯”ï¼Œé»˜è®¤4
 	
 	private int SHADOW_COLOR = Color.argb(160, 40, 40, 40);
 	
@@ -60,7 +58,7 @@ public class PieceFactory {
 	private int _pieceHeight;
 	private int _pieceD;
 	
-	//ÄÚÇĞ¾ØĞÎ¿í¸ß
+	//å†…åˆ‡çŸ©å½¢å®½é«˜
 	private int _pieceOW;
 	private int _pieceOH;
 	
@@ -108,9 +106,9 @@ public class PieceFactory {
 		
 		noPicPaint.setColor(Color.DKGRAY);
 		noPicPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-		noPicPaint.setStyle(Paint.Style.FILL_AND_STROKE);  //ÊµĞÄÌî³ä
-		noPicPaint.setStrokeWidth(1f); //Íâ¿ò¿í¶È
-		noPicPaint.setAntiAlias(true);  //¿¹¾â³İ
+		noPicPaint.setStyle(Paint.Style.FILL_AND_STROKE);  //å®å¿ƒå¡«å……
+		noPicPaint.setStrokeWidth(1f); //å¤–æ¡†å®½åº¦
+		noPicPaint.setAntiAlias(true);  //æŠ—é”¯é½¿
 		noPicPaint.setFilterBitmap(true);
 		noPicPaint.setShadowLayer(SHADOW_OFFSET, 0f, 0f, SHADOW_COLOR);
 		//edgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
@@ -139,17 +137,17 @@ public class PieceFactory {
 		edgePaint.setStyle(Paint.Style.STROKE);
 		edgePaint.setStrokeWidth(6);
 		edgePaint.setAntiAlias(true);
-		//////////Í¼Æ¬Ğ§¹û
-		//ÉèÖÃ¹âÔ´µÄ·½Ïò
+		//////////å›¾ç‰‡æ•ˆæœ
+		//è®¾ç½®å…‰æºçš„æ–¹å‘
 		float[] direction = new float[]{ 1, 1, 1 };
-		//ÉèÖÃ»·¾³¹âÁÁ¶È
+		//è®¾ç½®ç¯å¢ƒå…‰äº®åº¦
 		float light = 1.6f;
-		//Ñ¡ÔñÒªÓ¦ÓÃµÄ·´ÉäµÈ¼¶
+		//é€‰æ‹©è¦åº”ç”¨çš„åå°„ç­‰çº§
 		float specular = 5;
-		//ÏòmaskÓ¦ÓÃÒ»¶¨¼¶±ğµÄÄ£ºı
+		//å‘maskåº”ç”¨ä¸€å®šçº§åˆ«çš„æ¨¡ç³Š
 		float blur = 1.5f;
 		EmbossMaskFilter emboss = new EmbossMaskFilter(direction, light, specular, blur);
-		//Ó¦ÓÃmask
+		//åº”ç”¨mask
 		edgePaint.setMaskFilter(emboss);
 		*/
 		
@@ -159,14 +157,14 @@ public class PieceFactory {
 	private void bitmapCut() {
 		pieceSet();
 		
-		//Í¸Ã÷Ä£°å
+		//é€æ˜æ¨¡æ¿
 		//Bitmap copyBitPic = Bitmap.createBitmap(_imageW, _imageH, Config.ARGB_8888);
 		
 		for (int i=0; i<_row; i++) {
 			for (int j=0; j<_line; j++) {
 				Piece piece = new Piece();
 				
-				Point id = new Point(i, j);  //±£´æËéÆ¬µÄ¾ØÕóµã
+				Point id = new Point(i, j);  //ä¿å­˜ç¢ç‰‡çš„çŸ©é˜µç‚¹
 				piece.setId(id);
 				
 				Point key = new Point(j*_pieceWidth, i*_pieceHeight);  ///
@@ -174,10 +172,10 @@ public class PieceFactory {
 				piece.setLineWidth(_pieceWidth);
 				piece.setRowHeight(_pieceHeight);
 
-				//µÃ³öËéÆ¬µÄ¹Ø¼ü±ß½çµã
+				//å¾—å‡ºç¢ç‰‡çš„å…³é”®è¾¹ç•Œç‚¹
 				setAllDotArray(piece);
 				
-				//µÃ³ö×óÉÏ½ÇµãÎ»ºÍÓÒÏÂ½ÇµãÎ»£¬ÓÃÓÚÇĞÈ¡Ğ¡¿éËéÆ¬Í¼Æ¬
+				//å¾—å‡ºå·¦ä¸Šè§’ç‚¹ä½å’Œå³ä¸‹è§’ç‚¹ä½ï¼Œç”¨äºåˆ‡å–å°å—ç¢ç‰‡å›¾ç‰‡
 				setMinAndMaxPoint(piece);
 				
 				setPieceBitmap(piece);
@@ -330,7 +328,7 @@ public class PieceFactory {
         }
     }
 	
-	//È¡µÃ°¼Í¹µã¼¯
+	//å–å¾—å‡¹å‡¸ç‚¹é›†
 	public ArrayList<Point> getAotuDotArray(Piece piece, Place position) {
 		ArrayList<Point> dotArray = new ArrayList<Point>();
 		Point key = piece.getKey();
@@ -351,11 +349,11 @@ public class PieceFactory {
 	}
 
 	private int getRndD() {
-		//·µ»ØÓë±ß½ç´í¿ªµÄ¸ß¶È
+		//è¿”å›ä¸è¾¹ç•Œé”™å¼€çš„é«˜åº¦
 		return _pieceD - (int)Math.random() * 2 * _pieceD;
 	}
 	
-	//Ë³Ê±ÕëÈ¡ÍÖÔ²µãÎ»£¬ÓÒ±ß½çºÍÏÂ±ß½ç
+	//é¡ºæ—¶é’ˆå–æ¤­åœ†ç‚¹ä½ï¼Œå³è¾¹ç•Œå’Œä¸‹è¾¹ç•Œ
 	private ArrayList<Point> getOvalDotArray(Piece piece, Place position) {
 		int rnd = ((int)(Math.random()*10)%2 ==0) ? 1 : -1;
 		ArrayList<Point> circleDotArray = new ArrayList<Point>();
@@ -413,7 +411,7 @@ public class PieceFactory {
 	
 	private void setAllDotArray(Piece piece) {
 		//ArrayList<Point> allDotArray = new ArrayList<Point>();
-		//top,right,feet,leftËÄÃæ
+		//top,right,feet,leftå››é¢
 		ArrayList<Point> top = new ArrayList<Point>();
 		ArrayList<Point> right = new ArrayList<Point>();
 		ArrayList<Point> feet = new ArrayList<Point>();
@@ -422,12 +420,12 @@ public class PieceFactory {
 		Point id = piece.getId();
 		Point key = piece.getKey();
 		if(id.x == 0){
-			//top±ß½çÎªÖ±Ïß
+			//topè¾¹ç•Œä¸ºç›´çº¿
 			Point tp1 = new Point(key.x, key.y);
 			Point tp2 = new Point(key.x + _pieceWidth, key.y);
 			top.add(tp1);
 			top.add(tp2);
-		}else{  //top±ß½çÎªÇúÏß£¬ÔòÇúÏßµãÎªÉÏÒ»¿éËéÆ¬µÄfeet±ß½ç
+		}else{  //topè¾¹ç•Œä¸ºæ›²çº¿ï¼Œåˆ™æ›²çº¿ç‚¹ä¸ºä¸Šä¸€å—ç¢ç‰‡çš„feetè¾¹ç•Œ
 			Piece tmpPiece = (Piece) allPiece.get(_line * (id.x - 1) + id.y);
 			//Log.i("top", "top bian " + id.y + " " + id.y + " " + (_line * (id.x - 1) + id.y));
 			ArrayList<Point> tmpFeet = tmpPiece.getApFeet();
@@ -437,12 +435,12 @@ public class PieceFactory {
 		}
 		
 		if (id.y == 0) {
-			//left±ß½çÎªÖ±Ïß
+			//leftè¾¹ç•Œä¸ºç›´çº¿
 			Point lp1 = new Point(key.x, key.y + _pieceHeight);
 			Point lp2 = new Point(key.x, key.y);
 			left.add(lp1);
 			left.add(lp2);
-		} else {  //left±ß½çÎªÇúÏß£¬ÔòÇúÏßµãÎª×ó±ßÒ»¿éËéÆ¬µÄright±ß½ç
+		} else {  //leftè¾¹ç•Œä¸ºæ›²çº¿ï¼Œåˆ™æ›²çº¿ç‚¹ä¸ºå·¦è¾¹ä¸€å—ç¢ç‰‡çš„rightè¾¹ç•Œ
 			Piece tmpPiece = (Piece) allPiece.get(_line * id.x + id.y - 1);
 			//Log.i("left", "left bian " + id.y + " " + id.y + " " + (_line * id.x + id.y - 1));
 			ArrayList<Point> tmpRight = tmpPiece.getApRight();
@@ -452,7 +450,7 @@ public class PieceFactory {
 		}
 		
 		if (id.x == _row-1) {
-			//feet±ß½çÎªÖ±Ïß
+			//feetè¾¹ç•Œä¸ºç›´çº¿
 			Point fp1 = new Point(key.x + _pieceWidth, key.y + _pieceHeight);
 			Point fp2 = new Point(key.x, key.y + _pieceHeight);
 			feet.add(fp1);
@@ -465,7 +463,7 @@ public class PieceFactory {
 		}
 		
 		if (id.y == _line-1) {
-			//right±ß½çÎªÖ±Ïß
+			//rightè¾¹ç•Œä¸ºç›´çº¿
 			Point rp1 = new Point(key.x + _pieceWidth, key.y);
 			Point rp2 = new Point(key.x + _pieceWidth, key.y + _pieceHeight);
 			right.add(rp1);
@@ -486,7 +484,7 @@ public class PieceFactory {
 
 	}
 	
-	//µÃ³öËéÆ¬µÄ×óÉÏ½ÇºÍÓÒÏÂ½Ç×ø±êµãÎ»
+	//å¾—å‡ºç¢ç‰‡çš„å·¦ä¸Šè§’å’Œå³ä¸‹è§’åæ ‡ç‚¹ä½
 	private void setMinAndMaxPoint(Piece piece) {
 		int minx = _imageWidth;
 		int miny = _imageHeight;
@@ -509,7 +507,7 @@ public class PieceFactory {
 			}
 		}
 		//Log.i("getMinAndMaxPoint", "min point: (" + minx + ", " + miny + ")");
-		piece.setMinp(new Point(minx, miny));   // ×óÉÏ½ÇµãÎ»
+		piece.setMinp(new Point(minx, miny));   // å·¦ä¸Šè§’ç‚¹ä½
 		
 		ArrayList<Point> right = piece.getApRight();
 		for (int i=0; i<right.size(); i++) {
@@ -528,7 +526,7 @@ public class PieceFactory {
 		}
 		
 		//Log.i("getMinAndMaxPoint", "max point: (" + maxx + ", " + maxy + ")");
-		piece.setMaxp(new Point(maxx, maxy));   // ÓÒÏÂ½ÇµãÎ»
+		piece.setMaxp(new Point(maxx, maxy));   // å³ä¸‹è§’ç‚¹ä½
 		piece.setPieceWidth(maxx-minx);
 		piece.setPieceHeight(maxy-miny);
 		
@@ -565,7 +563,7 @@ public class PieceFactory {
 	}
 	
 	/**
-	 * ¸øÃ¿¸öpieceÃÉ°æÌî³äÏñËØ£¬µÃµ½Æ´Í¼ËéÆ¬piece
+	 * ç»™æ¯ä¸ªpieceè’™ç‰ˆå¡«å……åƒç´ ï¼Œå¾—åˆ°æ‹¼å›¾ç¢ç‰‡piece
 	 */
 	private void fillPieceWithBitmap(Piece piece, Bitmap pieceBit) {
 		//Bitmap pieceBit = piece.getBmpPiece();
@@ -575,14 +573,14 @@ public class PieceFactory {
 		int w = maxp.x - minp.x;
 		int h = maxp.y - minp.y;
 		
-		//Æ´Í¼ËéÆ¬µÄ¿í¸ß
+		//æ‹¼å›¾ç¢ç‰‡çš„å®½é«˜
 		int tpieceW = pieceBit.getWidth();
 		int tpieceH = pieceBit.getHeight();
 		
 		int _d = (PIECE_CUT_FLAG != 1 && SHADOW_OFFSET > 1) ? 1 : SHADOW_OFFSET;
 		_d = SHADOW_OFFSET;
 		
-		//»æÖÆËéÆ¬µÄ±ßÔµ
+		//ç»˜åˆ¶ç¢ç‰‡çš„è¾¹ç¼˜
 		Bitmap pieceEdge = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
 		canvas.setBitmap(pieceEdge);
 		canvas.drawPath(dotPath, edgePaint);
@@ -610,7 +608,7 @@ public class PieceFactory {
 		
 	}
 	
-	//»ñÈ¡Ã¿¿éÇĞÆ¬µÄÍ¼ĞÎ
+	//è·å–æ¯å—åˆ‡ç‰‡çš„å›¾å½¢
 	private Point setPieceBitmap(Piece piece) {
 		dotPath.reset();
 		
@@ -645,11 +643,11 @@ public class PieceFactory {
 		
 		dotPath.offset(_d, _d);
 		
-		//ÒÔ°Ù·Ö±È·ÖÅä±ß¿í¶È
+		//ä»¥ç™¾åˆ†æ¯”åˆ†é…è¾¹å®½åº¦
 		if (PIECE_EDGE_WIDTH > 1)
 			edgePaint.setStrokeWidth(Math.min(_pieceWidth, _pieceHeight) / 2 * PIECE_EDGE_WIDTH / 100);
 		
-		/////¸ù¾İËéÆ¬µÄ´óĞ¡£¬´´½¨Í¸Ã÷Í¼Æ¬£¬ÔÚ»­²¼ÉÏÃ¿´Î»æÖÆÒ»¸öËéÆ¬£¬È»ºó±£´æ
+		/////æ ¹æ®ç¢ç‰‡çš„å¤§å°ï¼Œåˆ›å»ºé€æ˜å›¾ç‰‡ï¼Œåœ¨ç”»å¸ƒä¸Šæ¯æ¬¡ç»˜åˆ¶ä¸€ä¸ªç¢ç‰‡ï¼Œç„¶åä¿å­˜
 		Bitmap pieceBitmap = Bitmap.createBitmap(w + _d*2, h + _d*2, Config.ARGB_8888);
 		canvas.setBitmap(pieceBitmap);
 		canvas.drawPath(dotPath, noPicPaint);
@@ -657,7 +655,7 @@ public class PieceFactory {
 		if (RENDER_FLAG != 0) {
 			PaintFlagsDrawFilter dfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);  
 			canvas.setDrawFilter(dfd);
-			canvas.clipPath(dotPath, Op.REPLACE);//Ê¹ÓÃÂ·¾¶¼ôÇĞ»­²¼  
+			canvas.clipPath(dotPath, Op.REPLACE);//ä½¿ç”¨è·¯å¾„å‰ªåˆ‡ç”»å¸ƒ  
 			canvas.drawBitmap(mBitmap, new Rect(minp.x, minp.y, maxp.x, maxp.y), new Rect(_d, _d, w + _d, h + _d), noPicPaint); 
 			canvas.drawPath(dotPath, edgePaint);
 			
@@ -679,12 +677,12 @@ public class PieceFactory {
 		piece.setPieceHeight(pieceBitmap.getHeight());
 		piece.setPieceWidth(pieceBitmap.getWidth());
 		
-		return diff;   //·µ»ØµãÎ»Ïà²î¾àÀë
+		return diff;   //è¿”å›ç‚¹ä½ç›¸å·®è·ç¦»
 		
 	}
 	
 	/**
-	 * ¸ù¾İminpµã£¬½«¾ø¶ÔµãÎ»×ª»¯ÎªÏà¶ÔµãÎ»
+	 * æ ¹æ®minpç‚¹ï¼Œå°†ç»å¯¹ç‚¹ä½è½¬åŒ–ä¸ºç›¸å¯¹ç‚¹ä½
 	 * @param dotList
 	 * @param dotPath
 	 * @param diff
@@ -703,10 +701,10 @@ public class PieceFactory {
 				Point p1 = (Point) tempDot.get(i+1);
 				if (QUAD_WAY) {
 					if (i + 1 == tempDot.size() - 1) {
-						//Ö±½ÓÁ¬½ÓÖÕµã
+						//ç›´æ¥è¿æ¥ç»ˆç‚¹
 						dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, p1.x-diff.x, p1.y-diff.y);
 					} else {
-						//ÒÔÖĞ¼äÎª¿ØÖÆµã»­ÇúÏß
+						//ä»¥ä¸­é—´ä¸ºæ§åˆ¶ç‚¹ç”»æ›²çº¿
 						cx = (p0.x + p1.x) / 2;
 			            cy = (p0.y + p1.y) / 2;
 			            dotPath.quadTo(p0.x-diff.x, p0.y-diff.y, cx-diff.x, cy-diff.y);
@@ -728,13 +726,14 @@ public class PieceFactory {
 		this.allPiece = allPiece;
 	}
 	
-	public void setPintuValue(PinkToru app) {
-		PIECE_CUT_FLAG = app.getPieceCutFlag();
-		SHADOW_OFFSET = app.getPieceShadowOffset();
-		RENDER_FLAG = app.getPieceRenderFlag();
-		PIECE_EDGE_WIDTH = app.getPieceEdgeWidth();
-		KOCH_CURVE_N = app.getPieceKochCurveN();
-		QUAD_WAY = app.isWithquad();
+	public void setPintuValue(LevelEntity le) {
+		PIECE_CUT_FLAG = le.getCutFlag();
+		SHADOW_OFFSET = le.getShadowOffset();
+		RENDER_FLAG = le.getRenderFlag();
+		PIECE_EDGE_WIDTH = le.getEdgeWidth();
+		KOCH_CURVE_N = le.getCutAlt();
+		QUAD_WAY = le.isWithQuad();
+		
 	}
 	
 	public void setPieceCutFlag(int flag) {

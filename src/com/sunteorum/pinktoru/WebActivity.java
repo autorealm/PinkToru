@@ -48,25 +48,25 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
         
 		webView = (WebView) findViewById(R.id.webViewer);
 		WebSettings ws = webView.getSettings();
-        ws.setJavaScriptEnabled(true); // ÉèÖÃÖ§³Öjavascript½Å±¾
+        ws.setJavaScriptEnabled(true); // è®¾ç½®æ”¯æŒjavascriptè„šæœ¬
         ws.setJavaScriptCanOpenWindowsAutomatically(true);
         ws.setPluginState(PluginState.ON);
         //ws.setPluginsEnabled(true);
         ws.setDomStorageEnabled(true);
         ws.setLoadWithOverviewMode(true);
         ws.setUseWideViewPort(true);
-        ws.setAllowFileAccess(true); // ÔÊĞí·ÃÎÊÎÄ¼ş
-        ws.setBuiltInZoomControls(true); // ÉèÖÃÏÔÊ¾Ëõ·Å°´Å¥
-        ws.setSupportZoom(true); //Ö§³ÖËõ·Å
+        ws.setAllowFileAccess(true); // å…è®¸è®¿é—®æ–‡ä»¶
+        ws.setBuiltInZoomControls(true); // è®¾ç½®æ˜¾ç¤ºç¼©æ”¾æŒ‰é’®
+        ws.setSupportZoom(true); //æ”¯æŒç¼©æ”¾
         ws.setRenderPriority(RenderPriority.HIGH);
         
         ws.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
-        //ws.setDefaultTextEncodingName("utf-8"); //ÉèÖÃÎÄ±¾±àÂë
+        //ws.setDefaultTextEncodingName("utf-8"); //è®¾ç½®æ–‡æœ¬ç¼–ç 
         //ws.setBlockNetworkImage(true);
         ws.setAppCacheEnabled(true);
         ws.setAppCachePath(this.getApplicationContext().getDir("cache", MODE_PRIVATE).getPath());
         ws.setAppCacheMaxSize(1024 * 1024 * 10);
-        ws.setCacheMode(WebSettings.LOAD_NO_CACHE);//ÉèÖÃ»º´æÄ£Ê½
+        ws.setCacheMode(WebSettings.LOAD_NO_CACHE);//è®¾ç½®ç¼“å­˜æ¨¡å¼
         
         ws.setUserAgentString("Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-N900T Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
         
@@ -116,10 +116,10 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 		}
 		
 		//webView.loadUrl("file:///android_asset/unti.html");
-		/*String htmlString = "<!doctype html><html><head><meta charset='utf-8'><title>Æ´Í¼ÓÎÏ· - ½±Æ·ÖĞĞÄ</title></head>"
-				+ "<body><h1>ÁìÈ¡½±Æ·²âÊÔÒ³Ãæ</h1><p>ÕâÀïÊÇÒ»¶ÎËµÃ÷<br /><i>¹§Ï²Äã»ñµÃ½±Æ·£¬ÇëÈ·ÈÏ</i><br />±¾»î¶¯×îÖÕ½âÊÍÈ¨¹éÆ´Í¼ÓÎÏ·¹Ù·½ËùÓĞ</p><script type='text/javascript'>"
+		/*String htmlString = "<!doctype html><html><head><meta charset='utf-8'><title>æ‹¼å›¾æ¸¸æˆ - å¥–å“ä¸­å¿ƒ</title></head>"
+				+ "<body><h1>é¢†å–å¥–å“æµ‹è¯•é¡µé¢</h1><p>è¿™é‡Œæ˜¯ä¸€æ®µè¯´æ˜<br /><i>æ­å–œä½ è·å¾—å¥–å“ï¼Œè¯·ç¡®è®¤</i><br />æœ¬æ´»åŠ¨æœ€ç»ˆè§£é‡Šæƒå½’æ‹¼å›¾æ¸¸æˆå®˜æ–¹æ‰€æœ‰</p><script type='text/javascript'>"
 				+ "setTimeout(function(){"
-				+ "var r=confirm('µã»÷È·¶¨ÂíÉÏÁìÈ¡½±Æ·'); if (r==true){document.write('ÕâÀïÊ²Ã´Ò²Ã»ÓĞ£¡')}else{document.write('È¡Ïû¾ÍÃ»ÓĞ½±Æ·ÁË£¡')}},1500)</script>"
+				+ "var r=confirm('ç‚¹å‡»ç¡®å®šé©¬ä¸Šé¢†å–å¥–å“'); if (r==true){document.write('è¿™é‡Œä»€ä¹ˆä¹Ÿæ²¡æœ‰ï¼')}else{document.write('å–æ¶ˆå°±æ²¡æœ‰å¥–å“äº†ï¼')}},1500)</script>"
 				+ "</body></html>";*/
 		//webView.loadData(htmlString, "text/html", "utf-8");
 	}
@@ -142,9 +142,9 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 1, 0, "Ë¢ĞÂ");
-		menu.add(0, 2, 0, "·µ»Ø");
-		//menu.add(0, 3, 0, "ĞÂÒ³");
+		menu.add(0, 1, 0, "åˆ·æ–°");
+		menu.add(0, 2, 0, "è¿”å›");
+		//menu.add(0, 3, 0, "æ–°é¡µ");
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -166,9 +166,9 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 			
 			Builder builder = new AlertDialog.Builder(WebActivity.this);
 			builder.setIcon(android.R.drawable.ic_menu_search);
-			builder.setTitle("ÊäÈëµØÖ·");
+			builder.setTitle("è¾“å…¥åœ°å€");
 			builder.setView(edt);
-			builder.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener(){
+			builder.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener(){
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -178,7 +178,7 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 				}
 				
 			});
-			builder.setNegativeButton("È¡Ïû", null);
+			builder.setNegativeButton("å–æ¶ˆ", null);
 			builder.show();
 			break;
 		}
@@ -257,7 +257,7 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 			builder.setMessage(message);
 			builder.setCancelable(false);
 			//builder.setView(new EditText(this));
-			builder.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener(){
+			builder.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener(){
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -265,7 +265,7 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 				}
 				
 			});
-			builder.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -282,11 +282,11 @@ public class WebActivity extends BaseActivity implements OnClickListener,Downloa
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
 			final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-	        builder.setMessage(message).setPositiveButton("È·¶¨", null);
+	        builder.setMessage(message).setPositiveButton("ç¡®å®š", null);
 	        builder.setCancelable(false);
 	        AlertDialog dialog = builder.create();
 	        dialog.show();
-	        result.confirm();// ÒòÎªÃ»ÓĞ°ó¶¨ÊÂ¼ş£¬ĞèÒªÇ¿ĞĞconfirm,·ñÔòÒ³Ãæ»á±äºÚÏÔÊ¾²»ÁËÄÚÈİ¡£  
+	        result.confirm();// å› ä¸ºæ²¡æœ‰ç»‘å®šäº‹ä»¶ï¼Œéœ€è¦å¼ºè¡Œconfirm,å¦åˆ™é¡µé¢ä¼šå˜é»‘æ˜¾ç¤ºä¸äº†å†…å®¹ã€‚  
 	        
 	        return true;
 			//return super.onJsAlert(view, url, message, result);

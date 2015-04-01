@@ -115,8 +115,8 @@ public class GameListActivity extends BaseActivity implements OnScrollListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 1, 0, "Ë¢ĞÂ");
-		menu.add(0, 2, 0, "·µ»Ø");
+		menu.add(0, 1, 0, "åˆ·æ–°");
+		menu.add(0, 2, 0, "è¿”å›");
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -148,7 +148,7 @@ public class GameListActivity extends BaseActivity implements OnScrollListener {
 	
 	protected void refresh(final int page, final Handler.Callback callback) {
 		if (!HttpUtils.getConnectState(this)) {
-			//ÍøÂçÎ´Á¬½Ó
+			//ç½‘ç»œæœªè¿æ¥
 		}
 
 	 	final Timer atimer = new Timer();
@@ -193,7 +193,7 @@ public class GameListActivity extends BaseActivity implements OnScrollListener {
 		FlippingImageView mFivIcon = (FlippingImageView) progd.findViewById(R.id.fiv_loading_icon);
 		
 		progd.setCancelable(false);
-		progd.setMessage("ÕıÔÚË¢ĞÂÁĞ±í£¬ÇëÉÔºò...");
+		progd.setMessage("æ­£åœ¨åˆ·æ–°åˆ—è¡¨ï¼Œè¯·ç¨å€™...");
 		
 		if (mFivIcon != null) mFivIcon.startAnimation();
 		
@@ -259,7 +259,7 @@ public class GameListActivity extends BaseActivity implements OnScrollListener {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
-				if (!result) Common.showToast(GameListActivity.this, "Ë¢ĞÂÁĞ±í³ö´í");
+				if (!result) Common.showToast(GameListActivity.this, "åˆ·æ–°åˆ—è¡¨å‡ºé”™");
 				if (gelist.size() == 0) {
 					((TextView) findViewById(android.R.id.empty)).setText(R.string.no_item_in_list);
 				} else {

@@ -29,6 +29,9 @@ public class SystemSetting extends PreferenceActivity implements OnSharedPrefere
 			
 		} else if (key.equals("piecerenderflag")) {
 			
+		} else {
+			
+			
 		}
 		
 	}

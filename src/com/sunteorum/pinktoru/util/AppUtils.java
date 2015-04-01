@@ -40,8 +40,8 @@ public class AppUtils {
 	final static String HOST_URL = "";
 	
 	/**
-	 * ¼ì²âµ±Ç°ActivityÊÇ·ñÔÚÇ°Ì¨
-	 * @return ÊÇ·ñÔÚÇ°Ì¨
+	 * æ£€æµ‹å½“å‰Activityæ˜¯å¦åœ¨å‰å°
+	 * @return æ˜¯å¦åœ¨å‰å°
 	 */
 	public boolean isOnForeground(Activity activity) {
 		ActivityManager mActivityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
@@ -57,7 +57,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñµÃÓ¦ÓÃ³ÌĞòÃû×Ö
+	 * è·å¾—åº”ç”¨ç¨‹åºåå­—
 	 * @param context
 	 * @return
 	 */
@@ -76,7 +76,7 @@ public class AppUtils {
 	}
 	
 	/** 
-	* »ñµÃÈí¼ş°æ±¾ºÅ
+	* è·å¾—è½¯ä»¶ç‰ˆæœ¬å·
 	* @param con
 	* @return
 	*/
@@ -94,7 +94,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñµÃÈí¼ş°æ±¾Ãû³Æ
+	 * è·å¾—è½¯ä»¶ç‰ˆæœ¬åç§°
 	 * @param context
 	 * @return
 	 */
@@ -111,8 +111,8 @@ public class AppUtils {
 	}
 
 	/**
-	 * »ñÈ¡ÊÖ»úÅäÖÃÄÚ´æĞÅÏ¢
-	 * @param c ÉÏÏÂÎÄ»·¾³
+	 * è·å–æ‰‹æœºé…ç½®å†…å­˜ä¿¡æ¯
+	 * @param c ä¸Šä¸‹æ–‡ç¯å¢ƒ
 	 * @return Array 1-total 2-avail
 	 */
 	public static String[] getTotalMemory(Context c) {
@@ -142,8 +142,8 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÊÖ»úÅäÖÃCPUĞÅÏ¢
-	 * @return Array 1-cpuĞÍºÅ  2-cpuÆµÂÊ
+	 * è·å–æ‰‹æœºé…ç½®CPUä¿¡æ¯
+	 * @return Array 1-cpuå‹å·  2-cpué¢‘ç‡
 	 */
 	public static String[] getCpuInfo() {
 		String str1 = "/proc/cpuinfo";
@@ -169,7 +169,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÊÖ»úÅäÖÃCPUºËĞÄÊı
+	 * è·å–æ‰‹æœºé…ç½®CPUæ ¸å¿ƒæ•°
 	 * @return
 	 */
 	public static int getCoreNum() {
@@ -197,7 +197,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÊÖ»úWIFIµÄMACµØÖ·
+	 * è·å–æ‰‹æœºWIFIçš„MACåœ°å€
 	 * @param c
 	 * @return
 	 */
@@ -211,7 +211,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÊÖ»úÎ¨Ò»Ê¶±ğÂë
+	 * è·å–æ‰‹æœºå”¯ä¸€è¯†åˆ«ç 
 	 * @param c
 	 * @return
 	 */
@@ -232,7 +232,7 @@ public class AppUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÊÖ»úÅäÖÃĞÅÏ¢
+	 * è·å–æ‰‹æœºé…ç½®ä¿¡æ¯
 	 * @param c
 	 * @return
 	 */
@@ -295,14 +295,14 @@ public class AppUtils {
 		case TelephonyManager.PHONE_TYPE_SIP: phone = "SIP";
 			break;
 		}
-		String ProvidersName = "Î´ÖªÔËÓªÉÌ";
+		String ProvidersName = "æœªçŸ¥è¿è¥å•†";
 		if (imsi != null) {
 			if (imsi.startsWith("46000") || imsi.startsWith("46002")) {
-				ProvidersName = "ÖĞ¹úÒÆ¶¯";
+				ProvidersName = "ä¸­å›½ç§»åŠ¨";
 			} else if (imsi.startsWith("46001")) {
-				ProvidersName = "ÖĞ¹úÁªÍ¨";
+				ProvidersName = "ä¸­å›½è”é€š";
 			} else if (imsi.startsWith("46003")) {
-				ProvidersName = "ÖĞ¹úµçĞÅ";
+				ProvidersName = "ä¸­å›½ç”µä¿¡";
 			}
 		}
 		
@@ -402,12 +402,12 @@ public class AppUtils {
     	    		lat = location.getLatitude();
     	    		lng = location.getLongitude();
     	    		alt = location.getAltitude();
-    	    		latLongString = "Î³¶È:" + lat + "\n¾­¶È:" + lng + "\nº£°Î:" + alt;
+    	    		latLongString = "çº¬åº¦:" + lat + "\nç»åº¦:" + lng + "\næµ·æ‹”:" + alt;
     	    		
     	    		//requestHttpGet(HEAD_URL + "&x=" + lng + "&y=" + lat, null);
     	    	} else {
     	    		
-    	    		latLongString = "ÎŞ·¨»ñÈ¡µØÀíĞÅÏ¢";
+    	    		latLongString = "æ— æ³•è·å–åœ°ç†ä¿¡æ¯";
     	    	}
     	    	
     	    	List<Address> addList = null;
@@ -457,7 +457,7 @@ public class AppUtils {
     	
     	try {
         	locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
-        	//Toast.makeText(mContext, "¿ªÊ¼¶¨Î»...", Toast.LENGTH_SHORT).show();
+        	//Toast.makeText(mContext, "å¼€å§‹å®šä½...", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -88,12 +88,12 @@ public class GameListAdapter extends BaseAdapter {
 		final String title = gameList.get(position).getGameName();
 		holder.txtTitle.setText(title);
 		holder.txtSub1.setText("");
-		holder.txtSub2.setText("½±ÀøµãÊı£º" + gameList.get(position).getGameReward());
+		holder.txtSub2.setText("å¥–åŠ±ç‚¹æ•°ï¼š" + gameList.get(position).getGameReward());
 		holder.txtSub3.setText("");
 		
 		try {
 			JSONArray jsa = new JSONArray(gameList.get(position).getGameLevel());
-			holder.txtSub3.setText("¹Ø¿¨Êı£º" + jsa.length());
+			holder.txtSub3.setText("å…³å¡æ•°ï¼š" + jsa.length());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

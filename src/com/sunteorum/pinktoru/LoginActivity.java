@@ -81,19 +81,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		case R.id.btnLogin:
 			if (app.getUser() != null) {
 				new AlertDialog.Builder(LoginActivity.this)
-					.setTitle("Òª×¢ÏúµÇÂ¼Âğ£¿")
+					.setTitle("è¦æ³¨é”€ç™»å½•å—ï¼Ÿ")
 					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+					.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int which) {
 							app.setUser(null);
 							String uuid = AppUtils.getDeviceUUID(LoginActivity.this);
 							app.saveConfig("uuid", uuid);
-							Toast.makeText(LoginActivity.this, "ÒÑ×¢ÏúµÇÂ¼", Toast.LENGTH_SHORT).show();
+							Toast.makeText(LoginActivity.this, "å·²æ³¨é”€ç™»å½•", Toast.LENGTH_SHORT).show();
 							
 							finish();
 							
 						}
-					}).setNegativeButton("È¡Ïû", null)
+					}).setNegativeButton("å–æ¶ˆ", null)
 					.create().show();
 				
 			} else {
@@ -119,14 +119,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private boolean validateAccount() {
 		mAccount = null;
 		if (Empty(edtAccount)) {
-			Toast.makeText(this, "ÇëÊäÈëÓÃ»§Ãû", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·è¾“å…¥ç”¨æˆ·å", Toast.LENGTH_SHORT).show();
 			edtAccount.requestFocus();
 			return false;
 		}
 		String account = edtAccount.getText().toString().trim();
 		
 		if (account.length() < 3) {
-			Toast.makeText(this, "ÕËºÅ¸ñÊ½²»ÕıÈ·", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è´¦å·æ ¼å¼ä¸æ­£ç¡®", Toast.LENGTH_SHORT).show();
 			edtAccount.requestFocus();
 			return false;
 		}
@@ -138,13 +138,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private boolean validatePassword() {
 		mPassword = null;
 		if (Empty(edtPassword)) {
-			Toast.makeText(this, "ÇëÊäÈëÃÜÂë", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·è¾“å…¥å¯†ç ", Toast.LENGTH_SHORT).show();
 			edtPassword.requestFocus();
 			return false;
 		}
 		String pwd = edtPassword.getText().toString().trim();
 		if (pwd.length() < 4) {
-			Toast.makeText(this, "ÃÜÂëÎ»Êı²»×ã", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å¯†ç ä½æ•°ä¸è¶³", Toast.LENGTH_SHORT).show();
 			edtPassword.requestFocus();
 			return false;
 		}
@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				
 				progd = new ProgressDialog(LoginActivity.this);
 				progd.setTitle(null);
-				progd.setMessage("ÕıÔÚµÇÂ¼,ÇëÉÔºó¡­");
+				progd.setMessage("æ­£åœ¨ç™»å½•,è¯·ç¨åâ€¦");
 				progd.setIndeterminate(true);
 				progd.setCancelable(false);
 				progd.show();
@@ -190,7 +190,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						// TODO Auto-generated method stub
 						ask.cancel(true);
 						progd.cancel();
-						Toast.makeText(LoginActivity.this, "ÒÑÈ¡ÏûµÇÂ¼", Toast.LENGTH_SHORT).show();
+						Toast.makeText(LoginActivity.this, "å·²å–æ¶ˆç™»å½•", Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -215,7 +215,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				try {
 					String rst = HttpUtils.postHttpRequest(murl, pmap);
 					if (rst == null || rst.length() == 0) {
-						msg = "·şÎñÆ÷ÎŞ»ØÓ¦£¬ÇëÓë¹ÜÀíÔ±ÁªÏµ¡£";
+						msg = "æœåŠ¡å™¨æ— å›åº”ï¼Œè¯·ä¸ç®¡ç†å‘˜è”ç³»ã€‚";
 						return false;
 					}
 					
@@ -223,7 +223,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					int i = json.getInt("result");
 					msg = json.getString("msg");
 					if (!json.has("user_info")) {
-						msg = "Î´ÕÒµ½ÓÃ»§ĞÅÏ¢";
+						msg = "æœªæ‰¾åˆ°ç”¨æˆ·ä¿¡æ¯";
 						return false;
 					}
 					JSONObject jso = json.getJSONObject("user_info");
@@ -234,12 +234,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					userUid = jso.get("user_uid").toString();
 					app.saveConfig("uuid", userUid);
 					
-					if (i == 0) publishProgress("ÓÃ»§ÑéÖ¤³É¹¦");
+					if (i == 0) publishProgress("ç”¨æˆ·éªŒè¯æˆåŠŸ");
 					else return false;
 					
-					//ÒÑÏÂ´ıÍê³É»ñÈ¡ÓÃ»§Êı¾İ
+					//å·²ä¸‹å¾…å®Œæˆè·å–ç”¨æˆ·æ•°æ®
 					Thread.sleep(500);
-					publishProgress("ÕıÔÚ¶ÁÈ¡ÓÃ»§Êı¾İ...");
+					publishProgress("æ­£åœ¨è¯»å–ç”¨æˆ·æ•°æ®...");
 					//rst = Common.getConnectResult("http://adr.czclub.cn:8909/DIY/user.php?id=" + userId);
 					
 					HttpUtils.getConnectResult("http://pt.939j.com/pt_init.php?UID=" + userUid);
@@ -260,7 +260,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				super.onProgressUpdate(values);
 				if (values == null)
-					Toast.makeText(LoginActivity.this, "³öÏÖÎ´Öª´íÎó", Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, "å‡ºç°æœªçŸ¥é”™è¯¯", Toast.LENGTH_SHORT).show();
 				else 
 					if (progd != null && progd.isShowing()) progd.setMessage(values[0]);
 				
@@ -271,7 +271,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				super.onPostExecute(result);
 				if (progd != null && progd.isShowing()) progd.dismiss();
 				if (result) {
-					//²âÊÔÊ¹ÓÃÕÊºÅ
+					//æµ‹è¯•ä½¿ç”¨å¸å·
 					UserEntity ue = new UserEntity(mAccount, mPassword);
 					ue.setUserId(Integer.valueOf(userId));
 					ue.setPoints(9999);
@@ -283,13 +283,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					
 					setUserToShared(true);
 					
-					Toast.makeText(LoginActivity.this, "µÇÂ¼³É¹¦", Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, "ç™»å½•æˆåŠŸ", Toast.LENGTH_SHORT).show();
 					setResult(Activity.RESULT_OK, LoginActivity.this.getIntent());
 					
 					finish();
 				} else {
 					
-					Common.showTip(LoginActivity.this, "µÇÂ¼Ê§°Ü", msg);
+					Common.showTip(LoginActivity.this, "ç™»å½•å¤±è´¥", msg);
 					
 				}
 			}

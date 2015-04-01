@@ -68,6 +68,11 @@
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait" />
         <activity
+			android:name=".PushGameActivity"
+			android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+			android:launchMode="singleTask"
+			android:screenOrientation="portrait" />
+        <activity
 			android:name=".CustomActivity"
 			android:theme="@android:style/Theme.Light.NoTitleBar"
 			android:launchMode="singleTask"

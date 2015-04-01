@@ -76,12 +76,22 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		app.init();
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		return;
+		
 	}
 
 	@Override
@@ -131,7 +141,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			bundle.putInt("line", line);
 			bundle.putParcelableArrayList("games", games);
 			
-			//¶ÁÈ¡¸Ã¼¶±ğµÄ·ÖÅä
+			//è¯»å–è¯¥çº§åˆ«çš„åˆ†é…
 			if (app.offline) {
 				/*MyDBAdapter db = new MyDBAdapter(PicView.this);
 				db.open();
@@ -151,7 +161,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 			if (!android.text.TextUtils.isEmpty(imageUri) && app.getCacheImagePath(imageUri) == null) {
 				final Intent intent = i;
 				intent.putExtras(bundle);
-				final ProgressDialog progdlg = ProgressDialog.show(ScoreActivity.this, null, "ÕıÔÚ¶ÁÈ¡×ÊÔ´£¬ÇëÉÔºò...", true, true);
+				final ProgressDialog progdlg = ProgressDialog.show(ScoreActivity.this, null, "æ­£åœ¨è¯»å–èµ„æºï¼Œè¯·ç¨å€™...", true, true);
 				new LoadImageThread(app, imageUri, null, new LoadImageThread.Callback() {
 
 					@Override
@@ -174,7 +184,7 @@ public class ScoreActivity extends BaseActivity implements OnClickListener {
 		case R.id.btnExit:
 			if (stage == 1) finish();
 			else new AlertDialog.Builder(this)
-				.setTitle("È·¶¨ÒªÍË³öµ±Ç°µÄÓÎÏ·Âğ£¿")
+				.setTitle("ç¡®å®šè¦é€€å‡ºå½“å‰çš„æ¸¸æˆå—ï¼Ÿ")
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {

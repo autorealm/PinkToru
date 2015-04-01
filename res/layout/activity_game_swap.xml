@@ -6,7 +6,7 @@
     android:background="#fff"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top|left"
@@ -22,12 +22,23 @@
             android:id="@id/space"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="top|left"
             android:animateLayoutChanges="true"
             android:padding="0dp" >
 
         </FrameLayout>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@id/ipin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|left"
+            android:background="@drawable/itemshape_1"
+            android:contentDescription="@string/swap_mode"
+            android:scaleType="fitXY"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 	<include layout="@layout/include_layout" />
 

@@ -271,11 +271,11 @@ public class ViewUtils {
 		private Matrix matrix = new Matrix();
 		private Matrix currentMaritx = new Matrix();
 		
-		private int mode = 0; // ÓÃÓÚ±ê¼ÇÄ£Ê½ 
-		private static final int DRAG = 1; // ÍÏ¶¯ 
-		private static final int ZOOM = 2; // ·Å´ó 
+		private int mode = 0; // ç”¨äºæ ‡è®°æ¨¡å¼ 
+		private static final int DRAG = 1; // æ‹–åŠ¨ 
+		private static final int ZOOM = 2; // æ”¾å¤§ 
 		private float startDis = 0;
-		private PointF midPoint; // ÖĞĞÄµã 
+		private PointF midPoint; // ä¸­å¿ƒç‚¹ 
 		
 		private onTouchCallBack callback;
 		
@@ -295,17 +295,17 @@ public class ViewUtils {
 	            mode = DRAG;
 	            v.bringToFront();
 	    	break;
-	    	case MotionEvent.ACTION_MOVE: // ÒÆ¶¯ÊÂ¼ş 
-		    	if (mode == DRAG) { // Í¼Æ¬ÍÏ¶¯ÊÂ¼ş 
-			    	float dx = event.getX() - startPoint.x; // xÖáÒÆ¶¯¾àÀë 
+	    	case MotionEvent.ACTION_MOVE: // ç§»åŠ¨äº‹ä»¶ 
+		    	if (mode == DRAG) { // å›¾ç‰‡æ‹–åŠ¨äº‹ä»¶ 
+			    	float dx = event.getX() - startPoint.x; // xè½´ç§»åŠ¨è·ç¦» 
 			    	float dy = event.getY() - startPoint.y;
-			    	matrix.set(currentMaritx); // ÔÚµ±Ç°µÄÎ»ÖÃ»ù´¡ÉÏÒÆ¶¯ 
+			    	matrix.set(currentMaritx); // åœ¨å½“å‰çš„ä½ç½®åŸºç¡€ä¸Šç§»åŠ¨ 
 			    	matrix.postTranslate(dx, dy);
 			    	
-		    	} else if (mode == ZOOM) { // Í¼Æ¬·Å´óÊÂ¼ş 
-			    	float endDis = distance(event); // ½áÊø¾àÀë 
+		    	} else if (mode == ZOOM) { // å›¾ç‰‡æ”¾å¤§äº‹ä»¶ 
+			    	float endDis = distance(event); // ç»“æŸè·ç¦» 
 			    	if (endDis > 10f) {
-				    	float scale = endDis / startDis;// ·Å´ó±¶Êı 
+				    	float scale = endDis / startDis;// æ”¾å¤§å€æ•° 
 				    	matrix.set(currentMaritx);
 				    	matrix.postScale(scale, scale, midPoint.x, midPoint.y);
 			    	}
@@ -314,17 +314,17 @@ public class ViewUtils {
 	    	case MotionEvent.ACTION_UP:
 	    		mode = 0;
 	    	break;
-	    	// ÓĞÊÖÖ¸Àë¿ªÆÁÄ»£¬µ«ÆÁÄ»»¹ÓĞ´¥µã(ÊÖÖ¸)
+	    	// æœ‰æ‰‹æŒ‡ç¦»å¼€å±å¹•ï¼Œä½†å±å¹•è¿˜æœ‰è§¦ç‚¹(æ‰‹æŒ‡)
 	    	case MotionEvent.ACTION_POINTER_UP:
 	    		mode = 0;
 	    	break;
-	    	// µ±ÆÁÄ»ÉÏÒÑ¾­ÓĞ´¥µã£¨ÊÖÖ¸£©,ÔÙÓĞÒ»¸öÊÖÖ¸Ñ¹ÏÂÆÁÄ» 
+	    	// å½“å±å¹•ä¸Šå·²ç»æœ‰è§¦ç‚¹ï¼ˆæ‰‹æŒ‡ï¼‰,å†æœ‰ä¸€ä¸ªæ‰‹æŒ‡å‹ä¸‹å±å¹• 
 	    	case MotionEvent.ACTION_POINTER_DOWN:
 		    	mode = ZOOM;
 		    	startDis = distance(event);
 		    	if (startDis > 10f) {
 			    	midPoint = mid(event);
-			    	currentMaritx.set(((ImageView) v).getImageMatrix());// ¼ÇÂ¼µ±Ç°µÄËõ·Å±¶Êı 
+			    	currentMaritx.set(((ImageView) v).getImageMatrix());// è®°å½•å½“å‰çš„ç¼©æ”¾å€æ•° 
 		    	}
 
 	    	break;
@@ -343,9 +343,9 @@ public class ViewUtils {
 
 		private PointF startPoint = new PointF();
 
-    	private int mode = 0; // ÓÃÓÚ±ê¼ÇÄ£Ê½ 
-    	private static final int DRAG = 1; // ÍÏ¶¯ 
-    	private static final int ZOOM = 2; // ·Å´ó 
+    	private int mode = 0; // ç”¨äºæ ‡è®°æ¨¡å¼ 
+    	private static final int DRAG = 1; // æ‹–åŠ¨ 
+    	private static final int ZOOM = 2; // æ”¾å¤§ 
     	
     	private onTouchCallBack callback;
     	boolean skiptrans = true;
@@ -376,7 +376,7 @@ public class ViewUtils {
 	            v.requestFocus();
 	            
 	    	break;
-	    	case MotionEvent.ACTION_MOVE: // ÒÆ¶¯ÊÂ¼ş 
+	    	case MotionEvent.ACTION_MOVE: // ç§»åŠ¨äº‹ä»¶ 
 		    	if (mode == DRAG) {
 			    	int dx = (int) (event.getX() - startPoint.x + 0.5f);
 			    	int dy = (int) (event.getY() - startPoint.y + 0.5f);
@@ -399,7 +399,7 @@ public class ViewUtils {
 						v.postInvalidate();
 			    	}
 		    	
-		    	} else if (mode == ZOOM) { // ·Å´óÊÂ¼ş 
+		    	} else if (mode == ZOOM) { // æ”¾å¤§äº‹ä»¶ 
 		    		
 		    	}
 		    	
@@ -486,14 +486,14 @@ public class ViewUtils {
 	}
 	
 	private static float distance(MotionEvent event) {
-		// Á½¸ùÏßµÄ¾àÀë 
+		// ä¸¤æ ¹çº¿çš„è·ç¦» 
 		float dx = event.getX(1) - event.getX(0);
 		float dy = event.getY(1) - event.getY(0);
 		return FloatMath.sqrt(dx * dx + dy * dy);
 	}
 	
 	private static PointF mid(MotionEvent event) {
-		//¼ÆËãÁ½µãÖ®¼äÖĞĞÄµãµÄ¾àÀë 
+		//è®¡ç®—ä¸¤ç‚¹ä¹‹é—´ä¸­å¿ƒç‚¹çš„è·ç¦» 
 		float midx = event.getX(1) + event.getX(0);
 		float midy = event.getY(1) - event.getY(0);
 		
@@ -501,9 +501,9 @@ public class ViewUtils {
 	}
 
     /**
-     * ¸Ä±äViewµÄZÖá
-     * @param v View (×¢Òâ¸¸Layout)
-     * @param front ÊÇ¼´Ç°ÖÃ,·ñÔòºóÖÃ
+     * æ”¹å˜Viewçš„Zè½´
+     * @param v View (æ³¨æ„çˆ¶Layout)
+     * @param front æ˜¯å³å‰ç½®,å¦åˆ™åç½®
      */
     public static void bringTo(View v, boolean front) {
     	ViewGroup flay = (ViewGroup) v.getParent();
@@ -540,10 +540,10 @@ public class ViewUtils {
     }
     
     /**
-     * ÒÆ¶¯ViewÖÁÖ¸¶¨×ø±ê
+     * ç§»åŠ¨Viewè‡³æŒ‡å®šåæ ‡
      * @param v View
-     * @param left ¶¥µãX×ø±ê
-     * @param top ¶¥µãY×ø±ê
+     * @param left é¡¶ç‚¹Xåæ ‡
+     * @param top é¡¶ç‚¹Yåæ ‡
      */
     public static void moveView(final View v, int left, int top) {
     	if (v.getParent() instanceof FrameLayout) {
@@ -564,9 +564,9 @@ public class ViewUtils {
     }
 
     /**
-     * Ëõ·ÅView
+     * ç¼©æ”¾View
      * @param v
-     * @param scale Ëõ·ÅÂÊ
+     * @param scale ç¼©æ”¾ç‡
      */
 	public static void zoomView(View v, float scale) {
 		ViewGroup.LayoutParams vlp = v.getLayoutParams();
@@ -604,9 +604,9 @@ public class ViewUtils {
 	}
 
     /**
-     * Ê¹Í¼°¸View¾ÓÖĞÏÔÊ¾
+     * ä½¿å›¾æ¡ˆViewå±…ä¸­æ˜¾ç¤º
      * @param view View
-     * @param fill ÊÇ·ñÊ¹ViewÊÊÓ¦²¼¾ÖÇøÓòÏÔÊ¾
+     * @param fill æ˜¯å¦ä½¿Viewé€‚åº”å¸ƒå±€åŒºåŸŸæ˜¾ç¤º
      */
     public static void alignCenter(View view, boolean fill) {
     	ViewGroup.LayoutParams vlp = view.getLayoutParams();
@@ -642,12 +642,12 @@ public class ViewUtils {
     }
     
     /**
-     * »ñÈ¡Æ¥Åä¿ò¼ÜËõ·ÅÂÊ
-     * @param width ¿ò¼Ü¿í¶È
-     * @param height ¿ò¼Ü¸ß¶È
-     * @param w Ô´¿í
-     * @param h Ô´¸ß
-     * @param a ×î´ó±¶ÂÊ
+     * è·å–åŒ¹é…æ¡†æ¶ç¼©æ”¾ç‡
+     * @param width æ¡†æ¶å®½åº¦
+     * @param height æ¡†æ¶é«˜åº¦
+     * @param w æºå®½
+     * @param h æºé«˜
+     * @param a æœ€å¤§å€ç‡
      */
     public static float getSpaceScale(int width, int height, int w, int h, int a) {
     	float s = 1f;
@@ -706,10 +706,10 @@ public class ViewUtils {
 	}
 	
 	/**
-	 * ¼ì²éËõ·Å
-	 * @param dx Ëõ·Åºó³ß´ç
-	 * @param d Ëõ·ÅÇ°³ß´ç
-	 * @return ÊÇ·ñÎ´Õı³£³ß´ç
+	 * æ£€æŸ¥ç¼©æ”¾
+	 * @param dx ç¼©æ”¾åå°ºå¯¸
+	 * @param d ç¼©æ”¾å‰å°ºå¯¸
+	 * @return æ˜¯å¦æœªæ­£å¸¸å°ºå¯¸
 	 */
 	private static boolean checkRect(int dx, int d) {
 		boolean iss = true;

@@ -61,10 +61,10 @@ public class HttpUtils {
 	}
 	
 	/**
-	 * ÒÔPOST·½Ê½·¢ËÍÇëÇó²¢·µ»Ø·şÎñÆ÷»ØÓ¦µÄ×Ö·û´®
-	 * @param url ÇëÇóµØÖ·
-	 * @param pmap ÇëÇóµÄ²ÎÊı¼üÖµ¶Ô
-	 * @return »ØÓ¦×Ö·û´®
+	 * ä»¥POSTæ–¹å¼å‘é€è¯·æ±‚å¹¶è¿”å›æœåŠ¡å™¨å›åº”çš„å­—ç¬¦ä¸²
+	 * @param url è¯·æ±‚åœ°å€
+	 * @param pmap è¯·æ±‚çš„å‚æ•°é”®å€¼å¯¹
+	 * @return å›åº”å­—ç¬¦ä¸²
 	 */
 	public static String postHttpRequest(String url, Map<String, String> pmap) {
 		String strResult = "";
@@ -98,10 +98,10 @@ public class HttpUtils {
 	}
 
 	/**
-	 * ÔÚÏß³ÌÖĞÒÔGET·½Ê½ÇëÇó·şÎñÆ÷Êı¾İ
-	 * @param RequestURL ÇëÇóUrlµØÖ·
-	 * @param callBack »Øµ÷º¯Êı
-	 * @return ¸ÃÏß³Ì
+	 * åœ¨çº¿ç¨‹ä¸­ä»¥GETæ–¹å¼è¯·æ±‚æœåŠ¡å™¨æ•°æ®
+	 * @param RequestURL è¯·æ±‚Urlåœ°å€
+	 * @param callBack å›è°ƒå‡½æ•°
+	 * @return è¯¥çº¿ç¨‹
 	 */
 	public static Thread requestHttpGet(final String RequestURL, final ResultCallBack callBack) {
 		if (RequestURL == null || RequestURL.length() < 1) return null;
@@ -173,22 +173,22 @@ public class HttpUtils {
 
 
 	/**
-	 * ÉÏ´«ÎÄ¼şµ½·şÎñÆ÷
-	 * @param file ĞèÒªÉÏ´«µÄÎÄ¼ş
-	 * @param RequestURL ÇëÇóµÄURL
-	 * @param name ÎÄ¼ş¶ÔÓ¦µÄ¼üÃû
-	 * @return ·µ»ØÏìÓ¦µÄÄÚÈİ
+	 * ä¸Šä¼ æ–‡ä»¶åˆ°æœåŠ¡å™¨
+	 * @param file éœ€è¦ä¸Šä¼ çš„æ–‡ä»¶
+	 * @param RequestURL è¯·æ±‚çš„URL
+	 * @param name æ–‡ä»¶å¯¹åº”çš„é”®å
+	 * @return è¿”å›å“åº”çš„å†…å®¹
 	 */
 	public static String uploadFile(File file, String RequestURL, String name) {
 		if (file == null || RequestURL == null || RequestURL.trim().length() == 0) return null;
 		if (name == null || name.trim().length() == 0) name = "file";
 		final String TAG = "uploadFile";
 		final int TIME_OUT = 6 * 1000;
-		final String CHARSET = "utf-8"; // ÉèÖÃ±àÂë
+		final String CHARSET = "utf-8"; // è®¾ç½®ç¼–ç 
 		String result = null;
-		String BOUNDARY = UUID.randomUUID().toString(); // ±ß½ç±êÊ¶ Ëæ»úÉú³É
+		String BOUNDARY = UUID.randomUUID().toString(); // è¾¹ç•Œæ ‡è¯† éšæœºç”Ÿæˆ
 		String PREFIX = "--", LINE_END = "\r\n";
-		String CONTENT_TYPE = "multipart/form-data"; // ÄÚÈİÀàĞÍ
+		String CONTENT_TYPE = "multipart/form-data"; // å†…å®¹ç±»å‹
 		HttpURLConnection conn = null;
 		
 		try {
@@ -196,11 +196,11 @@ public class HttpUtils {
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setReadTimeout(TIME_OUT);
 			conn.setConnectTimeout(TIME_OUT);
-			conn.setDoInput(true); // ÔÊĞíÊäÈëÁ÷
-			conn.setDoOutput(true); // ÔÊĞíÊä³öÁ÷
-			conn.setUseCaches(false); // ²»ÔÊĞíÊ¹ÓÃ»º´æ
-			conn.setRequestMethod("POST"); // ÇëÇó·½Ê½
-			conn.setRequestProperty("Charset", CHARSET); // ÉèÖÃ±àÂë
+			conn.setDoInput(true); // å…è®¸è¾“å…¥æµ
+			conn.setDoOutput(true); // å…è®¸è¾“å‡ºæµ
+			conn.setUseCaches(false); // ä¸å…è®¸ä½¿ç”¨ç¼“å­˜
+			conn.setRequestMethod("POST"); // è¯·æ±‚æ–¹å¼
+			conn.setRequestProperty("Charset", CHARSET); // è®¾ç½®ç¼–ç 
 			conn.setRequestProperty("connection", "keep-alive");
 			conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
 			

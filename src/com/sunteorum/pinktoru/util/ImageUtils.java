@@ -28,7 +28,7 @@ public class ImageUtils {
 	static String tag = "ImageUtils";
 	
 	/**
-	 * Drawable×ª»»ÎªBitmap
+	 * Drawableè½¬æ¢ä¸ºBitmap
 	 * @param drawable
 	 * @return
 	 */
@@ -40,7 +40,7 @@ public class ImageUtils {
 	}
 	
 	/**
-	 * Bitmap×ª»»ÎªDrawable
+	 * Bitmapè½¬æ¢ä¸ºDrawable
 	 * @param bitmap
 	 * @return
 	 */
@@ -56,10 +56,10 @@ public class ImageUtils {
 	}
 	
 	/**
-	 * ´´½¨Í¼Æ¬Bitmap
-	 * @param path Í¼Æ¬Â·¾¶
-	 * @param width ×î´ó¿í
-	 * @param height ×î´ó¸ß
+	 * åˆ›å»ºå›¾ç‰‡Bitmap
+	 * @param path å›¾ç‰‡è·¯å¾„
+	 * @param width æœ€å¤§å®½
+	 * @param height æœ€å¤§é«˜
 	 * @return
 	 */
 	public static Bitmap createBitmap(String path, int width, int height) {
@@ -69,17 +69,17 @@ public class ImageUtils {
 			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			
 			BitmapFactory.decodeFile(path, opts);
-			int srcWidth = opts.outWidth; //»ñÈ¡Í¼Æ¬µÄÔ­Ê¼¿í¶È
-			int srcHeight = opts.outHeight; //»ñÈ¡Í¼Æ¬Ô­Ê¼¸ß¶È
+			int srcWidth = opts.outWidth; //è·å–å›¾ç‰‡çš„åŸå§‹å®½åº¦
+			int srcHeight = opts.outHeight; //è·å–å›¾ç‰‡åŸå§‹é«˜åº¦
 			int destWidth = 0;
 			int destHeight = 0;
 			
-			float ratio = 0; //Ëõ·ÅµÄ±ÈÀı
+			float ratio = 0; //ç¼©æ”¾çš„æ¯”ä¾‹
 			if (width > 0 && height > 0) {
 				if (srcWidth < width && srcHeight < height) {
 					destWidth = srcWidth;
 					destHeight = srcHeight;
-				} else if (srcWidth > srcHeight) { //°´±ÈÀı¼ÆËãËõ·ÅºóµÄÍ¼Æ¬´óĞ¡
+				} else if (srcWidth > srcHeight) { //æŒ‰æ¯”ä¾‹è®¡ç®—ç¼©æ”¾åçš„å›¾ç‰‡å¤§å°
 					ratio = (float) srcWidth / (float) width;
 					destWidth = width;
 					destHeight = Math.round(srcHeight / ratio);
@@ -111,9 +111,9 @@ public class ImageUtils {
 	}
 
 	/**
-	 * Ñ¹ËõÏÔÊ¾Í¼°¸(³¤¿í²»³¬¹ı×î´óÏŞÖÆ)
-	 * @param uri ¸ÃÍ¼Æ¬µÄµØÖ·
-	 * @return Î»Í¼
+	 * å‹ç¼©æ˜¾ç¤ºå›¾æ¡ˆ(é•¿å®½ä¸è¶…è¿‡æœ€å¤§é™åˆ¶)
+	 * @param uri è¯¥å›¾ç‰‡çš„åœ°å€
+	 * @return ä½å›¾
 	 */
 	public static Bitmap compressBitmap(String uri, int MAX_IMAGE_SIZE) throws Exception {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -158,12 +158,12 @@ public class ImageUtils {
 	}
 
 	/**
-	 * ±£´æÍ¼Æ¬Êı¾İµ½ÎÄ¼ş
-	 * @param bitmap Í¼Æ¬
-	 * @param tofile ÎÄ¼ş
-	 * @param delx Í¼Æ¬ÎÄ¼ş´æÔÚÊ±ÊÇ·ñÉ¾³ıºó±£´æ£¬·ñÔò²»±£´æ
-	 * @param compressFormat Í¼Æ¬Ñ¹Ëõ¸ñÊ½(null ÔòÎªJPG¸ñÊ½)
-	 * @return ±£´æÊÇ·ñ³É¹¦
+	 * ä¿å­˜å›¾ç‰‡æ•°æ®åˆ°æ–‡ä»¶
+	 * @param bitmap å›¾ç‰‡
+	 * @param tofile æ–‡ä»¶
+	 * @param delx å›¾ç‰‡æ–‡ä»¶å­˜åœ¨æ—¶æ˜¯å¦åˆ é™¤åä¿å­˜ï¼Œå¦åˆ™ä¸ä¿å­˜
+	 * @param compressFormat å›¾ç‰‡å‹ç¼©æ ¼å¼(null åˆ™ä¸ºJPGæ ¼å¼)
+	 * @return ä¿å­˜æ˜¯å¦æˆåŠŸ
 	 */
 	public static boolean saveBitmap(Bitmap bitmap, File tofile, Boolean delx, Bitmap.CompressFormat compressFormat) {
 		if (bitmap == null || tofile == null) return false;
@@ -237,7 +237,7 @@ public class ImageUtils {
 	
 
 	/**
-	 * Ëõ·ÅÍ¼Ïñ
+	 * ç¼©æ”¾å›¾åƒ
 	 * @param bitmap
 	 * @param w
 	 * @param h
@@ -259,11 +259,11 @@ public class ImageUtils {
 	}
 	
 	/**
-	 * ¼ôÇĞÍ¼Æ¬µÄÒ»²¿·Ö²¢·µ»Ø
+	 * å‰ªåˆ‡å›¾ç‰‡çš„ä¸€éƒ¨åˆ†å¹¶è¿”å›
 	 * @param bmp
 	 * @param w
 	 * @param h
-	 * @param flag  0£º¾ÓÖĞ£¬1£º¾ÓÉÏ/¾Ó×ó£¬ 2£º¾ÓÓÒ/¾ÓÏÂ¡£
+	 * @param flag  0ï¼šå±…ä¸­ï¼Œ1ï¼šå±…ä¸Š/å±…å·¦ï¼Œ 2ï¼šå±…å³/å±…ä¸‹ã€‚
 	 * @return
 	 */
 	public static Bitmap cutBitmap(Bitmap bmp, int w, int h, int flag) {
@@ -335,27 +335,27 @@ public class ImageUtils {
 		if (originalImage == null) return null;
 		int reflectionGap = 4;
 		
-		int width = originalImage.getWidth();   //Ô­Í¼¿í
-		int height = originalImage.getHeight();   //Ô­Í¼¸ß
+		int width = originalImage.getWidth();   //åŸå›¾å®½
+		int height = originalImage.getHeight();   //åŸå›¾é«˜
 		
 		Matrix matrix = new Matrix();
 		matrix.preScale(1, -1);
 		
-		//»ñÈ¡Ô­Í¼ÏÂ°ëÕÅÍ¼Æ¬
+		//è·å–åŸå›¾ä¸‹åŠå¼ å›¾ç‰‡
 		Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0, height / 2, width, height / 2, matrix, false);
 
-		//´´½¨1.5±¶¸ßµÄÍ¸Ã÷Í¼Æ¬
+		//åˆ›å»º1.5å€é«˜çš„é€æ˜å›¾ç‰‡
 		Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height / 2), Config.ARGB_8888);
 		
 		Canvas canvas = new Canvas(bitmapWithReflection);
-		//»æÖÆÔ­Í¼
+		//ç»˜åˆ¶åŸå›¾
 		canvas.drawBitmap(originalImage, 0, 0, null);
 		
 		Paint paint = new Paint();
-		//»æÖÆÔ­Í¼ºÍË®Ó¡µÄ¼äÏ¶
+		//ç»˜åˆ¶åŸå›¾å’Œæ°´å°çš„é—´éš™
 		canvas.drawRect(0, height, width, height + reflectionGap, paint);
 
-		//»æÖÆÏÂ°ëÕÅÍ¼Æ¬µ¹Ó°
+		//ç»˜åˆ¶ä¸‹åŠå¼ å›¾ç‰‡å€’å½±
 		canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 		
 		LinearGradient shader = new LinearGradient(0, height, 0,

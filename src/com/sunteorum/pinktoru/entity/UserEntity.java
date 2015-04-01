@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * ÓÃ»§ĞÅÏ¢Êı¾İ°ü×°Àà
+ * ç”¨æˆ·ä¿¡æ¯æ•°æ®åŒ…è£…ç±»
  *
  */
 public class UserEntity implements Parcelable {

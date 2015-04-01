@@ -76,7 +76,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
         
         ((Button)findViewById(R.id.button_review)).setOnClickListener(this);
         
-        this.setTitle("±¾µØÍ¼Æ¬¿â");
+        this.setTitle("æœ¬åœ°å›¾ç‰‡åº“");
         
         loadImageList();
 	}
@@ -101,11 +101,11 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 1, 0, "Ë¢ĞÂ");
-		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "±¾µØÍ¼Æ¬");
-		sm1.add(1, 11, 0, "Ïà²áÑ¡È¡");
-		sm1.add(1, 12, 0, "ÅÄÕÕ»ñµÃ");
-		menu.add(0, 3, 0, "ÉèÖÃ");
+		menu.add(0, 1, 0, "åˆ·æ–°");
+		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "æœ¬åœ°å›¾ç‰‡");
+		sm1.add(1, 11, 0, "ç›¸å†Œé€‰å–");
+		sm1.add(1, 12, 0, "æ‹ç…§è·å¾—");
+		menu.add(0, 3, 0, "è®¾ç½®");
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -138,10 +138,10 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		
-		menu.add(0, 1, 1, "´ò¿ªÎª");
-		menu.add(0, 2, 2, "ÖØÃüÃû");
-		menu.add(0, 3, 3, "É¾³ı");
-		menu.add(0, 4, 4, "ÊôĞÔ");
+		menu.add(0, 1, 1, "æ‰“å¼€ä¸º");
+		menu.add(0, 2, 2, "é‡å‘½å");
+		menu.add(0, 3, 3, "åˆ é™¤");
+		menu.add(0, 4, 4, "å±æ€§");
 		
 	}
 
@@ -165,9 +165,9 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			break;
 		case 3:
 			new AlertDialog.Builder(this)
-			.setTitle("ÇëÈ·ÈÏ")
+			.setTitle("è¯·ç¡®è®¤")
 			.setIcon(android.R.drawable.ic_dialog_alert)
-			.setMessage("ÊÇ·ñÉ¾³ıÎÄ¼ş£º" + sfile.getAbsolutePath() + " £¿")
+			.setMessage("æ˜¯å¦åˆ é™¤æ–‡ä»¶ï¼š" + sfile.getAbsolutePath() + " ï¼Ÿ")
 			.setPositiveButton(R.string.btn_cancel, null)
 			.setNegativeButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 			
@@ -177,7 +177,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 						imageList.remove(id);
 						adapter.notifyDataSetChanged();
 					} else {
-						Toast.makeText(PictureFlowActivity.this, "É¾³ıÎÄ¼ş Ê§°Ü", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PictureFlowActivity.this, "åˆ é™¤æ–‡ä»¶ å¤±è´¥", Toast.LENGTH_SHORT).show();
 					}
 				}
 				
@@ -190,7 +190,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			
 			break;
 		default:
-			Toast.makeText(PictureFlowActivity.this, "Î´Ìá¹©", Toast.LENGTH_SHORT).show();
+			Toast.makeText(PictureFlowActivity.this, "æœªæä¾›", Toast.LENGTH_SHORT).show();
 			
 		}
 		
@@ -226,7 +226,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			ImageUtils.saveBitmap(bm, f, true, CompressFormat.JPEG);
 			capimgPath = f.getAbsolutePath();
 			
-			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, app.DEF_WITCH, app.DEF_WITCH), 9);
+			startActivityForResult(Common.cropImageUri(Uri.fromFile(f), 3, 5, app.DEF_WITCH, app.DEF_HEIGHT), 9);
 			break;
 		case 4:
 			
@@ -286,7 +286,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			}
 			String imgpath = imageList.get(galleryFlow.getSelectedItemPosition());
 			
-			gotoPlayTheGame(new GameEntity(1, app.getGameMode(), "Ä¬ÈÏ±¾µØÍ¼Æ¬ÓÎÏ·", imgpath));
+			gotoPlayTheGame(new GameEntity(1, app.getGameMode(), "é»˜è®¤æœ¬åœ°å›¾ç‰‡æ¸¸æˆ", imgpath));
 			
 			break;
 		case R.id.button_return:
@@ -298,14 +298,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 			break;
 		case 0:
 			new AlertDialog.Builder(PictureFlowActivity.this)
-			.setTitle("Ñ¡ÔñÀ´Ô´")
+			.setTitle("é€‰æ‹©æ¥æº")
 			.setIcon(android.R.drawable.ic_menu_gallery)
-			.setPositiveButton("±¾µØÍ¼Æ¬", new DialogInterface.OnClickListener() {
+			.setPositiveButton("æœ¬åœ°å›¾ç‰‡", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					startPickIntent(1);
 				}
 			})
-			.setNegativeButton("Ïà»úÅÄÕÕ", new DialogInterface.OnClickListener() {
+			.setNegativeButton("ç›¸æœºæ‹ç…§", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					startCropIntent(2);
 				}
@@ -326,7 +326,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	protected void loadImageList() {
 		
 		try {
-			final ProgressDialog progd = ProgressDialog.show(this, null, "ÕıÔÚ¼ÓÔØ±¾µØÍ¼Æ¬...", true, true);
+			final ProgressDialog progd = ProgressDialog.show(this, null, "æ­£åœ¨åŠ è½½æœ¬åœ°å›¾ç‰‡...", true, true);
 			
 			galleryFlow.postDelayed(new Runnable() {
 
@@ -337,9 +337,11 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 					listLocalImages(app.getAppImageDir().getAbsolutePath());
 					
 					File dir = android.os.Environment.getExternalStorageDirectory();
-					
-					dir = new File(dir, "Í¼Æ¬");
-					listLocalImages(dir.getAbsolutePath());
+					if (Common.hasSDCard() & dir != null) {
+						listLocalImages((new File(dir, "Pictures")).getAbsolutePath());
+						listLocalImages((new File(dir, "å›¾ç‰‡")).getAbsolutePath());
+						
+					}
 					
 					adapter = new FlowImageAdapter(app, imageList);
 					adapter.setBackRes(R.drawable.itemshape_7);
@@ -381,7 +383,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		
 		LevelEntity le = app.getLevelById(1);
 		if (le == null) {
-			Common.showToast(this, "Êı¾İ³ö´íÁË£¡");
+			Common.showToast(this, "æ•°æ®å‡ºé”™äº†ï¼");
 			return;
 		}
 		
@@ -404,14 +406,14 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	
 	public void addMore(View view) {
 		new AlertDialog.Builder(this)
-			.setTitle("Ìí¼ÓÍ¼Æ¬")
+			.setTitle("æ·»åŠ å›¾ç‰‡")
 			.setIcon(android.R.drawable.ic_menu_gallery)
-			.setPositiveButton("Ïà²áÑ¡È¡" ,new DialogInterface.OnClickListener() {
+			.setPositiveButton("ç›¸å†Œé€‰å–" ,new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					startPickIntent(3);
 				}
 			})
-			.setNegativeButton("ÅÄÕÕ»ñÈ¡", new DialogInterface.OnClickListener() {
+			.setNegativeButton("æ‹ç…§è·å–", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					startCropIntent(4);
 				}
@@ -441,7 +443,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 	
 	private void startCropIntent(int flag) {
 		if (!Common.hasSDCard()) {
-			Toast.makeText(this, "Î´ÕÒµ½¿ÉÓÃµÄ´æ´¢¿¨£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æœªæ‰¾åˆ°å¯ç”¨çš„å­˜å‚¨å¡ï¼", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
@@ -466,17 +468,17 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		UserEntity ue = ((PinkToru) this.getApplication()).getUser();
 		if ( ue == null) {
 			new AlertDialog.Builder(this)
-			.setTitle("Î´ÕÒµ½ÓÃ»§µÇÂ¼ĞÅÏ¢")
-			.setMessage("Ê¹ÓÃ¸Ã¹¦ÄÜĞèÒª×¢²á»áÔ±ÓÃ»§£¬ÇëÏÈµÇÂ¼¡£")
+			.setTitle("æœªæ‰¾åˆ°ç”¨æˆ·ç™»å½•ä¿¡æ¯")
+			.setMessage("ä½¿ç”¨è¯¥åŠŸèƒ½éœ€è¦æ³¨å†Œä¼šå‘˜ç”¨æˆ·ï¼Œè¯·å…ˆç™»å½•ã€‚")
 			.setIcon(android.R.drawable.ic_dialog_info)
-			.setPositiveButton("ÏÖÔÚµÇÂ¼" ,new DialogInterface.OnClickListener() {
+			.setPositiveButton("ç°åœ¨ç™»å½•" ,new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					Intent i = new Intent(PictureFlowActivity.this, LoginActivity.class);
 					startActivity(i);
 		    		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 					
 				}
-			}).setNegativeButton("×¢²á»áÔ±" ,new DialogInterface.OnClickListener() {
+			}).setNegativeButton("æ³¨å†Œä¼šå‘˜" ,new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					Intent i = new Intent(PictureFlowActivity.this, RegisterActivity.class);
 					startActivity(i);
@@ -496,7 +498,7 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 
 	protected void addImageToGallery(final File imgfile) {
 		if (imgfile == null || !imgfile.exists()) {
-			Toast.makeText(this, "ÎÄ¼şÎ´ÕÒµ½£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æ–‡ä»¶æœªæ‰¾åˆ°ï¼", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
@@ -505,13 +507,13 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		imgItem.setImageURI(Uri.fromFile(imgfile));
 		
 		new AlertDialog.Builder(this)
-		.setTitle("ÊÇ·ñ½«¸ÃÍ¼Æ¬·ÅÈëÍ¼¿â£¿")
+		.setTitle("æ˜¯å¦å°†è¯¥å›¾ç‰‡æ”¾å…¥å›¾åº“ï¼Ÿ")
 		.setView(view)
 		.setIcon(android.R.drawable.ic_input_add)
 		.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				try {
-					final ProgressDialog progd = ProgressDialog.show(PictureFlowActivity.this, null, "ÇëÉÔºó...", true, true);
+					final ProgressDialog progd = ProgressDialog.show(PictureFlowActivity.this, null, "è¯·ç¨å...", true, true);
 					new Thread(new Runnable() {
 
 						@Override
@@ -550,30 +552,31 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		edt.setInputType(InputType.TYPE_CLASS_TEXT);
 		
 		new AlertDialog.Builder(this)
-		.setTitle("ÖØÃüÃû")
+		.setTitle("é‡å‘½å")
 		.setView(edt)
 		.setIcon(android.R.drawable.ic_menu_edit)
-		.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+		.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				File nfile = new File(sfile.getParent() + "/" + edt.getText().toString());
 				
 				if (sfile.renameTo(nfile)) {
-					imageList.get(p).replace(imageList.get(p), Uri.fromFile(nfile).toString());
+					imageList.remove(p);
+					imageList.add(p, Uri.fromFile(nfile).toString());
 					
 					adapter.notifyDataSetChanged();
 				} else {
 					System.out.println("<rename error!> " + sfile.getName());
 				}
 			}})
-		.setNegativeButton("È¡Ïû", null)
+		.setNegativeButton("å–æ¶ˆ", null)
 		.show();
 		
 	}
 
 	protected void showFileInfo(final File sfile) {
 		new AlertDialog.Builder(this)
-		.setTitle("ÎÄ¼şĞÅÏ¢")
+		.setTitle("æ–‡ä»¶ä¿¡æ¯")
 		.setIcon(android.R.drawable.ic_dialog_info)
 		.setMessage(getFileInfo(sfile))
 		.show();
@@ -587,27 +590,27 @@ public class PictureFlowActivity extends BaseActivity implements OnItemClickList
 		t.set(sfile.lastModified());
 		DecimalFormat fnum = new DecimalFormat("##0.00"); 
 		String ftype = "", flen = "";
-		if (sfile.isFile()) {ftype = "ÎÄ¼ş"; 
+		if (sfile.isFile()) {ftype = "æ–‡ä»¶"; 
 			if (sfile.length() < 1024 * 1024)
 			flen = fnum.format((float)sfile.length() / 1024) + " KB";
 			else flen = fnum.format((float)sfile.length() / 1024 / 1024) + " MB";
 		}
 		else if (sfile.isDirectory()) {
 			File[] files = sfile.listFiles();
-			ftype = "ÎÄ¼ş¼Ğ";
-			if (files != null) flen = "°üº¬  " + files.length + " ¸öÄÚÈİ";
+			ftype = "æ–‡ä»¶å¤¹";
+			if (files != null) flen = "åŒ…å«  " + files.length + " ä¸ªå†…å®¹";
 			else flen = "NULL";
 			}
 		
-		info = "Ãû³Æ£º " + sfile.getName() + "\n" +
-			"ÀàĞÍ£º " + ftype + "\n" +
-			"Â·¾¶£º " + sfile.getParent() + "\n" +
-			"´óĞ¡£º " + flen + "\n" +
-			"ĞŞ¸ÄÊ±¼ä£º " + t.format("%Y-%m-%d %H:%M:%S") + "\n\n" +
-			"¿É¶Á£º " + (sfile.canRead()?"ÊÇ":"·ñ") + "\t" +
-			" ¿ÉĞ´£º " + (sfile.canWrite()?"ÊÇ":"·ñ") + "\n" +
-			"Ö´ĞĞ£º " + (sfile.canExecute()?"ÊÇ":"·ñ") + "\t" +
-			" Òş²Ø£º " + (sfile.isHidden()?"ÊÇ":"·ñ") + "\n";
+		info = "åç§°ï¼š " + sfile.getName() + "\n" +
+			"ç±»å‹ï¼š " + ftype + "\n" +
+			"è·¯å¾„ï¼š " + sfile.getParent() + "\n" +
+			"å¤§å°ï¼š " + flen + "\n" +
+			"ä¿®æ”¹æ—¶é—´ï¼š " + t.format("%Y-%m-%d %H:%M:%S") + "\n\n" +
+			"å¯è¯»ï¼š " + (sfile.canRead()?"æ˜¯":"å¦") + "\t" +
+			" å¯å†™ï¼š " + (sfile.canWrite()?"æ˜¯":"å¦") + "\n" +
+			"æ‰§è¡Œï¼š " + (sfile.canExecute()?"æ˜¯":"å¦") + "\t" +
+			" éšè—ï¼š " + (sfile.isHidden()?"æ˜¯":"å¦") + "\n";
 		
 		return info;
 	}

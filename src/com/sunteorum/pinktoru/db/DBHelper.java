@@ -100,7 +100,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.clear();
 		values.put("game_id", 1);
-		values.put("game_name", "Ä¬ÈÏ");
+		values.put("game_name", "é»˜è®¤");
 		values.put("image_uri", "assets://game/images/default.jpg");
 		values.put("level", "{}");
 		values.put("desc", "");
@@ -108,14 +108,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		ArrayList<LevelEntity> lvlist = new ArrayList<LevelEntity>();
 		lvlist.add(new LevelEntity(1, 3, 2, "3*2"));
-		lvlist.add(new LevelEntity(2, 5, 3, "5*3"));
-		lvlist.add(new LevelEntity(3, 6, 4, "6*4"));
-		lvlist.add(new LevelEntity(4, 7, 5, "7*5"));
-		lvlist.add(new LevelEntity(5, 8, 6, "8*6"));
-		lvlist.add(new LevelEntity(6, 9, 7, "9*7"));
-		lvlist.add(new LevelEntity(7, 10, 8, "10*8"));
-		lvlist.add(new LevelEntity(8, 12, 9, "12*9"));
-		lvlist.add(new LevelEntity(9, 14, 10, "14*10"));
+		lvlist.add(new LevelEntity(2, 4, 3, "4*3"));
+		lvlist.add(new LevelEntity(3, 5, 3, "5*3"));
+		lvlist.add(new LevelEntity(4, 6, 4, "6*4"));
+		lvlist.add(new LevelEntity(5, 7, 4, "7*4"));
+		lvlist.add(new LevelEntity(6, 8, 5, "8*5"));
+		lvlist.add(new LevelEntity(7, 9, 5, "9*5"));
+		lvlist.add(new LevelEntity(8, 9, 6, "9*6"));
+		lvlist.add(new LevelEntity(9, 10, 6, "10*6"));
 		
 		for (LevelEntity le:lvlist) {
 			values.clear();

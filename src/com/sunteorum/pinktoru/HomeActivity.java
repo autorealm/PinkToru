@@ -67,11 +67,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 1, 0, "Ë¢ĞÂ");
-		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "¸ü¶à");
-		sm1.add(1, 11, 0, "µ÷ÊÔ");
-		sm1.add(1, 12, 0, "¹ØÓÚ");
-		menu.add(0, 3, 0, "ÉèÖÃ");
+		menu.add(0, 1, 0, "åˆ·æ–°");
+		SubMenu sm1 = menu.addSubMenu(1, 2, 0, "æ›´å¤š");
+		sm1.add(1, 11, 0, "è°ƒè¯•");
+		sm1.add(1, 12, 0, "å…³äº");
+		menu.add(0, 3, 0, "è®¾ç½®");
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -101,7 +101,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			
 			new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.star_big_on)
-				.setTitle("Bug ÁĞ±í")
+				.setTitle("Bug åˆ—è¡¨")
 				.setSingleChoiceItems(aa, 0, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -110,7 +110,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 					}
 					
 				})
-				.setNegativeButton("¹Ø±Õ", null)
+				.setNegativeButton("å…³é—­", null)
 				.show();
 			
 			break;
@@ -135,7 +135,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 			//slideDrawer.scrollToRightLayout();
 		//} else {
 			if ((System.currentTimeMillis() - curtime) > 2000) {
-				Toast.makeText(this, "ÔÙ´Î°´·µ»Ø¼üÍË³ö", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "å†æ¬¡æŒ‰è¿”å›é”®é€€å‡º", Toast.LENGTH_SHORT).show();
 				curtime = System.currentTimeMillis();
 			} else {
 				super.onBackPressed();
@@ -209,7 +209,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
 	}
 
 	private void init() {
-		//»ñµÃÆÁÄ»µÄ¿íºÍ¸ß
+		//è·å¾—å±å¹•çš„å®½å’Œé«˜
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		int screenWidth = dm.widthPixels;
 		int screenHeight = dm.heightPixels;

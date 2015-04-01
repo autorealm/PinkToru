@@ -32,7 +32,7 @@ public class DataBean {
 	}
 	
 	/**
-	 * ¹Ø±ÕÊı¾İ¿â
+	 * å…³é—­æ•°æ®åº“
 	 */
 	public void close() {
 		mSQLHelper.close();
@@ -43,14 +43,14 @@ public class DataBean {
 	}
 
 	/**
-	 * Ìí¼ÓÊı¾İ
+	 * æ·»åŠ æ•°æ®
 	 */
 	public void insertData(String tableName, ContentValues values) {
 		mSQLiteDatabase.insert(tableName, null, values);
 	}
 
 	/**
-	 * ¸üĞÂÊı¾İ
+	 * æ›´æ–°æ•°æ®
 	 * 
 	 * @param values
 	 * @param whereClause
@@ -61,7 +61,7 @@ public class DataBean {
 	}
 
 	/**
-	 * É¾³ıÊı¾İ
+	 * åˆ é™¤æ•°æ®
 	 * 
 	 * @param whereClause
 	 * @param whereArgs
@@ -71,7 +71,7 @@ public class DataBean {
 	}
 
 	/**
-	 * ²éÑ¯Êı¾İ
+	 * æŸ¥è¯¢æ•°æ®
 	 * 
 	 * @param columns
 	 * @param selection
@@ -88,10 +88,10 @@ public class DataBean {
 	}
 	
 	/**
-	 * »ñÈ¡¼ÇÂ¼µÄ×î´óÖµ
-	 * @param table ±íÃû
-	 * @param get_col ²éÑ¯µÄ×Ö¶Î
-	 * @param order_col ÅÅĞòµÄ×Ö¶Î
+	 * è·å–è®°å½•çš„æœ€å¤§å€¼
+	 * @param table è¡¨å
+	 * @param get_col æŸ¥è¯¢çš„å­—æ®µ
+	 * @param order_col æ’åºçš„å­—æ®µ
 	 * @return
 	 */
 	public int getMaxValue(String table, String get_col, String order_col) {
@@ -119,7 +119,7 @@ public class DataBean {
 		return mSQLiteDatabase.rawQuery(sql, null);
 	}
 
-	/** ²åÈë³É¼¨¼ÇÂ¼Êı¾İ */
+	/** æ’å…¥æˆç»©è®°å½•æ•°æ® */
 	public void insertRecord(int gameId, int levelId, int score, int steps, int time, String desc) {
 		ContentValues values = new ContentValues();
 		values.put("game_id", gameId);
@@ -132,7 +132,7 @@ public class DataBean {
 		mSQLiteDatabase.insert(DBHelper.TABLE_RECORD, "", values);
 	}
 
-	/** ¸üĞÂ¹Ø¿¨Êı¾İ */
+	/** æ›´æ–°å…³å¡æ•°æ® */
 	public void updateLevel(String mode, String level, String desc, int row, int line) {
 		ContentValues values = new ContentValues();
 		values.put("piece_row", row);
@@ -142,13 +142,13 @@ public class DataBean {
 				new String[] { mode, level });
 	}
 
-	/** É¾³ıÓÎÏ·Êı¾İ */
+	/** åˆ é™¤æ¸¸æˆæ•°æ® */
 	public void deleteGame(String mode, String level) {
 		mSQLiteDatabase.delete(DBHelper.TABLE_GAME, "game_mode=? and " + "level_id=?",
 				new String[] { mode, level });
 	}
 	
-	/** ²éÑ¯Êı¾İ */
+	/** æŸ¥è¯¢æ•°æ® */
 	public LinkedList<LevelEntity> queryGame(String mode, String level) {
 		
 		LinkedList<LevelEntity> recordList = new LinkedList<LevelEntity>();
@@ -162,13 +162,13 @@ public class DataBean {
 			int nameIndex = cursor.getColumnIndex("");
 			int stepsIndex = cursor.getColumnIndex("");
 			int timeIndex = cursor.getColumnIndex("");
-			// »ñÈ¡×ÜÁĞÊı
+			// è·å–æ€»åˆ—æ•°
 			cursor.getColumnCount();
-			// »ñÈ¡×Ü¹²ÓĞ¶àÉÙÌõÊı¾İ
+			// è·å–æ€»å…±æœ‰å¤šå°‘æ¡æ•°æ®
 			cursor.getCount();
 			
 			LevelEntity record = null;
-			while (cursor.moveToNext()) {// Òª²éÑ¯µÄÁĞ
+			while (cursor.moveToNext()) {// è¦æŸ¥è¯¢çš„åˆ—
 				cursor.getString(nameIndex);
 				cursor.getInt(stepsIndex);
 				cursor.getInt(timeIndex);
@@ -177,7 +177,7 @@ public class DataBean {
 		} catch (Exception e) {
 		} finally {
 			if (cursor != null) {
-				cursor.close();// ÓÎ±êÖ´ĞĞÍêÅĞ¶ÏÊÇ·ñÎª¿Õ£¬²»Îª¿Õ¼´¿É¹Ø±Õ
+				cursor.close();// æ¸¸æ ‡æ‰§è¡Œå®Œåˆ¤æ–­æ˜¯å¦ä¸ºç©ºï¼Œä¸ä¸ºç©ºå³å¯å…³é—­
 			}
 		}
 		

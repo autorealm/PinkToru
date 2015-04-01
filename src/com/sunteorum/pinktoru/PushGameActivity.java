@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -15,14 +14,9 @@ import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +27,7 @@ import com.sunteorum.pinktoru.util.ImageUtils;
 import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer;
 import com.sunteorum.pinktoru.view.PieceView;
 
-public class SwapGameActivity extends BaseGameActivity {
+public class PushGameActivity extends BaseGameActivity {
 
 	private String tag = this.getClass().getSimpleName();
 	private ArrayList<Point> mPoints;
@@ -41,81 +35,90 @@ public class SwapGameActivity extends BaseGameActivity {
 	private int ett = 0;
 	private int lastX;
 	private int lastY;
+	private int hitv;
+	private PieceView tPieceView;
+	private Point point = null;
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (!(v instanceof PieceView)) return true;
 		
-		int tx, ty;
-		PieceView pib = (PieceView) v;
-		/*if (tagpib != null) {
-        	tagpib.setPadding(0, 0, 0, 0);
-        	tagpib.setBackgroundDrawable(null);
-        }*/
+		int dx = 0, dy = 0;
+		PieceView pv = (PieceView) v;
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			pib.bringToFront();
+			pv.bringToFront();
 			lastX = (int) event.getX();
 			lastY = (int) event.getY();
+			
+			point = getPieceAround(pv);
+			
+			if (point != null)
+			System.out.println ("X : " + point.x + " Y : " + point.y);
 			
 			if (drawer != null && drawer.isOpened()) drawer.animateClose();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			int dx =(int)event.getX() - lastX;
-			int dy =(int)event.getY() - lastY;
+			dx = (int) event.getX() - lastX;
+			dy = (int) event.getY() - lastY;
 			
-			int left = v.getLeft() + dx;
-            int top = v.getTop() + dy;
+			int left = v.getLeft(), top = v.getTop();
+			
+			if (point == null) return true;
+			if (point.x == 1) {
+				left = v.getLeft() + dx;
+				if (left < tPieceView.getLocation().x) left = tPieceView.getLocation().x;
+				if (dx > 0) if (left > pv.getLocation().x) {left = pv.getLocation().x;}
+				else {};
+			} else if (point.x == -1) {
+				left = v.getLeft() + dx;
+				if (left > tPieceView.getLocation().x) left = tPieceView.getLocation().x;
+				if (dx < 0) if (left < pv.getLocation().x) {left = pv.getLocation().x;}
+				else {};
+			} else if (point.y == 1) {
+				top = v.getTop() + dy;
+				if (top < tPieceView.getLocation().y) top = tPieceView.getLocation().y;
+				if (dy > 0) if (top > pv.getLocation().y) {top = pv.getLocation().y;}
+				else {};
+			} else if (point.y == -1) {
+				top = v.getTop() + dy;
+				if (top > tPieceView.getLocation().y) top = tPieceView.getLocation().y;
+				if (dy < 0) if (top < pv.getLocation().y) {top = pv.getLocation().y;}
+				else {};
+			}
+			
             //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) (v.getLayoutParams());
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(v.getWidth(), v.getHeight());
+            
             lp.leftMargin = left;
             lp.topMargin = top;
             lp.gravity = Gravity.TOP|Gravity.LEFT;
             v.setLayoutParams(lp);
             
-            /*
-            tx = (int) event.getRawX() - ((FrameLayout.LayoutParams)space.getLayoutParams()).leftMargin;
-            ty = (int) event.getRawY() - ((FrameLayout.LayoutParams)space.getLayoutParams()).topMargin;
-            
-            tagpib = getPieceBtnInLocal(tx, ty);
-            if (tagpib != null && !tagpib.equals(pib)) {
-            	tagpib.setPadding(1, 1, 1, 1);
-            	tagpib.setBackgroundResource(R.drawable.itemshape_2);
-            }
-            */
-            
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					
-				}
-				
-			});
-			
 			break;
 		case MotionEvent.ACTION_UP:
+			if (point == null) return true;
+			if (pv.getLocation().x == pv.getLeft() && pv.getLocation().y == pv.getTop()) return true;
+			
 			View play = (View) space.getParent();
 			FrameLayout.LayoutParams pfp = (FrameLayout.LayoutParams) play.getLayoutParams();
-            tx = (int) event.getRawX() - pfp.leftMargin - play.getPaddingLeft();
-            ty = (int) event.getRawY() - pfp.topMargin - play.getPaddingTop();
-			drop(pib, tx, ty);
+			int tx = (int) event.getRawX() - pfp.leftMargin - play.getPaddingLeft();
+			int ty = (int) event.getRawY() - pfp.topMargin - play.getPaddingTop();
+			push(pv, tx, ty);
 			
 			//Log.i("drop", "tx: " + tx + " ty: " + ty);
 			
-			break;        		
+			break;
 		}
 
 		return true;
 	}
 
 	@SuppressWarnings("deprecation")
-	@SuppressLint("InflateParams")
 	@Override
 	public void init() {
-		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game_swap, null);
+		puzzle = (FrameLayout) View.inflate(this, R.layout.activity_game_swap, null);
 		
 		setContentView(puzzle);
 		
@@ -136,9 +139,6 @@ public class SwapGameActivity extends BaseGameActivity {
 		
 		handle.setBackgroundResource(R.drawable.bannershape_1);
 		
-		//强制使用纯矩形分图方式
-		//app.setPieceCutFlag(0);
-		//app.setPieceEdgeWidth(1);
 		INACCURACY = 0;
 		
 		Log.i(tag, String.format("", System.currentTimeMillis()));
@@ -152,7 +152,6 @@ public class SwapGameActivity extends BaseGameActivity {
 		int autoY = p.y;
 		
 		pv.setLocation(p);
-		//pv.setId(pv.getPiece().getId().hashCode());
 		
 		if (distance(pv.getMinp(), p, 12)) pv.setTraverse(true);
 		else pv.setTraverse(false);
@@ -160,6 +159,13 @@ public class SwapGameActivity extends BaseGameActivity {
 		FrameLayout.LayoutParams autoParams = (FrameLayout.LayoutParams) pv.getLayoutParams();
 		autoParams.leftMargin = (autoX);
 		autoParams.topMargin = (autoY);
+		
+		if (i == hitv) {
+			pv.setTraverse(true);
+			pv.setEnabled(false);
+			pv.setVisibility(8);
+			tPieceView = pv;
+		}
 		
 		space.addView(pv);
 		
@@ -187,7 +193,7 @@ public class SwapGameActivity extends BaseGameActivity {
 		if (blurbg != null) dg = ImageUtils.BitmapToDrawable(this, blurbg);
 		if (dg != null) {
 			space.setBackgroundDrawable(dg);
-			space.getBackground().setAlpha(120);
+			space.getBackground().setAlpha(80);
 			space.postInvalidate();
 		}
 		
@@ -209,6 +215,8 @@ public class SwapGameActivity extends BaseGameActivity {
 			
 			mPoints.add(p);
 		}
+		
+		hitv = (int) Math.random()*pieces.size();
 		
 		Collections.sort(mPoints, new Comparator() {
 		      @Override
@@ -239,17 +247,14 @@ public class SwapGameActivity extends BaseGameActivity {
 	 * @param x
 	 * @param y
 	 */
-    public void drop(PieceView pv, int x, int y) {
-		Point p = new Point(x, y);
-		
-		int left, top, left2, top2;
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-				(pv.getWidth(), pv.getHeight());
-		left = pv.getLocation().x;
-		top = pv.getLocation().y;
-		
-		final PieceView pib2 = getPieceBtnInLocal(x, y);
-		if (pib2 == null || pib2.equals(pv)) {
+    public void push(PieceView pv, int x, int y) {
+
+		step++;
+		game_status = "Step: " + String.valueOf(step);
+    	setGameStatus();
+    	
+		if (pv.equals(getPieceBtnInLocal(x, y))) {
+			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) pv.getLayoutParams();
 			params.leftMargin = pv.getLocation().x;
 			params.topMargin = pv.getLocation().y;
 			params.gravity = Gravity.TOP|Gravity.LEFT;
@@ -264,10 +269,25 @@ public class SwapGameActivity extends BaseGameActivity {
 			return;
 		}
 		
-		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams
-				(pv.getWidth(), pv.getHeight());
-		left2 = pib2.getLocation().x;
-		top2 = pib2.getLocation().y;
+		swap(pv, tPieceView);
+		
+	}
+
+    private void swap(PieceView fpv, PieceView tpv) {
+    	if (fpv == null || tpv == null) return;
+    	if (fpv.equals(tpv)) return;
+    	
+    	int left, top, left2, top2;
+    	
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
+				(fpv.getWidth(), fpv.getHeight());
+		left = fpv.getLocation().x;
+		top = fpv.getLocation().y;
+		
+    	FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams
+				(tpv.getWidth(), tpv.getHeight());
+		left2 = tpv.getLocation().x;
+		top2 = tpv.getLocation().y;
 		
 		params2.leftMargin = left;
 		params2.topMargin = top;
@@ -277,62 +297,22 @@ public class SwapGameActivity extends BaseGameActivity {
 		params.topMargin = top2;
 		params.gravity = Gravity.TOP|Gravity.LEFT;
 		
-		pib2.setVisibility(4);
-		pib2.bringToFront();
-		pib2.setLayoutParams(params2);
-		pv.setLayoutParams(params);
+		tpv.setLayoutParams(params2);
+		fpv.setLayoutParams(params);
 		
-		pv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.show_2));
-		
-		Animation anim = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, (left2 - left) / pv.getPiece().getLineWidth(),
-				Animation.RELATIVE_TO_SELF, 0f,
-				Animation.RELATIVE_TO_SELF, (top2 - top) / pv.getPiece().getRowHeight(),
-				Animation.RELATIVE_TO_SELF, 0f
-				);
-		anim.setDuration(150);
-		anim.setFillAfter(false);
-		anim.setInterpolator(new DecelerateInterpolator());
-		anim.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				
-				
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-				
-				pib2.setVisibility(0);
-			}
-			
-		});
-		pib2.startAnimation(anim);
-		
-		p = new Point(left, top);
-		pib2.setLocation(p);
-		if (distance(pib2.getMinp(), p, 12)) pib2.setTraverse(true);
-		else pib2.setTraverse(false);
+		Point p = new Point(left, top);
+		tpv.setLocation(p);
+		if (distance(tpv.getMinp(), p, 12)) tpv.setTraverse(true);
+		else tpv.setTraverse(false);
 		
 		p = new Point(left2, top2);
-		pv.setLocation(p);
-		if (distance(pv.getMinp(), p, 12)) pv.setTraverse(true);
-		else pv.setTraverse(false);
+		fpv.setLocation(p);
+		if (distance(fpv.getMinp(), p, 12)) fpv.setTraverse(true);
+		else fpv.setTraverse(false);
 		
-		step++;
-		game_status = "Step: " + String.valueOf(step);
-    	setGameStatus();
 		hasComplete();
-		
-	}
-
+    }
+    
     private PieceView getPieceBtnInLocal(int x, int y) {
     	PieceView pib = null;
     	int piececount = allPieces.size();
@@ -362,7 +342,26 @@ public class SwapGameActivity extends BaseGameActivity {
 		pv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shan));
 		topv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shan));
 		
+		swap(pv, topv);
+		
 		return;
 		
+    }
+    
+    private Point getPieceAround(PieceView pv) {
+    	if (pv == null) return null;
+    	Point p = tPieceView.getLocation();
+    	int dx = tPieceView.getPiece().getLineWidth();
+    	int dy = tPieceView.getPiece().getRowHeight();
+    	PieceView rpv = getPieceBtnInLocal(p.x + dx + dx / 2, p.y + dy /2);
+    	if (pv.equals(rpv)) return new Point(1, 0);
+    	rpv = getPieceBtnInLocal(p.x + dx / 2, p.y + dy + dy / 2);
+    	if (pv.equals(rpv)) return new Point(0, 1);
+    	rpv = getPieceBtnInLocal(p.x - dx / 2, p.y + dy / 2);
+    	if (pv.equals(rpv)) return new Point(-1, 0);
+    	rpv = getPieceBtnInLocal(p.x + dx / 2, p.y - dy / 2);
+    	if (pv.equals(rpv)) return new Point(0, -1);
+    	
+    	return null;
     }
 }

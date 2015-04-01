@@ -6,12 +6,10 @@ import java.util.Locale;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,10 +32,9 @@ public class FillGameActivity extends BaseGameActivity {
 
 	private DragImageAdapter adapter;
 	private GalleryDrag gallery;
-	private Vibrator mVibrator;
 	
-	private int ett = 0;//提示次数
-	private int step = 0;//步数
+	private int ett = 0;//閿欒娆℃暟锛堟彁绀猴級
+	private int step = 0;//姝ユ暟
 	
 	private ImageView imgWrong, imgRight;
 	
@@ -55,9 +52,9 @@ public class FillGameActivity extends BaseGameActivity {
 		puzzle = (FrameLayout) inflater.inflate(R.layout.activity_game_fill, null);
 		
 		setContentView(puzzle);
-		mVibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		
 		space = (FrameLayout) findViewById(R.id.space);
+		ipin = (android.widget.ImageView) findViewById(R.id.ipin);
 		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
 		drawer = (MultiDirectionSlidingDrawer) this.findViewById(R.id.drawer);
 		handle = (View) this.findViewById(R.id.handle);
@@ -74,10 +71,10 @@ public class FillGameActivity extends BaseGameActivity {
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		_params_.gravity = Gravity.TOP|Gravity.LEFT;
 		imgWrong.setLayoutParams(_params);
-		imgWrong.setImageResource(R.drawable.ic_toast_post_fail);
+		imgWrong.setImageResource(0);
 		imgWrong.setVisibility(8);
 		imgRight.setLayoutParams(_params_);
-		imgRight.setImageResource(R.drawable.ic_toast_post_ok);
+		imgRight.setImageResource(R.drawable.itemshape_8);
 		imgRight.setVisibility(8);
 		puzzle.addView(imgWrong);
 		puzzle.addView(imgRight);
@@ -116,8 +113,10 @@ public class FillGameActivity extends BaseGameActivity {
 				//imgWrong.setLayoutParams(flp);
 				
 				FrameLayout.LayoutParams rlp = (FrameLayout.LayoutParams) imgRight.getLayoutParams();
-				rlp.leftMargin = pm.x - imgRight.getWidth() / 2;
-				rlp.topMargin = pm.y - imgRight.getHeight() / 2;
+				rlp.leftMargin = pie.getKey().x + dx;
+				rlp.topMargin = pie.getKey().y + dy;
+				rlp.width = pie.getLineWidth();
+				rlp.height = pie.getRowHeight();
 				//imgRight.setLayoutParams(rlp);
 				
 				if (drawer != null && drawer.isOpened()) drawer.animateClose();
@@ -127,7 +126,7 @@ public class FillGameActivity extends BaseGameActivity {
 				//Log.i("drop-pointer",x + " - " + y);
 				if (distance(p, pm, INACCURACY)) {
 	    			//Log.i("drop", "XXXXXXXXXXXXXXXXXXXXXXXXXX");
-	    			PieceView pib = (PieceView) allPieces.get(getPieceViewPos(pie));
+	    			final PieceView pib = (PieceView) allPieces.get(getPieceViewPos(pie));
 	    			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
 	    					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	    			params.leftMargin = pie.getMinp().x;
@@ -137,46 +136,49 @@ public class FillGameActivity extends BaseGameActivity {
 	    			params.gravity = Gravity.TOP|Gravity.LEFT;
 	    			pib.setLayoutParams(params);
 	    			pib.setFocusable(false);
+	    			pib.setVisibility(4);
 	    			space.addView(pib);
+	    			mHandler.postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							pib.setVisibility(0);
+							if (pieces.size() == 0) {
+			    				onCompleted();
+			    				
+			    			}
+						}
+	    				
+	    			}, 260);
+	    			
 	    			gallery.stopDrag();
 	    			pieces.remove(pos);
 	    			adapter.notifyDataSetChanged();
 	    			
 	    			//adapter.setSelected(pos, false);
 	    			//if (adapter.lostCount() == 0) {
-	    			if (pieces.size() == 0) {
-	    				space.postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								onCompleted();
-							}
-	    					
-	    				}, 500);
-	    				
-	    			}
+	    			
 
 	    		} else {
 	    			gallery.stopDrag(0, 0);
-	    			mVibrator.vibrate(50);
+	    			doVibrate();
 	    			
-	    			ett++;//次数自增
-	    			if (ett > ERR_TIP_TIMES) return;
-	    			
-	    			imgWrong.setVisibility(0);
-	    			imgRight.setVisibility(0);
-	    			
-	    			imgWrong.postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							imgWrong.setVisibility(8);
-							imgRight.setVisibility(8);
-						}
+	    			ett++;//娆℃暟鑷
+	    			if (ett <= ERR_TIP_TIMES) {
 	    				
-	    			}, 600);
-	    			
+		    			imgWrong.setVisibility(0);
+		    			imgRight.setVisibility(0);
+		    			
+		    			imgWrong.postDelayed(new Runnable() {
+	
+							@Override
+							public void run() {
+								imgWrong.setVisibility(8);
+								imgRight.setVisibility(8);
+							}
+		    				
+		    			}, 600);
+	    			}
 	    		}
 				
 				String str = String.format(Locale.getDefault(), "%.1f",
@@ -225,7 +227,7 @@ public class FillGameActivity extends BaseGameActivity {
 		puzzle.setBackgroundColor(themeColor);
 		puzzle.getChildAt(0).setVisibility(0);
 		
-		
+		INACCURACY = space.getWidth() / line / 2;
 	}
 
 	private int getPieceViewPos(Piece piece) {
@@ -244,6 +246,13 @@ public class FillGameActivity extends BaseGameActivity {
 	@Override
 	public void onFailed() {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onCompleted() {
+		// TODO Auto-generated method stub
+		super.onCompleted();
 		
 	}
 

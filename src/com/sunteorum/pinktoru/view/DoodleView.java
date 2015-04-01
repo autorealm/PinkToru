@@ -116,17 +116,17 @@
 			areaToRefresh.set((int) mCurveEndX , (int) mCurveEndY ,
 					(int) mCurveEndX, (int) mCurveEndY);
 			
-		  //ÉèÖÃ±´Èû¶ûÇúÏßµÄ²Ù×÷µãÎªÆğµãºÍÖÕµãµÄÒ»°ë
+		  //è®¾ç½®è´å¡å°”æ›²çº¿çš„æ“ä½œç‚¹ä¸ºèµ·ç‚¹å’Œç»ˆç‚¹çš„ä¸€åŠ
 			float cX = mCurveEndX = (x + previousX) / 2;
 			float cY = mCurveEndY = (y + previousY) / 2;
 
-			//ÊµÏÖ»æÖÆ±´Èû¶ûÆ½»¬ÇúÏß£»previousX, previousYÎª²Ù×÷µã£¬cX, cYÎªÖÕµã
+			//å®ç°ç»˜åˆ¶è´å¡å°”å¹³æ»‘æ›²çº¿ï¼›previousX, previousYä¸ºæ“ä½œç‚¹ï¼ŒcX, cYä¸ºç»ˆç‚¹
 			mPath.quadTo(previousX, previousY, cX, cY);
 			//mPath.lineTo(x, y);
 
 			// union with the control point of the new curve
-			/*areaToRefresh¾ØĞÎÀ©´óÁËborder(¿íºÍ¸ßÀ©´óÁËÁ½±¶border)£¬
-			 * borderÖµÓÉÉèÖÃÊÖÊÆ»­±Ê´ÖÏ¸Öµ¾ö¶¨
+			/*areaToRefreshçŸ©å½¢æ‰©å¤§äº†border(å®½å’Œé«˜æ‰©å¤§äº†ä¸¤å€border)ï¼Œ
+			 * borderå€¼ç”±è®¾ç½®æ‰‹åŠ¿ç”»ç¬”ç²—ç»†å€¼å†³å®š
 			 */
 			areaToRefresh.union((int) previousX, (int) previousY,
 					(int) previousX, (int) previousY);
@@ -138,7 +138,7 @@
 			areaToRefresh.union((int) cX, (int) cY ,
 					(int) cX, (int) cY);
 
-			//µÚ¶ş´ÎÖ´ĞĞÊ±£¬µÚÒ»´Î½áÊøµ÷ÓÃµÄ×ø±êÖµ½«×÷ÎªµÚ¶ş´Îµ÷ÓÃµÄ³õÊ¼×ø±êÖµ
+			//ç¬¬äºŒæ¬¡æ‰§è¡Œæ—¶ï¼Œç¬¬ä¸€æ¬¡ç»“æŸè°ƒç”¨çš„åæ ‡å€¼å°†ä½œä¸ºç¬¬äºŒæ¬¡è°ƒç”¨çš„åˆå§‹åæ ‡å€¼
 			mX = x;
 			mY = y;
 			drawCanvas();

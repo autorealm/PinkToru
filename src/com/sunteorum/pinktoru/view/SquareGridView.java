@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 /**
- * ×Ô¶¯ÊÊÓ¦ÁÐ±í¸ß¶ÈµÄGridViewÀ©Õ¹Àà
+ * è‡ªåŠ¨é€‚åº”åˆ—è¡¨é«˜åº¦çš„GridViewæ‰©å±•ç±»
  *
  */
 public class SquareGridView extends GridView {

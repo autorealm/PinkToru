@@ -8,35 +8,35 @@ import com.sunteorum.pinktoru.view.PieceView;
 public interface IPintuGame {
 	
 	/**
-	 * ³õÊ¼»¯£¬setContentView ÉèÖÃÄÚÈİ½çÃæ£¬findViewById ÕÒ³ö¿Ø¼ş
+	 * åˆå§‹åŒ–ï¼ŒsetContentView è®¾ç½®å†…å®¹ç•Œé¢ï¼ŒfindViewById æ‰¾å‡ºæ§ä»¶
 	 */
 	void init();
 	
 	/**
-	 * ÕıÔÚ¼ÓÔØÓÎÏ·£¬½øĞĞ·ÖÍ¼´¦Àí
+	 * æ­£åœ¨åŠ è½½æ¸¸æˆï¼Œè¿›è¡Œåˆ†å›¾å¤„ç†
 	 * @param pieces
 	 */
 	void onNewGame(final Vector<Piece> pieces);
 
 	/**
-	 * ÒÑ´´½¨Ò»ËéÆ¬
+	 * å·²åˆ›å»ºä¸€ç¢ç‰‡
 	 * @param pv
 	 * @param index
 	 */
 	void OnCreatePiece(PieceView pv, int index);
 	
 	/**
-	 * ÓÎÏ·ÍêÈ«¼ÓÔØÍê³ÉÊ±
+	 * æ¸¸æˆå®Œå…¨åŠ è½½å®Œæˆæ—¶
 	 */
 	void onStartGame();
 	
 	/**
-	 * Æ´Í¼Ê§°ÜÊ±£¬Ìø×ªµ½³É¼¨½çÃæ
+	 * æ‹¼å›¾å¤±è´¥æ—¶ï¼Œè·³è½¬åˆ°æˆç»©ç•Œé¢
 	 */
 	void onFailed();
 	
 	/**
-	 * Æ´Í¼Íê³ÉÊ±£¬Ìø×ªµ½³É¼¨½çÃæ
+	 * æ‹¼å›¾å®Œæˆæ—¶ï¼Œè·³è½¬åˆ°æˆç»©ç•Œé¢
 	 */
 	void onCompleted();
 	

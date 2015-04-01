@@ -18,7 +18,7 @@
 	    android:orientation="vertical"
 	    android:padding="6dp" >
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -36,7 +36,16 @@
 
             </FrameLayout>
 
-        </LinearLayout>
+			<ImageView
+			    android:id="@id/ipin"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:layout_gravity="top|left"
+			    android:contentDescription="@string/fill_mode"
+			    android:scaleType="fitXY"
+			    android:visibility="gone" />
+			
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

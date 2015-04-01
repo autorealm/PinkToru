@@ -11,7 +11,7 @@ import android.view.animation.Animation.AnimationListener;
 public class MainActivity extends BaseActivity {
 
 	private Intent intent = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,33 +23,33 @@ public class MainActivity extends BaseActivity {
 		
 		intent = new Intent(MainActivity.this, HomeActivity.class);
 		
-		//ÉèÖÃ¶¯»­
+		//è®¾ç½®åŠ¨ç”»
 		final Animation hide = AnimationUtils.loadAnimation(this, R.anim.hide_half);
-        hide.setAnimationListener(hide_listener);
-        
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
+		hide.setAnimationListener(hide_listener);
+		
+		Handler mHandler = new Handler();
+		mHandler.postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
 				root_view.startAnimation(hide);
 				
 			}
-        	
-        }, 800);
-        
-        
-    }
-    
-    AnimationListener hide_listener = new AnimationListener() {
+			
+		}, 800);
+		
+		
+	}
+
+	AnimationListener hide_listener = new AnimationListener() {
 
 		public void onAnimationEnd(Animation animation) {
 			// TODO Auto-generated method stub
-    		
-    		startActivity(intent);
-    		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    		
-    		finish();
+			
+			startActivity(intent);
+			overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+			
+			finish();
 		}
 
 		public void onAnimationRepeat(Animation animation) {
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			
 		}
-    	
-    };
-    
+		
+	};
+
 }

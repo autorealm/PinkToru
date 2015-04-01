@@ -31,7 +31,7 @@ public class DragImageAdapter extends BaseAdapter {
 		this.mImageList = imgList;
 		initSelect(true);
 		
-		//Ëæ»ú·Ö²¼Piece
+		//éšæœºåˆ†å¸ƒPiece
 		Collections.sort(imgList, new Comparator() {
 		      @Override
 		      public int compare(Object o1, Object o2) {

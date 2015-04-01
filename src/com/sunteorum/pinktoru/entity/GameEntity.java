@@ -7,22 +7,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * ÓÎÏ·Êı¾İ°ü×°Àà
+ * æ¸¸æˆæ•°æ®åŒ…è£…ç±»
  * @author KYO
  *
  */
 public class GameEntity implements Parcelable {
 
-	private int gameId;				//ÓÎÏ·ID
-	private int gameMode = 1;			//ÓÎÏ·Í¨ÓÃÄ£Ê½
-	private int gameReward = 2;		//ÓÎÏ·½±ÀøµãÊı
-	private int gamePrice = 0;		//ÓÎÏ·¼ÛÖµµãÊı
-	private int gameImageId = 0;		//ÓÎÏ·Í¼Æ¬µÄID
-	private String gameName;		//ÓÎÏ·Ãû³Æ
-	private String gameLevel = "{}";		//ÓÎÏ·¹Ø¿¨JSONÊı¾İ
-	private String gameImageUrl;	//ÓÎÏ·Í¼Æ¬µÄURL
-	private String gameIconUrl;		//ÓÎÏ·Í¼±êµÄURL
-	private String gameDesc = "¸ÃÓÎÏ·ÔİÎŞ½éÉÜ";	//ÓÎÏ·½éÉÜ
+	private int gameId;				//æ¸¸æˆID
+	private int gameMode = 1;			//æ¸¸æˆé€šç”¨æ¨¡å¼
+	private int gameReward = 2;		//æ¸¸æˆå¥–åŠ±ç‚¹æ•°
+	private int gamePrice = 0;		//æ¸¸æˆä»·å€¼ç‚¹æ•°
+	private int gameImageId = 0;		//æ¸¸æˆå›¾ç‰‡çš„ID
+	private String gameName;		//æ¸¸æˆåç§°
+	private String gameLevel = "{}";		//æ¸¸æˆå…³å¡JSONæ•°æ®
+	private String gameImageUrl;	//æ¸¸æˆå›¾ç‰‡çš„URL
+	private String gameIconUrl;		//æ¸¸æˆå›¾æ ‡çš„URL
+	private String gameDesc = "è¯¥æ¸¸æˆæš‚æ— ä»‹ç»";	//æ¸¸æˆä»‹ç»
 	
 	public GameEntity() {
 		super();

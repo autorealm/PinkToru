@@ -31,9 +31,9 @@ import android.widget.Toast;
 
 public class BaseActivity extends Activity {
 
-	/** ÊÖÊÆ¼àÌı */
+	/** æ‰‹åŠ¿ç›‘å¬ */
 	GestureDetector mGestureDetector;
-	/** ÊÇ·ñĞèÒª¼àÌıÊÖÊÆ¹Ø±Õ¹¦ÄÜ */
+	/** æ˜¯å¦éœ€è¦ç›‘å¬æ‰‹åŠ¿å…³é—­åŠŸèƒ½ */
 	private boolean mNeedBackGesture = false;
 	
 	PinkToru app;
@@ -103,7 +103,7 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * ·µ»Ø
+	 * è¿”å›
 	 * @param view
 	 */
 	public void doBack(View view) {
@@ -121,14 +121,14 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * ÉèÖÃÊÇ·ñ½øĞĞÊÖÊÆ¼àÌı
+	 * è®¾ç½®æ˜¯å¦è¿›è¡Œæ‰‹åŠ¿ç›‘å¬
 	 */
 	public void setNeedBackGesture(boolean mNeedBackGesture){
 		this.mNeedBackGesture = mNeedBackGesture;
 	}
 
 	/**
-	 * ÉèÖÃ±êÌâ
+	 * è®¾ç½®æ ‡é¢˜
 	 * @param title
 	 */
 	public void setTitle(String title) {
@@ -138,7 +138,7 @@ public class BaseActivity extends Activity {
 	}
 	
 	/**
-	 * ¼ì²âĞÂ°æ±¾
+	 * æ£€æµ‹æ–°ç‰ˆæœ¬
 	 */
 	protected void checkNewVersion() {
 		String params = "?app_name=" + this.getPackageName() + "&ver_code=" + AppUtils.getCoreNum();
@@ -167,21 +167,21 @@ public class BaseActivity extends Activity {
 					String ver = jso.get("app_ver").toString();
 					
 					new AlertDialog.Builder(BaseActivity.this)
-					.setTitle("·¢ÏÖĞÂ°æ±¾ (" + ver + ")")
+					.setTitle("å‘ç°æ–°ç‰ˆæœ¬ (" + ver + ")")
 					.setMessage(Html.fromHtml(desc))
 					.setIcon(android.R.drawable.ic_menu_info_details)
 					.setCancelable(false)
-					.setPositiveButton("¸üĞÂ", new DialogInterface.OnClickListener(){
+					.setPositiveButton("æ›´æ–°", new DialogInterface.OnClickListener(){
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							app.downloadReceiver(durl);
-							Toast.makeText(BaseActivity.this, "ÕıÔÚºóÌ¨ÏÂÔØ¸üĞÂ...", Toast.LENGTH_SHORT).show();
+							Toast.makeText(BaseActivity.this, "æ­£åœ¨åå°ä¸‹è½½æ›´æ–°...", Toast.LENGTH_SHORT).show();
 							finish();
 						}
 						
 					})
-					.setNegativeButton("¹Ø±Õ",  null)
+					.setNegativeButton("å…³é—­",  null)
 					.create().show();
 					
 				} catch (Exception e) {
@@ -194,7 +194,7 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * ¼ì²éÓÎÏ·
+	 * æ£€æŸ¥æ¸¸æˆ
 	 * @param context
 	 * @param g_id
 	 * @param handler
@@ -216,7 +216,7 @@ public class BaseActivity extends Activity {
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					// TODO Auto-generated method stub
-					//Toast.makeText(HomeActivity.this, "ÒÑÈ¡Ïû½øÈëÓÎÏ·", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(HomeActivity.this, "å·²å–æ¶ˆè¿›å…¥æ¸¸æˆ", Toast.LENGTH_SHORT).show();
 				}
 				
 			});
@@ -264,7 +264,7 @@ public class BaseActivity extends Activity {
 						.setMessage(Html.fromHtml(msg))
 						.setIcon(android.R.drawable.ic_menu_info_details)
 						.setCancelable(false)
-						.setPositiveButton("È·¶¨",  new DialogInterface.OnClickListener(){
+						.setPositiveButton("ç¡®å®š",  new DialogInterface.OnClickListener(){
 	
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
@@ -272,7 +272,7 @@ public class BaseActivity extends Activity {
 							}
 							
 						})
-						.setNegativeButton("·µ»Ø",  null)
+						.setNegativeButton("è¿”å›",  null)
 						.create().show();
 					
 				} catch (Exception e) {
@@ -286,7 +286,7 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * ×Ô¶¯µÇÂ¼
+	 * è‡ªåŠ¨ç™»å½•
 	 */
 	public void autoLogin() {
 		SharedPreferences sdf = getSharedPreferences("pt_config", Context.MODE_PRIVATE);

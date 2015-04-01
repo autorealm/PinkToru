@@ -23,7 +23,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- * È«¾ÖÒì³£´¦ÀíÆ÷
+ * å…¨å±€å¼‚å¸¸å¤„ç†å™¨
  * @author KYO
  *
  */
@@ -62,10 +62,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
 				infos.put("versionName", pi.versionName);
                 infos.put("versionCode", "" + pi.versionCode);
 			}
-			//Ê¹ÓÃ·´ÉäÀ´ÊÕ¼¯Éè±¸ĞÅÏ¢.ÔÚBuildÀàÖĞ°üº¬¸÷ÖÖÉè±¸ĞÅÏ¢
+			//ä½¿ç”¨åå°„æ¥æ”¶é›†è®¾å¤‡ä¿¡æ¯.åœ¨Buildç±»ä¸­åŒ…å«å„ç§è®¾å¤‡ä¿¡æ¯
 			Field[] fields = Build.class.getDeclaredFields();
 			for (Field field : fields) {
-				//ÉèÖÃAccessibleÊôĞÔÎªtrue,²ÅÄÜ¶ÔË½ÓĞ±äÁ¿½øĞĞ·ÃÎÊ
+				//è®¾ç½®Accessibleå±æ€§ä¸ºtrue,æ‰èƒ½å¯¹ç§æœ‰å˜é‡è¿›è¡Œè®¿é—®
 				field.setAccessible(true);
 				infos.put(field.getName(), field.get(null).toString());
 			}
@@ -73,14 +73,14 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			e.printStackTrace();
 		}
 		
-		//ÉèÖÃCrashHandlerÎª³ÌĞòµÄÄ¬ÈÏ´¦ÀíÆ÷
+		//è®¾ç½®CrashHandlerä¸ºç¨‹åºçš„é»˜è®¤å¤„ç†å™¨
 		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
 	
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
 		if (!handleException(ex) && eHandler != null) {
-			//Èç¹ûÓÃ»§Ã»ÓĞ´¦ÀíÔòÈÃÏµÍ³Ä¬ÈÏµÄÒì³£´¦ÀíÆ÷À´´¦Àí
+			//å¦‚æœç”¨æˆ·æ²¡æœ‰å¤„ç†åˆ™è®©ç³»ç»Ÿé»˜è®¤çš„å¼‚å¸¸å¤„ç†å™¨æ¥å¤„ç†
 			eHandler.uncaughtException(thread, ex);
 		} else {
 			
@@ -112,14 +112,14 @@ public class CrashHandler implements UncaughtExceptionHandler {
 				// TODO Auto-generated method stub
 				Looper.prepare();
 				
-				Toast toast = Toast.makeText(context, "·Ç³£±§Ç¸£¬³ÌĞò³öÏÖÒì³££¬½«±»Ç¿ÖÆÍË³ö£º\r\n" + msg, Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(context, "éå¸¸æŠ±æ­‰ï¼Œç¨‹åºå‡ºç°å¼‚å¸¸ï¼Œå°†è¢«å¼ºåˆ¶é€€å‡ºï¼š\r\n" + msg, Toast.LENGTH_LONG);
 				toast.setGravity(android.view.Gravity.CENTER, 0, 0);
 				toast.show();
 				/*
 				new AlertDialog.Builder(context)
-						.setTitle("ÌáÊ¾")
+						.setTitle("æç¤º")
 						.setCancelable(false)
-						.setMessage("³ÌĞò±ÀÀ£ÁË...")
+						.setMessage("ç¨‹åºå´©æºƒäº†...")
 						.setNegativeButton("", null)
 						.create()
 						.show();

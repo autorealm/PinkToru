@@ -7,18 +7,18 @@ import android.graphics.Path;
 import android.graphics.Point;
 
 public class Piece {
-	private Point id;  //¼ÇÂ¼¼ôÇĞÆ´Í¼Ê±µÄµãÎ»
-	private Point key; //ÓÃÓÚ¼ÇÂ¼Ã¿¿éÆ´Í¼µÄÖĞĞÄµã£¬Îü¸½ÅĞ¶ÏÊ¹ÓÃ
-	private Point minp;  //×óÉÏ½ÇµÄµãÎ»
-	private Point maxp;  //ÓÒÏÂ½ÇµÄµãÎ»
+	private Point id;  //è®°å½•å‰ªåˆ‡æ‹¼å›¾æ—¶çš„ç‚¹ä½
+	private Point key; //ç”¨äºè®°å½•æ¯å—æ‹¼å›¾çš„ä¸­å¿ƒç‚¹ï¼Œå¸é™„åˆ¤æ–­ä½¿ç”¨
+	private Point minp;  //å·¦ä¸Šè§’çš„ç‚¹ä½
+	private Point maxp;  //å³ä¸‹è§’çš„ç‚¹ä½
 	
-	private int offset;  //Í¼Æ¬Æ«ÒÆ
+	private int offset;  //å›¾ç‰‡åç§»
 	
-	private int lineWidth;  //²»°üº¬°¼Í¹µÄ¿í¶È
-	private int rowHeight;  //²»°üº¬°¼Í¹µÄ¸ß¶È
+	private int lineWidth;  //ä¸åŒ…å«å‡¹å‡¸çš„å®½åº¦
+	private int rowHeight;  //ä¸åŒ…å«å‡¹å‡¸çš„é«˜åº¦
 	
-	private int pieceWidth;  //°üº¬°¼Í¹µÄ¿í¶È
-	private int pieceHeight;  //°üº¬°¼Í¹µÄ¸ß¶È
+	private int pieceWidth;  //åŒ…å«å‡¹å‡¸çš„å®½åº¦
+	private int pieceHeight;  //åŒ…å«å‡¹å‡¸çš„é«˜åº¦
 	
 	private ArrayList<Point> apTop = new ArrayList<Point>(4);
 	private ArrayList<Point> apRight = new ArrayList<Point>(4);
@@ -28,7 +28,7 @@ public class Piece {
 	private Bitmap bmpPiece;
 	private Bitmap obmPiece;
 	
-	private Path piecePath; //ËéÆ¬Ô´Í¼Â·¾¶
+	private Path piecePath; //ç¢ç‰‡æºå›¾è·¯å¾„
 	
 	private int x = 0, y = 0;
 	private PieceGroup group = null;

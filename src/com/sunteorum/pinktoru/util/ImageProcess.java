@@ -11,11 +11,11 @@ public class ImageProcess {
 
 
 	/**
-	 * ËÄÏó£¨°ËÏó£©Ë®ÂşÌî³ä·¨
-	 * @param bitmap Ä¿±êÍ¼Æ¬£¨Ö±½Ó²Ù×÷£©
-	 * @param point µãÏà¶ÔÓÚÍ¼Æ¬µÄ×ø±ê
-	 * @param sColor Ô­Ê¼ÑÕÉ«
-	 * @param dColor Ìî³äÑÕÉ«
+	 * å››è±¡ï¼ˆå…«è±¡ï¼‰æ°´æ¼«å¡«å……æ³•
+	 * @param bitmap ç›®æ ‡å›¾ç‰‡ï¼ˆç›´æ¥æ“ä½œï¼‰
+	 * @param point ç‚¹ç›¸å¯¹äºå›¾ç‰‡çš„åæ ‡
+	 * @param sColor åŸå§‹é¢œè‰²
+	 * @param dColor å¡«å……é¢œè‰²
 	 */
 	public static void floodFill(Bitmap bitmap, Point point, int sColor, int dColor) {
 		if (sColor == dColor) return;
@@ -47,12 +47,12 @@ public class ImageProcess {
 	}
 	
 	/**
-	 * É¨ÃèÏß£¨×óÓÒ·½Ê½£©Ë®ÂşÌî³ä·¨
-	 * @param bitmap Ä¿±êÍ¼Æ¬£¨Ö±½Ó²Ù×÷£©
-	 * @param x µãÏà¶ÔÓÚÍ¼Æ¬µÄX×ø±ê
-	 * @param y µãÏà¶ÔÓÚÍ¼Æ¬µÄY×ø±ê
-	 * @param oldColor ¾ÉÑÕÉ«
-	 * @param newColor ĞÂÑÕÉ«
+	 * æ‰«æçº¿ï¼ˆå·¦å³æ–¹å¼ï¼‰æ°´æ¼«å¡«å……æ³•
+	 * @param bitmap ç›®æ ‡å›¾ç‰‡ï¼ˆç›´æ¥æ“ä½œï¼‰
+	 * @param x ç‚¹ç›¸å¯¹äºå›¾ç‰‡çš„Xåæ ‡
+	 * @param y ç‚¹ç›¸å¯¹äºå›¾ç‰‡çš„Yåæ ‡
+	 * @param oldColor æ—§é¢œè‰²
+	 * @param newColor æ–°é¢œè‰²
 	 */
 	public static void floodFill(Bitmap bitmap , int x, int y, int oldColor, int newColor) {
 		if (oldColor == newColor) return;

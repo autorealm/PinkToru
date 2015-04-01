@@ -102,20 +102,20 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 		String txt3 = edtem.getText().toString();
 		
 		if (txt1.length() < 2 || txt2.length() < 4) {
-			err.add("ÊäÈë×ÖÊı¹ıÉÙ£¬ÓÃ»§ÃûºÍÃÜÂë²»ÄÜÉÙÓÚ4Î»Êı¡£");
+			err.add("è¾“å…¥å­—æ•°è¿‡å°‘ï¼Œç”¨æˆ·åå’Œå¯†ç ä¸èƒ½å°‘äº4ä½æ•°ã€‚");
 		} else {
 			username = txt1;
 			password = txt2;
 		}
 		
 		if (!matchEmail(txt3)) {
-			err.add("ÓÊÏäµØÖ·²»¹æ·¶£¬ÓÊÏä¸ñÊ½ \"name@sample.com\"¡£");
+			err.add("é‚®ç®±åœ°å€ä¸è§„èŒƒï¼Œé‚®ç®±æ ¼å¼ \"name@sample.com\"ã€‚");
 		} else {
 			email = txt3;
 		}
 		
 		if (!matchPhone(txt1)) {
-			err.add("ÊÖ»úºÅÂë²»¹æ·¶£¬ÊÖ»úºÅÂëĞèÒª11Î»Êı×Ö¡£");
+			err.add("æ‰‹æœºå·ç ä¸è§„èŒƒï¼Œæ‰‹æœºå·ç éœ€è¦11ä½æ•°å­—ã€‚");
 		} else {
 			phone = txt1;
 		}
@@ -129,7 +129,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 				else msg += "\n\t" + i + ". " + err.get(i - 1);
 			}
 			
-			Common.showTip(RegisterActivity.this, "ÎŞ·¨½øĞĞ×¢²á", "Çë¼ì²éÒÔÏÂ´íÎó£º\n\n" + msg);
+			Common.showTip(RegisterActivity.this, "æ— æ³•è¿›è¡Œæ³¨å†Œ", "è¯·æ£€æŸ¥ä»¥ä¸‹é”™è¯¯ï¼š\n\n" + msg);
 			return false;
 		}
 		
@@ -190,14 +190,14 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			
 			final AsyncTask<Void, String, Boolean> ask = this;
 			
-			progd = ProgressDialog.show(RegisterActivity.this, null, "ÕıÔÚ×¢²á,ÇëÉÔºó¡­", true, false);
+			progd = ProgressDialog.show(RegisterActivity.this, null, "æ­£åœ¨æ³¨å†Œ,è¯·ç¨åâ€¦", true, false);
 			progd.setOnCancelListener(new OnCancelListener() {
 
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					ask.cancel(true);
 					progd.cancel();
-					Toast.makeText(RegisterActivity.this, "ÒÑÈ¡Ïû×¢²á", Toast.LENGTH_SHORT).show();
+					Toast.makeText(RegisterActivity.this, "å·²å–æ¶ˆæ³¨å†Œ", Toast.LENGTH_SHORT).show();
 				}
 				
 			});
@@ -221,7 +221,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			try {
 				String rst = HttpUtils.postHttpRequest(murl, pmap);
 				if (rst == null || rst.length() == 0) {
-					msg = "·şÎñÆ÷ÎŞ»ØÓ¦£¬ÇëÓë¹ÜÀíÔ±ÁªÏµ¡£";
+					msg = "æœåŠ¡å™¨æ— å›åº”ï¼Œè¯·ä¸ç®¡ç†å‘˜è”ç³»ã€‚";
 					return false;
 				}
 				
@@ -229,7 +229,7 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 				int i = json.getInt("result");
 				msg = json.getString("msg");
 				if (!json.has("user_info")) {
-					msg = "Î´ÕÒµ½ÓÃ»§ĞÅÏ¢";
+					msg = "æœªæ‰¾åˆ°ç”¨æˆ·ä¿¡æ¯";
 					return false;
 				}
 				JSONObject jso = json.getJSONObject("user_info");
@@ -258,9 +258,9 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			if (values == null)
-				Toast.makeText(RegisterActivity.this, "³öÏÖÎ´Öª´íÎó", Toast.LENGTH_SHORT).show();
+				Toast.makeText(RegisterActivity.this, "å‡ºç°æœªçŸ¥é”™è¯¯", Toast.LENGTH_SHORT).show();
 			else
-				if (progd != null && progd.isShowing()) progd.setTitle("ÓÃ»§ÑéÖ¤³É¹¦...");
+				if (progd != null && progd.isShowing()) progd.setTitle("ç”¨æˆ·éªŒè¯æˆåŠŸ...");
 			
 		}
 
@@ -277,12 +277,12 @@ public class RegisterActivity extends BaseActivity implements OnFocusChangeListe
 				
 				app.setUser(ue);
 				
-				Toast.makeText(RegisterActivity.this, "×¢²á³É¹¦£¬ĞÂÕË»§ÒÑµÇÂ¼", Toast.LENGTH_SHORT).show();
+				Toast.makeText(RegisterActivity.this, "æ³¨å†ŒæˆåŠŸï¼Œæ–°è´¦æˆ·å·²ç™»å½•", Toast.LENGTH_SHORT).show();
 				setResult(Activity.RESULT_OK, RegisterActivity.this.getIntent());
 				
 				finish();
 			} else {
-				Common.showTip(RegisterActivity.this, "×¢²áÊ§°Ü", msg);
+				Common.showTip(RegisterActivity.this, "æ³¨å†Œå¤±è´¥", msg);
 				
 			}
 		}

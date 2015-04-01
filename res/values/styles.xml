@@ -110,6 +110,11 @@
 		<item name="android:windowExitAnimation">@anim/popup_exit</item>
 	</style>
 	
+	<style name="DragAnimation" parent="android:Animation">
+		<item name="@android:windowEnterAnimation">@anim/drag_enter</item>
+		<item name="@android:windowExitAnimation">@anim/drag_exit</item>
+	</style>
+	
 	<style name="RadioPoint">
 		<item name="android:gravity">center</item>
 		<item name="android:layout_width">wrap_content</item>

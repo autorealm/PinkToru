@@ -64,7 +64,7 @@ public class CustomActivity extends BaseActivity {
 		//super.onBackPressed();
 		
 		new AlertDialog.Builder(this)
-		.setTitle("ÒªÍË³öÓÎÏ·µÄ¶¨ÖÆÂğ£¿")
+		.setTitle("è¦é€€å‡ºæ¸¸æˆçš„å®šåˆ¶å—ï¼Ÿ")
 		.setIcon(android.R.drawable.ic_dialog_alert)
 		.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int which) {
@@ -128,7 +128,7 @@ public class CustomActivity extends BaseActivity {
 	protected void dlog(String[] effects, final boolean[] effect_flags) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
-		builder.setTitle("Ñ¡ÔñÌáÊ¾Ğ§¹û");
+		builder.setTitle("é€‰æ‹©æç¤ºæ•ˆæœ");
 		builder.setMultiChoiceItems(effects, effect_flags, new DialogInterface.OnMultiChoiceClickListener() {
 
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -136,7 +136,7 @@ public class CustomActivity extends BaseActivity {
 				Common.showToast(getApplicationContext(), "" + effect_flags[which]);
 			}
 			
-		}).setPositiveButton("È·ÈÏ", new DialogInterface.OnClickListener() {
+		}).setPositiveButton("ç¡®è®¤", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
 				int len = effect_flags.length;
@@ -147,7 +147,7 @@ public class CustomActivity extends BaseActivity {
 				dialog.dismiss();
 			}
 			
-		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -159,7 +159,7 @@ public class CustomActivity extends BaseActivity {
 	protected void openLevelDialog(String[] levels, int currentLevel) {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Ñ¡ÔñÄÑÒ×¶È");
+		builder.setTitle("é€‰æ‹©éš¾æ˜“åº¦");
 		builder.setSingleChoiceItems(levels, currentLevel, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int item) {

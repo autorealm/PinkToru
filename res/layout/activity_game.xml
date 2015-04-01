@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.sunteorum.pinktoru"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="top|left"
     android:background="@drawable/backgroud_1"
     android:orientation="vertical" >
 
-    <include layout="@layout/include_layout" />
+    <com.sunteorum.pinktoru.view.RippleView
+        android:id="@+id/rv_space"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|left"
+        rv_centered="false"
+        app:rv_alpha="50"
+        app:rv_rippleDuration="200"
+        app:rv_type="simpleRipple"
+        app:rv_zoom="true"
+        app:rv_zoomDuration="140"
+        app:rv_zoomScale="1.01" >
+
+	</com.sunteorum.pinktoru.view.RippleView>
 
     <FrameLayout
-	    android:id="@id/space"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" >
+        android:id="@id/space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <ImageView
+        android:id="@id/ipin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:contentDescription="@string/pintu_mode"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+    <include layout="@layout/include_layout" />
 	
-	</FrameLayout>
-
-
 </FrameLayout>

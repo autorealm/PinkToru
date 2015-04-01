@@ -68,8 +68,8 @@ public class FlowImageAdapter extends BaseAdapter {
 			if (width > 0 && height > 0 && width <= screenWidth && height <= screenHeight) {
 				iv.setLayoutParams(new GalleryFlow.LayoutParams(width, height));
 			} else {
-				iv.setLayoutParams(new GalleryFlow.LayoutParams((int) Math.round(screenWidth * 0.74f),
-					(int) Math.round(screenHeight * 0.68f)));
+				iv.setLayoutParams(new GalleryFlow.LayoutParams((int) Math.round(screenWidth * 0.78f),
+					(int) Math.round(screenHeight * 0.65f)));
 			}
 			
 			int sc = ViewUtils.dip2px(mContext, 12);

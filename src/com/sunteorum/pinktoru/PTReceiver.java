@@ -28,10 +28,10 @@ public class PTReceiver extends BroadcastReceiver {
 		
 		String action = intent.getAction();
 		if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-			//Toast.makeText(context, "ÏÂÔØÍê³ÉÁË....", Toast.LENGTH_LONG).show();
+			//Toast.makeText(context, "ä¸‹è½½å®Œæˆäº†....", Toast.LENGTH_LONG).show();
 			
 			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-			//TODO ÅĞ¶ÏÕâ¸öidÓëÖ®Ç°µÄidÊÇ·ñÏàµÈ£¬Èç¹ûÏàµÈËµÃ÷ÊÇÖ®Ç°µÄÄÇ¸öÒªÏÂÔØµÄÎÄ¼ş
+			//TODO åˆ¤æ–­è¿™ä¸ªidä¸ä¹‹å‰çš„idæ˜¯å¦ç›¸ç­‰ï¼Œå¦‚æœç›¸ç­‰è¯´æ˜æ˜¯ä¹‹å‰çš„é‚£ä¸ªè¦ä¸‹è½½çš„æ–‡ä»¶
 			if (id != did) return;
 			
 			Query query = new Query();
@@ -41,7 +41,7 @@ public class PTReceiver extends BroadcastReceiver {
 			
 			int columnCount = cursor.getColumnCount();
 			String path = null;
-			//TODO ÕâÀï°ÑËùÓĞµÄÁĞ¶¼´òÓ¡Ò»ÏÂ£¬ÓĞÊ²Ã´ĞèÇó£¬¾ÍÔõÃ´´¦Àí,ÎÄ¼şµÄ±¾µØÂ·¾¶¾ÍÊÇpath
+			//TODO è¿™é‡ŒæŠŠæ‰€æœ‰çš„åˆ—éƒ½æ‰“å°ä¸€ä¸‹ï¼Œæœ‰ä»€ä¹ˆéœ€æ±‚ï¼Œå°±æ€ä¹ˆå¤„ç†,æ–‡ä»¶çš„æœ¬åœ°è·¯å¾„å°±æ˜¯path
 			while(cursor.moveToNext()) {
 				for (int j = 0; j < columnCount; j++) {
 					String columnName = cursor.getColumnName(j);
@@ -64,26 +64,26 @@ public class PTReceiver extends BroadcastReceiver {
 			}
 			cursor.close();
 			if (path == null) return;
-			//Èç¹ûsdcard²»¿ÉÓÃÊ±ÏÂÔØÏÂÀ´µÄÎÄ¼ş£¬ÄÇÃ´ÕâÀï½«ÊÇÒ»¸öÄÚÈİÌá¹©ÕßµÄÂ·¾¶£¬ÕâÀï´òÓ¡³öÀ´£¬ÓĞÊ²Ã´ĞèÇó¾ÍÔõÃ´Ñù´¦Àí
+			//å¦‚æœsdcardä¸å¯ç”¨æ—¶ä¸‹è½½ä¸‹æ¥çš„æ–‡ä»¶ï¼Œé‚£ä¹ˆè¿™é‡Œå°†æ˜¯ä¸€ä¸ªå†…å®¹æä¾›è€…çš„è·¯å¾„ï¼Œè¿™é‡Œæ‰“å°å‡ºæ¥ï¼Œæœ‰ä»€ä¹ˆéœ€æ±‚å°±æ€ä¹ˆæ ·å¤„ç†
 			if(path.startsWith("content:")) {
-               cursor = context.getContentResolver().query(Uri.parse(path), null, null, null, null);
-               columnCount = cursor.getColumnCount();
-               while (cursor.moveToNext()) {
-                    for (int j = 0; j < columnCount; j++) {
-                        String columnName = cursor.getColumnName(j);
-                        String string = cursor.getString(j);
-                        if(string != null) {
-                            System.out.println(columnName+": "+ string);
-                            if(columnName.equals("_data")) {
-                            	path = string;
-                            	
-        					}
+			cursor = context.getContentResolver().query(Uri.parse(path), null, null, null, null);
+			columnCount = cursor.getColumnCount();
+			while (cursor.moveToNext()) {
+					for (int j = 0; j < columnCount; j++) {
+						String columnName = cursor.getColumnName(j);
+						String string = cursor.getString(j);
+						if(string != null) {
+							System.out.println(columnName+": "+ string);
+							if(columnName.equals("_data")) {
+								path = string;
+								
+							}
 						} else {
 							System.out.println(columnName+": null");
 							
 						}
-                        
-                    }
+						
+					}
 				}
 				cursor.close();
 			}
@@ -93,8 +93,8 @@ public class PTReceiver extends BroadcastReceiver {
 			
 			
 		} else if (action.equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
-			//Toast.makeText(context, "µã»÷<span style='font-family: ËÎÌå; '>Í¨Öª</span>
-			//<span style='font-size: 10.5pt; text-indent: 21pt; font-family: ËÎÌå; '>ÁË....</span>", Toast.LENGTH_LONG).show();
+			//Toast.makeText(context, "ç‚¹å‡»<span style='font-family: å®‹ä½“; '>é€šçŸ¥</span>
+			//<span style='font-size: 10.5pt; text-indent: 21pt; font-family: å®‹ä½“; '>äº†....</span>", Toast.LENGTH_LONG).show();
 		}
 	}
 }

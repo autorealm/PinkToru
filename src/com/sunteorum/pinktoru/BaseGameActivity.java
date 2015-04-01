@@ -8,6 +8,7 @@ import java.util.Vector;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
@@ -17,6 +18,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.format.Time;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -30,9 +32,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -61,26 +67,28 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	protected int screenHeight;
 	protected Drawable background_drawalbe;
 	
-	protected int INACCURACY = 12;//ÅĞ¶ÏÆ´ºÏµÄ¾àÀë
-	protected int ERR_TIP_TIMES = 3;//´íÎóÌáÊ¾´ÎÊı
+	protected int INACCURACY = 12;//åˆ¤æ–­æ‹¼åˆçš„è·ç¦»
+	protected int ERR_TIP_TIMES = 4;//é”™è¯¯æç¤ºæ¬¡æ•°
+	
+	private Vibrator mVibrator;
 	
 	protected ArrayList<PieceView> allPieces = new ArrayList<PieceView>();
 	
-	protected FrameLayout puzzle = null; //¸ù²¼¾Ö
-	protected FrameLayout space = null; //ÓÎÏ·´°¿Ú
+	protected FrameLayout puzzle = null; //æ ¹å¸ƒå±€
+	protected FrameLayout space = null; //æ¸¸æˆçª—å£
 	
 	private ArrayList<LevelEntity> games;
-	protected int imageId = 0;//Í¼Æ¬ID
-	protected String imageUri;//Í¼Æ¬µÄµØÖ·
-	protected String imagePath;//Í¼Æ¬µÄ±¾µØÂ·¾¶
+	protected int imageId = 0;//å›¾ç‰‡ID
+	protected String imageUri;//å›¾ç‰‡çš„åœ°å€
+	protected String imagePath;//å›¾ç‰‡çš„æœ¬åœ°è·¯å¾„
 	
-	protected int gameId = 0;//ÓÎÏ·ID
-	protected int levelId = 0;//¹Ø¿¨ID
-	protected int stage;//¹ØÊı
-	protected int row;//ĞĞ
-	protected int line;//ÁĞ
+	protected int gameId = 0;//æ¸¸æˆID
+	protected int levelId = 0;//å…³å¡ID
+	protected int stage;//å…³æ•°
+	protected int row;//è¡Œ
+	protected int line;//åˆ—
 	
-	protected int dx, dy; //ÓÎÏ·´°¿ÚÓë¸ù²¼¾ÖµÄ¾àÀë
+	protected int dx, dy; //æ¸¸æˆçª—å£ä¸æ ¹å¸ƒå±€çš„è·ç¦»
 	
 	protected GameEntity ge;
 	protected LevelEntity le;
@@ -88,9 +96,10 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	protected View handle;
 	protected LinearLayout layGameStatus;
 	protected TextView tvGameLevel, tvGameTime, tvGameStatus;
+	protected ImageView ipin;
 	
-	protected long lctime;//´¢´æµ±Ç°Ê±¼äÖµ
-	protected long start_time;//´¢´æ¿ªÊ¼ÓÎÏ·Ê±¼äÖµ
+	protected long lctime;//å‚¨å­˜å½“å‰æ—¶é—´å€¼
+	protected long start_time;//å‚¨å­˜å¼€å§‹æ¸¸æˆæ—¶é—´å€¼
 	protected Handler mHandler = new Handler();
 	
 	protected String game_status = "0";
@@ -120,11 +129,16 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		Log.i(tag, "imageUri = " + imageUri);
 		if (games != null) {
 			if (games.size() < stage) {
-				Common.showTip(this, "³ÌĞò³ö´í", "ÓÎÏ·Êı¾İ¶ÁÈ¡Ê§°Ü£¡");
+				Common.showTip(this, "ç¨‹åºå‡ºé”™", "æ¸¸æˆæ•°æ®è¯»å–å¤±è´¥ï¼");
 				return;
 			}
 			
 			le = games.get(stage - 1);
+		} else if (levelId > 99) {
+			le = app.getLevelById(levelId);
+		}
+		
+		if (le != null) {
 			row = le.getPieceRow();
 			line = le.getPieceLine();
 			if (!android.text.TextUtils.isEmpty(le.getImageUrl()))
@@ -144,9 +158,26 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		
 		Log.i(tag, "imagePath = " + imagePath);
 		if (imagePath == null || imagePath.trim().length() == 0) {
-			Common.showTip(this, "³ÌĞò³ö´í", "ÓÎÏ·Í¼Æ¬×ÊÔ´¶ÁÈ¡Ê§°Ü£¡");
+			Common.showTip(this, "ç¨‹åºå‡ºé”™", "æ¸¸æˆå›¾ç‰‡èµ„æºè¯»å–å¤±è´¥ï¼");
 			return;
 		}
+		
+
+		if (le == null) {
+			le = new LevelEntity(levelId, row, line, imageUri);
+			
+			le.setCutAlt(app.getPieceKochCurveN());
+			le.setCutFlag(app.getPieceCutFlag());
+			le.setEdgeWidth(app.getPieceEdgeWidth());
+			le.setShadowOffset(app.getPieceShadowOffset());
+			le.setRenderFlag(app.getPieceRenderFlag());
+			le.setWithQuad((app.isWithquad()));
+			le.setAbsInMove(app.isAbsinmove());
+			
+		}
+		
+		
+		mVibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		screenWidth = dm.widthPixels;
@@ -197,19 +228,43 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		if (allPieces != null) {
 			for (int i=0; i < allPieces.size(); i++) {
 				PieceView p = (PieceView) allPieces.get(i);
-				if (Piece.class.isInstance(p.getTag())) {
-					Piece piece = (Piece) p.getTag();
-					if (!piece.getBmpPiece().isRecycled()) piece.getBmpPiece().recycle();
-					//if (!piece.getBmpEdge().isRecycled()) piece.getBmpEdge().recycle();
-				}
+				Piece piece = p.getPiece();
+				if (!piece.getBmpPiece().isRecycled()) piece.getBmpPiece().recycle();
+				//if (!piece.getBmpEdge().isRecycled()) piece.getBmpEdge().recycle();
+			
 			}
+			
 			allPieces.clear();
 		}
 		
+		background_drawalbe = null;
+		if (space != null) space.removeAllViews();
 		if (puzzle != null) puzzle.setBackgroundDrawable(null);
 	}
 
-	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		app.init();
+		app.setGameTime(savedInstanceState.getLong("gt"));
+		
+		le = savedInstanceState.getParcelable("le");
+		
+		
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		
+		outState.putLong("gt", app.getGameTime());
+		
+		outState.putParcelable("le", le);
+		
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
@@ -225,7 +280,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			
 			break;
 		case 1:
-			showPopupReview(3000);
+			showPopupReview(2000);
 			break;
 		case 2:
 			showExitDialog();
@@ -237,23 +292,31 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	
 	private void showExitDialog() {
 		new AlertDialog.Builder(BaseGameActivity.this)
-			.setTitle("ÍË³öµ±Ç°µÄÓÎÏ·Âğ£¿")
+			.setTitle("é€€å‡ºå½“å‰çš„æ¸¸æˆå—ï¼Ÿ")
 			.setIcon(android.R.drawable.ic_dialog_alert)
-			.setPositiveButton("È·¶¨",new DialogInterface.OnClickListener() {
+			.setPositiveButton("ç¡®å®š",new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog,int which) {
 					finish();
 				}
-			}).setNegativeButton("È¡Ïû", null)
+			}).setNegativeButton("å–æ¶ˆ", null)
 			.create().show();
 	}
 
 	/**
-	 * ³õÊ¼»¯£¬setContentView ÉèÖÃÄÚÈİ½çÃæ£¬findViewById ÕÒ³ö¿Ø¼ş
+	 * å¼€å§‹éœ‡åŠ¨ä¸€ä¸‹
+	 */
+	public void doVibrate() {
+		
+		mVibrator.vibrate(50);
+	}
+
+	/**
+	 * åˆå§‹åŒ–ï¼ŒsetContentView è®¾ç½®å†…å®¹ç•Œé¢ï¼ŒfindViewById æ‰¾å‡ºæ§ä»¶
 	 */
 	public abstract void init ();
 	
 	protected void process() {
-		//ÏÔÊ¾ÕıÔÚ×¼±¸ÓÎÏ·µÄ½ø¶ÈÌáÊ¾¿ò
+		//æ˜¾ç¤ºæ­£åœ¨å‡†å¤‡æ¸¸æˆçš„è¿›åº¦æç¤ºæ¡†
 		final ProgressDialog progd = new ProgressDialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		View fay = View.inflate(this, R.layout.popup_game_loading, null);
@@ -267,7 +330,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 		final TextView txtName = (TextView) progd.findViewById(R.id.txtGameName);
 		TextView txtDesc = (TextView) progd.findViewById(R.id.txtGameDesc);
 		ImageButton btnClose = (ImageButton) progd.findViewById(R.id.btnGameClose);
-		txtName.setText("×¼±¸¿ªÊ¼ Stage " + stage + " ...");
+		txtName.setText("å‡†å¤‡å¼€å§‹ Stage " + stage + " ...");
 		txtDesc.setText((le != null) ? le.getLevelDesc() : "");
 		
 		final FlippingImageView mFivIcon = (FlippingImageView) progd.findViewById(R.id.game_loading_icon);
@@ -298,22 +361,24 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			
 		});
 		
-		mHandler.postDelayed(new Runnable() {
+		final Thread mThread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				if ("NEW_GAME_ACTION".equalsIgnoreCase(getIntent().getAction())) {
-					newPuzzle(imagePath, row, line);
 					
 				} else if ("RETURN_GAME_ACTION".equalsIgnoreCase(getIntent().getAction())) {
 					
 				}
 				
+				newPuzzle(imagePath, row, line);
+				
 				if (mFivIcon != null) {
 					mFivIcon.clearAnimation();
 					mFivIcon.setImageResource(R.drawable.ic_android);
 				}
-				txtName.setText("ÓÎÏ·¼ÓÔØÍê³É");
+				
+				txtName.setText("æ¸¸æˆåŠ è½½å®Œæˆ");
 				
 				onStartGame();
 				
@@ -327,16 +392,17 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 				
 				start_time = System.currentTimeMillis();
 				
-				//ÑÓ³ÙÏÔÊ¾¶¥²¿×´Ì¬Ìõ
+				//å»¶è¿Ÿæ˜¾ç¤ºé¡¶éƒ¨çŠ¶æ€æ¡
 				mHandler.postDelayed(new Runnable(){
 
 					@Override
 					public void run() {
+						mHandler.removeCallbacks(this);
 						setDrawer();
 						setGameTime();
 						setGameStatus();
 						
-						final int[] location = new int[2];   
+						final int[] location = new int[2];
 						space.getLocationOnScreen(location);
 						dx = location[0];
 						dy = location[1];
@@ -345,15 +411,19 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 						//dy = (int) ((float) (puzzle.getHeight() - space.getHeight()) / 2 + 0.5f);
 						
 					}
-				}, 800);
+				}, 600);
+				
 			}
 			
-		}, 800);
+		});
+		mThread.setPriority(Thread.NORM_PRIORITY + 1);
+		
+		mHandler.postDelayed(mThread, 800);
 		
 	}
 
 	/**
-	 * ÓÎÏ·ÍêÈ«¼ÓÔØÍê³ÉÊ±
+	 * æ¸¸æˆå®Œå…¨åŠ è½½å®Œæˆæ—¶
 	 */
 	public abstract void onStartGame();
 	
@@ -473,8 +543,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	/**
-	 * ÏÔÊ¾µ±Ç°ÓÎÏ·µÄÍ¼Æ¬Ô¤ÀÀ
-	 * @param delay ÑÓ³Ù¹Ø±ÕÊ±¼ä
+	 * æ˜¾ç¤ºå½“å‰æ¸¸æˆçš„å›¾ç‰‡é¢„è§ˆ
+	 * @param delay å»¶è¿Ÿå…³é—­æ—¶é—´
 	 * @return
 	 */
 	public PopupWindow showPopupReview(long delay) {
@@ -529,7 +599,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	/**
-	 * ÕıÔÚ¼ÓÔØÓÎÏ·£¬½øĞĞ·ÖÍ¼´¦Àí
+	 * æ­£åœ¨åŠ è½½æ¸¸æˆï¼Œè¿›è¡Œåˆ†å›¾å¤„ç†
 	 * @param pieces
 	 */
 	public abstract void onNewGame(Vector<Piece> pieces);
@@ -542,16 +612,16 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
         
         onNewGame(pieces);
         
-        //¶Ô¸÷¸öÇĞ¿éÍ¼Æ¬°ü×°³Éimagebutton´ıÓÃ
+        //å¯¹å„ä¸ªåˆ‡å—å›¾ç‰‡åŒ…è£…æˆimagebuttonå¾…ç”¨
         createAllPieceView(pieces);
         
-        //½«°ü×°ºÃµÄimageviewËæ»ú»æÖÆµ½Æ´Í¼°åÉÏ
+        //å°†åŒ…è£…å¥½çš„imageviewéšæœºç»˜åˆ¶åˆ°æ‹¼å›¾æ¿ä¸Š
         createPuzzle();
         
 	}
 	
 	/**
-	 * ÒÑ´´½¨Ò»ËéÆ¬
+	 * å·²åˆ›å»ºä¸€ç¢ç‰‡
 	 * @param pv
 	 * @param index
 	 */
@@ -592,8 +662,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 
 	private Vector<Piece> createAllPieces(Bitmap bitmap, int row, int line) {
 		PieceFactory pf = new PieceFactory(this);
-		pf.setPintuValue(app);
-		//pu.setPieceCutFlag(0);
+		pf.setPintuValue(le);
+		//pf.setPieceCutFlag(0);
 		
     	pf.setImage(bitmap);
     	pf.setRowAndLine(row, line);
@@ -606,8 +676,8 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			Piece piece = (Piece) pieces.get(i);
 			PieceView pv = new PieceView(this, piece);
 			
-			pv.setId(i);  //ËéÆ¬µÄÎ¨Ò»ID
-			pv.setMinp(piece.getMinp());     //Õû¸öËéÆ¬µÄÍâ²¿¿ªÊ¼µã,ÇĞÍ¼Ç°µÄµãÎ»
+			pv.setId(i);  //ç¢ç‰‡çš„å”¯ä¸€ID
+			pv.setMinp(piece.getMinp());     //æ•´ä¸ªç¢ç‰‡çš„å¤–éƒ¨å¼€å§‹ç‚¹,åˆ‡å›¾å‰çš„ç‚¹ä½
 			pv.setLocation(new Point(0, 0));
 			pv.setTag(piece);
 			
@@ -627,7 +697,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	protected boolean distance(Point srcloc, Point destloc, int inaccuracy) {
-		//µ±Ç°X×ø±êµÄ²îÖµ£¬ÓëÔ­À´µÄĞé×ø±êµÄ²îÖµ½Ó½üÊ±
+		//å½“å‰Xåæ ‡çš„å·®å€¼ï¼Œä¸åŸæ¥çš„è™šåæ ‡çš„å·®å€¼æ¥è¿‘æ—¶
 		if (Math.abs(srcloc.x - destloc.x) <= inaccuracy) {
 			if (Math.abs(srcloc.y - destloc.y) <= inaccuracy) {
 				return true;
@@ -637,7 +707,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
     
 	protected boolean distance(Point srckey, Point destkey, Point srcloc, Point destloc, int inaccuracy) {
-		//µ±Ç°X×ø±êµÄ²îÖµ£¬ÓëÔ­À´µÄĞé×ø±êµÄ²îÖµ½Ó½üÊ±
+		//å½“å‰Xåæ ‡çš„å·®å€¼ï¼Œä¸åŸæ¥çš„è™šåæ ‡çš„å·®å€¼æ¥è¿‘æ—¶
 		if (Math.abs((srckey.x - destkey.x) - (srcloc.x - destloc.x)) <= inaccuracy) {
 			if (Math.abs((srckey.y - destkey.y) - (srcloc.y - destloc.y)) <= inaccuracy) {
 				return true;
@@ -658,7 +728,7 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
     
 	protected int getNextGameLevel() {
 		int max_level = 9;
-		//Èç¹ûÒÑ¾­ÊÇ×î´óÄÑ¶È£¬ÔòÃ»ÓĞÏÂÒ»¹Ø
+		//å¦‚æœå·²ç»æ˜¯æœ€å¤§éš¾åº¦ï¼Œåˆ™æ²¡æœ‰ä¸‹ä¸€å…³
 		if (games != null) max_level = games.size();
 		int next_level = stage + 1;
 		if (next_level > max_level) {
@@ -694,9 +764,9 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 	}
 	
 	/**
-	 * ÅĞ¶ÏÊÇ·ñÍê³ÉÆ´Í¼
+	 * åˆ¤æ–­æ˜¯å¦å®Œæˆæ‹¼å›¾
 	 */
-	public void hasComplete() {
+	public boolean hasComplete() {
 		int finish = 0;
 		for (int i = 0; i < allPieces.size(); i++) {
 			PieceView piece = (PieceView) allPieces.get(i);
@@ -706,34 +776,88 @@ abstract class BaseGameActivity extends BaseActivity implements OnTouchListener,
 			
 		}
 		if (finish == row * line) {
-			puzzle.postDelayed(new Runnable() {
-	
-				@Override
-				public void run() {
-					onCompleted();
-				}
-				
-			}, 500);
+			
+			onCompleted();
+			return true;
 		}
+		
+		return false;
+	}
+
+	@Override
+	public void onCompleted() {
+		if (ipin == null || background_drawalbe == null) {
+			toCompleted();
+			return;
+		}
+
+		space.setEnabled(false);
+		puzzle.setEnabled(false);
+		
+		ipin.setImageDrawable(background_drawalbe);
+		FrameLayout.LayoutParams flay = (FrameLayout.LayoutParams) ipin.getLayoutParams();
+		flay.gravity = Gravity.TOP|Gravity.LEFT;
+		flay.width = space.getWidth();
+		flay.height = space.getHeight();
+		flay.leftMargin = 0;
+		flay.topMargin = 0;
+		ipin.setLayoutParams(flay);
+		ipin.setOnTouchListener(this);
+		puzzle.bringChildToFront(ipin);
+		
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.show_3);
+		anim.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				toCompleted();
+				
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				
+				ipin.setVisibility(0);
+				
+			}
+			
+		});
+		
+		ipin.startAnimation(anim);
+		
 	}
 
 	/**
-	 * Æ´Í¼Íê³ÉÊ±£¬Ìø×ªµ½³É¼¨½çÃæ
+	 * æ‹¼å›¾å®Œæˆæ—¶ï¼Œè·³è½¬åˆ°æˆç»©ç•Œé¢
 	 */
-	public void onCompleted() {
-		Intent i = new Intent(BaseGameActivity.this, ScoreActivity.class);
-		i.setAction("GAME_COMPLETE_ACTION");
+	public void toCompleted() {
+		puzzle.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				Intent i = new Intent(BaseGameActivity.this, ScoreActivity.class);
+				i.setAction("GAME_COMPLETE_ACTION");
+				
+				i.putExtras(getNextGameBundle());
+				
+				startActivity(i);
+				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+				
+				//å®Œæˆå…³å¡æ—¶çš„æ¥å£è®¿é—®
+				//String uuid = app.getUUID();
+				
+				finish();
+			
+			}
+			
+		}, 400);
 		
-		i.putExtras(this.getNextGameBundle());
-		
-		startActivity(i);
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-		
-		
-		//Íê³É¹Ø¿¨Ê±µÄ½Ó¿Ú·ÃÎÊ
-		//String uuid = app.getUUID();
-		
-		finish();
 	}
     
 	@Override

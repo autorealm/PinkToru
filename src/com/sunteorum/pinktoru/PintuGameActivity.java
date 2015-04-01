@@ -1,6 +1,8 @@
 package com.sunteorum.pinktoru;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
@@ -10,14 +12,19 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunteorum.pinktoru.entity.Piece;
+import com.sunteorum.pinktoru.inc.ColorThief;
 import com.sunteorum.pinktoru.util.ImageUtils;
 import com.sunteorum.pinktoru.view.MultiDirectionSlidingDrawer;
 import com.sunteorum.pinktoru.view.PieceView;
+import com.sunteorum.pinktoru.view.RippleView;
 
 public class PintuGameActivity extends BaseGameActivity {
 
@@ -29,9 +36,14 @@ public class PintuGameActivity extends BaseGameActivity {
 	boolean duoMove = false;
 	boolean skip = false;
 	boolean trainmove = true;
+	boolean hasc = false;
+	
+	RippleView rv_space;
 	
 	@Override
 	public boolean onTouch(final View v, MotionEvent event) {
+		if (!(v instanceof PieceView)) return true;
+		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			
@@ -42,17 +54,23 @@ public class PintuGameActivity extends BaseGameActivity {
 			
 			if (bmp != null && bmp.getPixel((int)event.getX(), (int)event.getY()) == 0) {
 				skip = true;
-				return false;
 			} else skip = false;
+			
+			//å®‰å“3.0ä¹‹å‰çš„ç‰ˆæœ¬ä¸ä¼ é€’Touchäº‹ä»¶?
+			//System.out.println("Touch Down - ID : " + lastId + " | " + skip);
+			if (android.os.Build.VERSION.SDK_INT < 11) skip = false;
+			
+			if (skip) return false;
 			
 			lastX = (int) event.getRawX();
 			lastY = (int) event.getRawY();
 			
-			//°Ñ¸ÃÊÓÍ¼ÖÃÓÚÆäËûËùÓĞ×ÓÊÓÍ¼Ö®ÉÏ
-			//puzzle.bringChildToFront(v);
+			//æŠŠè¯¥è§†å›¾ç½®äºå…¶ä»–æ‰€æœ‰å­è§†å›¾ä¹‹ä¸Š
+			//space.bringChildToFront(v);
 			displayFront((PieceView)v);
+			v.requestFocus();
 			
-			//Èç¹û¿ªÊ¼ÁË¶¥²¿À¸Ôò¹Ø±ÕËü
+			//å¦‚æœå¼€å§‹äº†é¡¶éƒ¨æ åˆ™å…³é—­å®ƒ
 			if (drawer != null && drawer.isOpened()) drawer.animateClose();
 			
 			break;
@@ -76,7 +94,7 @@ public class PintuGameActivity extends BaseGameActivity {
 				public void run() {
 					
 					moveSomePieces(movePieces);
-					//movePieces.clear();   //ÖØÖÃÒÆ¶¯µÄ±êÖ¾£¬Çå¿Õ¿ÉÒÆ¶¯¼ÇÂ¼
+					//movePieces.clear();   //é‡ç½®ç§»åŠ¨çš„æ ‡å¿—ï¼Œæ¸…ç©ºå¯ç§»åŠ¨è®°å½•
 					cleanPath();
 					if (app.isAbsinmove()) {
 						PieceView firstPiece = checkAbsorb((PieceView)v);
@@ -98,7 +116,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			
 			if (skip == true) return false;
 			
-			//ÏÈÈ¡µÃËéÆ¬Îü¸½µÄÂ·¾¶£¬È»ºóÒÆ¶¯ËéÆ¬
+			//å…ˆå–å¾—ç¢ç‰‡å¸é™„çš„è·¯å¾„ï¼Œç„¶åç§»åŠ¨ç¢ç‰‡
 			cleanPath();
 			
 			PieceView firstPiece = checkAbsorb((PieceView)v);
@@ -106,7 +124,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			absorb(firstPiece);
 			
 			displayLast(stage);
-			//Îü¸½ºó£¬ÏÔÊ¾µ½Ç°¶Ë
+			//å¸é™„åï¼Œæ˜¾ç¤ºåˆ°å‰ç«¯
 			//displayFront(firstPiece);
 			
 			if (trainmove) setOpacity(allPieces);
@@ -114,7 +132,7 @@ public class PintuGameActivity extends BaseGameActivity {
 			game_status = " " + dsts + " ";
 			setGameStatus();
 			
-			//ÅĞ¶ÏÊÇ·ñÍê³É
+			//åˆ¤æ–­æ˜¯å¦å®Œæˆ
 			hasComplete();
 			
 			break;
@@ -142,6 +160,7 @@ public class PintuGameActivity extends BaseGameActivity {
 		setContentView(puzzle);
 		
 		space = (FrameLayout) findViewById(R.id.space);
+		ipin = (android.widget.ImageView) findViewById(R.id.ipin);
 		layGameStatus = (LinearLayout) this.findViewById(R.id.layGameStatus);
 		drawer = (MultiDirectionSlidingDrawer) this.findViewById(R.id.drawer);
 		handle = (View) this.findViewById(R.id.handle);
@@ -154,30 +173,53 @@ public class PintuGameActivity extends BaseGameActivity {
 		puzzle.setKeepScreenOn(app.isKeepon());
 		
 		trainmove = app.isTrainmove();
+		
+		rv_space = (RippleView) findViewById(R.id.rv_space);
+		
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onStartGame() {
 		
-		//½«±³¾°Ä£ºı´¦Àí
+		//å°†èƒŒæ™¯æ¨¡ç³Šå¤„ç†
 		Drawable dg = puzzle.getBackground();
 		Bitmap blurbg = ImageUtils.fastBlur(ImageUtils.DrawableToBitmap(dg), 10);
 		if (blurbg != null) dg = ImageUtils.BitmapToDrawable(this, blurbg);
 		if (dg != null) {
 			dg.setAlpha(160);
-			space.setBackgroundDrawable(dg);
+			rv_space.setBackgroundDrawable(dg);
 			//puzzle.getBackground().setAlpha(120);
 		}
+		
+		int themeColor = Color.WHITE;
+		try {
+			List<int[]> result = ColorThief.compute(ImageUtils.DrawableToBitmap(dg), 3);
+			int[] dc = result.get(2);
+			themeColor = Color.rgb((int) (dc[0]), (int) (dc[1]), (int) (dc[2]));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		rv_space.setRippleColor(themeColor);
 		
 		puzzle.setBackgroundColor(Color.DKGRAY);
 		//puzzle.getChildAt(0).setVisibility(0);
 		
-		//½«ËéÆ¬¿ÉÊÓ»¯
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.show_2);
+		LayoutAnimationController lac = new LayoutAnimationController(anim);
+		
+		lac.setOrder(LayoutAnimationController.ORDER_RANDOM);
+		lac.setDelay(1);
+		
+		//space.setLayoutAnimation(lac);
+		
+		//å°†ç¢ç‰‡å¯è§†åŒ–
 		int piececount = allPieces.size();
-		for(int i=0; i< piececount; i++) {
-			PieceView pib = (PieceView) allPieces.get(i);
-			pib.setVisibility(0);
+		for (int i = 0; i < piececount; i++) {
+			PieceView pv = (PieceView) allPieces.get(i);
+			pv.setVisibility(0);
 			
 		}
 		
@@ -195,7 +237,7 @@ public class PintuGameActivity extends BaseGameActivity {
 		//pv.setPadding(4, 4, 4, 4);
 		pv.setVisibility(8);
 		
-		puzzle.addView(pv);
+		space.addView(pv);
 		
 	}
 
@@ -205,73 +247,80 @@ public class PintuGameActivity extends BaseGameActivity {
 		
 	}
 
-    /**
-     * Ê¹ËéÆ¬Ç°ÖÃ
-     * @param curPiece
-     */
-    private void displayFront(PieceView curPiece) {
-    	puzzle.bringChildToFront(curPiece);   //°Ñ¸ÃÊÓÍ¼ÖÃÓÚÆäËûËùÓĞ×ÓÊÓÍ¼Ö®ÉÏ
-    	curPiece.postInvalidate();
-    	
-    	int id = curPiece.getId();
-    	int curRow = id / line;
-    	int curLine = id % line;
-    	
-    	//top
-    	if (curPiece.isHasTop()) {
-    		PieceView topPiece = (PieceView) allPieces.get((curRow - 1) * line + curLine);
-    		if (!topPiece.isTraverse()) {
-    			topPiece.setTraverse(true);
-    			displayFront(topPiece);
-    		}
-    		
-    	}
-    	
-    	//right
-    	if (curPiece.isHasRight()) {
-    		PieceView rightPiece = (PieceView) allPieces.get(id + 1);
-    		if (!rightPiece.isTraverse()) {
-    			rightPiece.setTraverse(true);
-        		displayFront(rightPiece);
-    		}
-    		
-    	}
-    	
-    	//feet
-    	if (curPiece.isHasFeet()) {
-    		PieceView feetPiece = (PieceView) allPieces.get((curRow + 1) * line + curLine);
-    		if (!feetPiece.isTraverse()) {
-    			feetPiece.setTraverse(true);
-        		displayFront(feetPiece);
-    		}
-    		
-    	}
-    	
-    	//left
-    	if (curPiece.isHasLeft()) {
-    		PieceView leftPiece = (PieceView) allPieces.get(id - 1);
-    		if (!leftPiece.isTraverse()) {
-    			leftPiece.setTraverse(true);
-        		displayFront(leftPiece);
-    		}
-    		
-    	}
-    	
-    }
-    
-    /**
-     * ÅĞ¶ÏĞèÒ»ÆğÒÆ¶¯µÄËéÆ¬£¬»áÑ­»·µ÷ÓÃ
-     * @param curPIB
-     * @param dx
-     * @param dy
-     * @param movePieces
-     */
-    private void checkMove(PieceView curPIB, int dx, int dy, ArrayList<PieceView> movePieces) {
-    	int l = curPIB.getLeft() + dx;
-    	int t = curPIB.getTop() + dy;
-    	curPIB.setLocation(new Point(l, t));
+	@Override
+	public void onCompleted() {
+		// TODO Auto-generated method stub
+		super.onCompleted();
+		
+	}
 
-    	/*
+	/**
+	 * ä½¿ç¢ç‰‡å‰ç½®
+	 * @param curPiece
+	 */
+	private void displayFront(PieceView curPiece) {
+		space.bringChildToFront(curPiece);   //æŠŠè¯¥è§†å›¾ç½®äºå…¶ä»–æ‰€æœ‰å­è§†å›¾ä¹‹ä¸Š
+		curPiece.postInvalidate();
+		
+		int id = curPiece.getId();
+		int curRow = id / line;
+		int curLine = id % line;
+		
+		//top
+		if (curPiece.isHasTop()) {
+			PieceView topPiece = (PieceView) allPieces.get((curRow - 1) * line + curLine);
+			if (!topPiece.isTraverse()) {
+				topPiece.setTraverse(true);
+				displayFront(topPiece);
+			}
+			
+		}
+		
+		//right
+		if (curPiece.isHasRight()) {
+			PieceView rightPiece = (PieceView) allPieces.get(id + 1);
+			if (!rightPiece.isTraverse()) {
+				rightPiece.setTraverse(true);
+				displayFront(rightPiece);
+			}
+			
+		}
+		
+		//feet
+		if (curPiece.isHasFeet()) {
+			PieceView feetPiece = (PieceView) allPieces.get((curRow + 1) * line + curLine);
+			if (!feetPiece.isTraverse()) {
+				feetPiece.setTraverse(true);
+				displayFront(feetPiece);
+			}
+			
+		}
+		
+		//left
+		if (curPiece.isHasLeft()) {
+			PieceView leftPiece = (PieceView) allPieces.get(id - 1);
+			if (!leftPiece.isTraverse()) {
+				leftPiece.setTraverse(true);
+				displayFront(leftPiece);
+			}
+			
+		}
+		
+	}
+
+	/**
+	 * åˆ¤æ–­éœ€ä¸€èµ·ç§»åŠ¨çš„ç¢ç‰‡ï¼Œä¼šå¾ªç¯è°ƒç”¨
+	 * @param curPIB
+	 * @param dx
+	 * @param dy
+	 * @param movePieces
+	 */
+	private void checkMove(PieceView curPIB, int dx, int dy, ArrayList<PieceView> movePieces) {
+		int l = curPIB.getLeft() + dx;
+		int t = curPIB.getTop() + dy;
+		curPIB.setLocation(new Point(l, t));
+
+		/*
 		if (l < 0) {
 			l = 0;
 			r = l + curPIB.getWidth();
@@ -290,57 +339,57 @@ public class PintuGameActivity extends BaseGameActivity {
 		}
 		
 		curPIB.layout(l, t, r, b);*/
-    	
-    	movePieces.add(curPIB);
-    	
+		
+		movePieces.add(curPIB);
+		
 		int id = curPIB.getId();
-    	int curRow = id / line;
-    	int curLine = id % line;
-    	
-    	//top
-    	if (curPIB.isHasTop()) {
-    		PieceView topPIB = (PieceView) allPieces.get((curRow - 1) * line + curLine);
-    		if (!topPIB.isTraverse()) {
-    			topPIB.setTraverse(true);
-    			checkMove(topPIB, dx, dy, movePieces);
-    		}
-    		
-    	}
-    	
-    	//right
-    	if (curPIB.isHasRight()) {
-    		PieceView rightPIB = (PieceView) allPieces.get(id + 1);
-        	if (!rightPIB.isTraverse()) {
-        		rightPIB.setTraverse(true);
-        		checkMove(rightPIB, dx, dy, movePieces);
-        	}
-    		
-    	}
-    	
-    	//feet
-    	if (curPIB.isHasFeet()) {
-    		PieceView feetPIB = (PieceView) allPieces.get((curRow + 1) * line + curLine);
-        	if (!feetPIB.isTraverse()) {
-        		feetPIB.setTraverse(true);
-        		checkMove(feetPIB, dx, dy, movePieces);
-        	}
-    		
-    	}
-    	
-    	//left
-    	if (curPIB.isHasLeft()) {
-    		PieceView leftPIB = (PieceView) allPieces.get(id - 1);
-        	if (!leftPIB.isTraverse()) {
-        		leftPIB.setTraverse(true);
-        		checkMove(leftPIB, dx, dy, movePieces);
-        	}
-    		
-    	}
-    	
-    }
+		int curRow = id / line;
+		int curLine = id % line;
+		
+		//top
+		if (curPIB.isHasTop()) {
+			PieceView topPIB = (PieceView) allPieces.get((curRow - 1) * line + curLine);
+			if (!topPIB.isTraverse()) {
+				topPIB.setTraverse(true);
+				checkMove(topPIB, dx, dy, movePieces);
+			}
+			
+		}
+		
+		//right
+		if (curPIB.isHasRight()) {
+			PieceView rightPIB = (PieceView) allPieces.get(id + 1);
+			if (!rightPIB.isTraverse()) {
+				rightPIB.setTraverse(true);
+				checkMove(rightPIB, dx, dy, movePieces);
+			}
+			
+		}
+		
+		//feet
+		if (curPIB.isHasFeet()) {
+			PieceView feetPIB = (PieceView) allPieces.get((curRow + 1) * line + curLine);
+			if (!feetPIB.isTraverse()) {
+				feetPIB.setTraverse(true);
+				checkMove(feetPIB, dx, dy, movePieces);
+			}
+			
+		}
+		
+		//left
+		if (curPIB.isHasLeft()) {
+			PieceView leftPIB = (PieceView) allPieces.get(id - 1);
+			if (!leftPIB.isTraverse()) {
+				leftPIB.setTraverse(true);
+				checkMove(leftPIB, dx, dy, movePieces);
+			}
+			
+		}
+		
+	}
 
 	/**
-	 * Ò»ÆğÒÆ¶¯ËéÆ¬
+	 * ä¸€èµ·ç§»åŠ¨ç¢ç‰‡
 	 * @param absorbPieces
 	 */
 	private void moveSomePieces(final ArrayList<PieceView> absorbPieces) {
@@ -367,270 +416,270 @@ public class PintuGameActivity extends BaseGameActivity {
 		}
 		
 	}
-    
-    /**
-     * Æ´ºÏËéÆ¬
-     * @param curPiece
-     */
-    private void absorb(PieceView curPiece) {
-    	Point curMinp = curPiece.getMinp();
-    	Point curLoc = curPiece.getLocation();
-    	
-    	if (curPiece.getParent() instanceof FrameLayout) {
-	    	FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) curPiece.getLayoutParams();
-	    	alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
+
+	/**
+	 * æ‹¼åˆç¢ç‰‡
+	 * @param curPiece
+	 */
+	private void absorb(PieceView curPiece) {
+		Point curMinp = curPiece.getMinp();
+		Point curLoc = curPiece.getLocation();
+		
+		if (curPiece.getParent() instanceof FrameLayout) {
+			FrameLayout.LayoutParams alp = (FrameLayout.LayoutParams) curPiece.getLayoutParams();
+			alp.gravity = android.view.Gravity.TOP|android.view.Gravity.LEFT;
 			alp.leftMargin = curLoc.x;
 			alp.topMargin = curLoc.y;
 			alp.width = curPiece.getWidth();
 			alp.height = curPiece.getHeight();
 			
 			curPiece.setLayoutParams(alp);
-    	}
-    	
-    	curPiece.layout(curLoc.x, curLoc.y, curLoc.x + curPiece.getWidth(),
-    			curLoc.y + curPiece.getHeight());
-    	
-    	curPiece.postInvalidate();
-		puzzle.bringChildToFront(curPiece);   //°Ñ¸ÃÊÓÍ¼ÖÃÓÚÆäËûËùÓĞ×ÓÊÓÍ¼Ö®ÉÏ
+		}
 		
-    	int id = curPiece.getId();
-    	int curRow = id / line;
-    	int curLine = id % line;
-    	
-    	//top
-    	if (curPiece.isHasTop()) {
-    		PieceView topPiece = (PieceView) allPieces.get((curRow - 1) * line + curLine);
-    		if (!topPiece.isTraverse()) {
-    			Point topMinp = topPiece.getMinp();
-        		topPiece.setLocation(new Point(curLoc.x + (topMinp.x - curMinp.x),
-        				curLoc.y + (topMinp.y - curMinp.y)));
-        		topPiece.setTraverse(true);
-        		absorb(topPiece);
-    		}
-    		
-    	}
-    	
-    	//right
-    	if (curPiece.isHasRight()) {
-    		PieceView rightPiece = (PieceView) allPieces.get(id + 1);
-    		if (!rightPiece.isTraverse()) {
-    			Point rightMinp = rightPiece.getMinp();
-        		rightPiece.setLocation(new Point(curLoc.x + (rightMinp.x - curMinp.x),
-        				curLoc.y + (rightMinp.y - curMinp.y)));
-        		rightPiece.setTraverse(true);
-        		absorb(rightPiece);
-    		}
-    		
-    	}
-    	
-    	//feet
-    	if (curPiece.isHasFeet()) {
-    		PieceView feetPiece = (PieceView) allPieces.get((curRow + 1) * line + curLine);
-    		if (!feetPiece.isTraverse()) {
-    			Point feetMinp = feetPiece.getMinp();
-        		feetPiece.setLocation(new Point(curLoc.x + (feetMinp.x - curMinp.x),
-        				curLoc.y + (feetMinp.y - curMinp.y)));
-        		feetPiece.setTraverse(true);
-        		absorb(feetPiece);
-    		}
-    		
-    	}
-    	
-    	//left
-    	if (curPiece.isHasLeft()) {
-    		PieceView leftPiece = (PieceView) allPieces.get(id - 1);
-    		if (!leftPiece.isTraverse()) {
-    			Point leftMinp = leftPiece.getMinp();
-        		leftPiece.setLocation(new Point(curLoc.x + (leftMinp.x - curMinp.x),
-        				curLoc.y + (leftMinp.y - curMinp.y)));
-        		leftPiece.setTraverse(true);
-        		absorb(leftPiece);
-    		}
-    		
-    	}
-    	
-    }
-    
-    /**
-     * ¼ì²é¿ÉÒÔÆ´ºÏµÄËéÆ¬
-     * @param v µ±Ç°µÄËéÆ¬
-     * @return Ê×¸ö¿ÉÒÔÆ´ºÏµÄËéÆ¬
-     */
-    private PieceView checkAbsorb(PieceView v) {
-    	PieceView firstPiece = null;
-    	
-    	PieceView curPiece = (PieceView) v;
-    	curPiece.setTraverse(true);
-    	
-    	int curId = curPiece.getId();
-    	int curRow = curId / line;
-    	int curLine = curId % line;
-       	Point curMinp = curPiece.getMinp();
-    	Point curLoc = curPiece.getLocation();
-    	
-    	//´Ótop£¬right£¬feet£¬left¿ªÊ¼±éÀú£¬ÉèÖÃÎü¸½±êÖ¾
- 
-    	//top
-    	if (curRow > 0) {   //µ±Ç°ËéÆ¬´æÔÚÉÏÃæµÄËéÆ¬
-    		int topPieceId = (curRow - 1) * line + curLine;
-    		if (!curPiece.isHasTop()) {  //Èç¹ûÉÏÃæµÄËéÆ¬»¹Î´Îü¸½
-    			//Èç¹û´æÔÚÉÏÃæµÄËéÆ¬£¬»¹Ã»ÓĞÅö×²£¬ÔòµÃµ½ÉÏÃæËéÆ¬µÄÎ»ÖÃÅĞ¶ÏÊÇ·ñÎü¸½
-    			PieceView topPiece = (PieceView) allPieces.get(topPieceId);
-	    		Point topLoc = topPiece.getLocation();
-	    		Point topMinp = topPiece.getMinp();
-	    		
-	    		//Èç¹ûÎü¸½Ìõ¼ş³ÉÁ¢£¬ÔòÎü¸½
-	    		if (distance(curMinp, topMinp, curLoc, topLoc, INACCURACY)) {
-	    			curPiece.setHasTop(true);
-	    			topPiece.setHasFeet(true);
-	    			if (firstPiece == null) {
-	    				firstPiece = topPiece;
-	    			}
+		curPiece.layout(curLoc.x, curLoc.y, curLoc.x + curPiece.getWidth(),
+				curLoc.y + curPiece.getHeight());
+		
+		curPiece.postInvalidate();
+		space.bringChildToFront(curPiece);   //æŠŠè¯¥è§†å›¾ç½®äºå…¶ä»–æ‰€æœ‰å­è§†å›¾ä¹‹ä¸Š
+		
+		int id = curPiece.getId();
+		int curRow = id / line;
+		int curLine = id % line;
+		
+		//top
+		if (curPiece.isHasTop()) {
+			PieceView topPiece = (PieceView) allPieces.get((curRow - 1) * line + curLine);
+			if (!topPiece.isTraverse()) {
+				Point topMinp = topPiece.getMinp();
+				topPiece.setLocation(new Point(curLoc.x + (topMinp.x - curMinp.x),
+						curLoc.y + (topMinp.y - curMinp.y)));
+				topPiece.setTraverse(true);
+				absorb(topPiece);
+			}
+			
+		}
+		
+		//right
+		if (curPiece.isHasRight()) {
+			PieceView rightPiece = (PieceView) allPieces.get(id + 1);
+			if (!rightPiece.isTraverse()) {
+				Point rightMinp = rightPiece.getMinp();
+				rightPiece.setLocation(new Point(curLoc.x + (rightMinp.x - curMinp.x),
+						curLoc.y + (rightMinp.y - curMinp.y)));
+				rightPiece.setTraverse(true);
+				absorb(rightPiece);
+			}
+			
+		}
+		
+		//feet
+		if (curPiece.isHasFeet()) {
+			PieceView feetPiece = (PieceView) allPieces.get((curRow + 1) * line + curLine);
+			if (!feetPiece.isTraverse()) {
+				Point feetMinp = feetPiece.getMinp();
+				feetPiece.setLocation(new Point(curLoc.x + (feetMinp.x - curMinp.x),
+						curLoc.y + (feetMinp.y - curMinp.y)));
+				feetPiece.setTraverse(true);
+				absorb(feetPiece);
+			}
+			
+		}
+		
+		//left
+		if (curPiece.isHasLeft()) {
+			PieceView leftPiece = (PieceView) allPieces.get(id - 1);
+			if (!leftPiece.isTraverse()) {
+				Point leftMinp = leftPiece.getMinp();
+				leftPiece.setLocation(new Point(curLoc.x + (leftMinp.x - curMinp.x),
+						curLoc.y + (leftMinp.y - curMinp.y)));
+				leftPiece.setTraverse(true);
+				absorb(leftPiece);
+			}
+			
+		}
+		
+	}
 
-	    		}
-    		} else {  //Èç¹ûÉÏÃæµÄËéÆ¬ÒÑ¾­Îü¸½,ÇÒ²»ÊÇËÑË÷µÄÀ´Ô´£¨±ÜÃâËÀÑ­»·£©,Ôò¼ÌĞøÉÏÃæµÄËéÆ¬²éÕÒ
-    			PieceView topPiece = (PieceView) allPieces.get(topPieceId);
-    			if (!topPiece.isTraverse()) {
-    				checkAbsorb(topPiece);
-    			}
+	/**
+	 * æ£€æŸ¥å¯ä»¥æ‹¼åˆçš„ç¢ç‰‡
+	 * @param v å½“å‰çš„ç¢ç‰‡
+	 * @return é¦–ä¸ªå¯ä»¥æ‹¼åˆçš„ç¢ç‰‡
+	 */
+	private PieceView checkAbsorb(PieceView v) {
+		PieceView firstPiece = null;
+		
+		PieceView curPiece = (PieceView) v;
+		curPiece.setTraverse(true);
+		
+		int curId = curPiece.getId();
+		int curRow = curId / line;
+		int curLine = curId % line;
+		Point curMinp = curPiece.getMinp();
+		Point curLoc = curPiece.getLocation();
+		
+		//ä»topï¼Œrightï¼Œfeetï¼Œleftå¼€å§‹éå†ï¼Œè®¾ç½®å¸é™„æ ‡å¿—
 
-    		}
-    	}
-    	
-    	//right
-    	if (curLine < (line -1)) {  //µ±Ç°ËéÆ¬´æÔÚÓÒÃæµÄËéÆ¬
-    		int rightPieceId = curId + 1;
-    		if (!curPiece.isHasRight()) {  //Èç¹ûÓÒÃæµÄËéÆ¬»¹ÎªÎü¸½
-    			//Èç¹û´æÔÚÓÒÃæµÄËéÆ¬£¬»¹Ã»ÓĞÅö×²£¬ÔòµÃµ½ÓÒÃæËéÆ¬µÄÎ»ÖÃÅĞ¶ÏÊÇ·ñÎü¸½
-    			PieceView rightPiece = (PieceView) allPieces.get(rightPieceId);
-	    		Point rightLoc = rightPiece.getLocation();
-	    		Point rightMinp = rightPiece.getMinp();
+		//top
+		if (curRow > 0) {   //å½“å‰ç¢ç‰‡å­˜åœ¨ä¸Šé¢çš„ç¢ç‰‡
+			int topPieceId = (curRow - 1) * line + curLine;
+			if (!curPiece.isHasTop()) {  //å¦‚æœä¸Šé¢çš„ç¢ç‰‡è¿˜æœªå¸é™„
+				//å¦‚æœå­˜åœ¨ä¸Šé¢çš„ç¢ç‰‡ï¼Œè¿˜æ²¡æœ‰ç¢°æ’ï¼Œåˆ™å¾—åˆ°ä¸Šé¢ç¢ç‰‡çš„ä½ç½®åˆ¤æ–­æ˜¯å¦å¸é™„
+				PieceView topPiece = (PieceView) allPieces.get(topPieceId);
+				Point topLoc = topPiece.getLocation();
+				Point topMinp = topPiece.getMinp();
+				
+				//å¦‚æœå¸é™„æ¡ä»¶æˆç«‹ï¼Œåˆ™å¸é™„
+				if (distance(curMinp, topMinp, curLoc, topLoc, INACCURACY)) {
+					curPiece.setHasTop(true);
+					topPiece.setHasFeet(true);
+					if (firstPiece == null) {
+						firstPiece = topPiece;
+					}
 
-	    		//Èç¹ûÎü¸½Ìõ¼ş³ÉÁ¢£¬ÔòÎü¸½
-	    		if (distance(curMinp, rightMinp, curLoc, rightLoc, INACCURACY)) {
-	    			curPiece.setHasRight(true);
-	    			rightPiece.setHasLeft(true);
-	    			if (firstPiece == null) {
-	    				firstPiece = rightPiece;
-	    			}
-	    			
-	    		}
-    		} else {
-    			PieceView rightPiece = (PieceView) allPieces.get(rightPieceId);
-    			if (!rightPiece.isTraverse()) {
-    				checkAbsorb(rightPiece);
-    			}
+				}
+			} else {  //å¦‚æœä¸Šé¢çš„ç¢ç‰‡å·²ç»å¸é™„,ä¸”ä¸æ˜¯æœç´¢çš„æ¥æºï¼ˆé¿å…æ­»å¾ªç¯ï¼‰,åˆ™ç»§ç»­ä¸Šé¢çš„ç¢ç‰‡æŸ¥æ‰¾
+				PieceView topPiece = (PieceView) allPieces.get(topPieceId);
+				if (!topPiece.isTraverse()) {
+					checkAbsorb(topPiece);
+				}
 
-    		}
-    	}
-    	
-    	//feet
-    	if (curRow < (row - 1)) {
-    		int feetPieceId = (curRow + 1) * line + curLine;
-    		if (!curPiece.isHasFeet()) {
-    			//Èç¹û´æÔÚÓÒÃæµÄËéÆ¬£¬»¹Ã»ÓĞÅö×²£¬ÔòµÃµ½ÓÒÃæËéÆ¬µÄÎ»ÖÃÅĞ¶ÏÊÇ·ñÎü¸½
-    			PieceView feetPiece = (PieceView) allPieces.get(feetPieceId);
-	    		Point feetLoc = feetPiece.getLocation();
-	    		Point feetMinp = feetPiece.getMinp();
-	    		
-	    		//Èç¹ûÎü¸½Ìõ¼ş³ÉÁ¢£¬ÔòÎü¸½
-	    		if (distance(curMinp, feetMinp, curLoc, feetLoc, INACCURACY)) {
-	    			curPiece.setHasFeet(true);
-	    			feetPiece.setHasTop(true);
-	    			if (firstPiece == null) {
-	    				firstPiece = feetPiece;
-	    			}
-	    			
-	    		}
-    		} else {
-    			PieceView feetPiece = (PieceView) allPieces.get(feetPieceId);
-    			if (!feetPiece.isTraverse()) {
-    				checkAbsorb(feetPiece);
-    			}
-    		}
+			}
+		}
+		
+		//right
+		if (curLine < (line -1)) {  //å½“å‰ç¢ç‰‡å­˜åœ¨å³é¢çš„ç¢ç‰‡
+			int rightPieceId = curId + 1;
+			if (!curPiece.isHasRight()) {  //å¦‚æœå³é¢çš„ç¢ç‰‡è¿˜ä¸ºå¸é™„
+				//å¦‚æœå­˜åœ¨å³é¢çš„ç¢ç‰‡ï¼Œè¿˜æ²¡æœ‰ç¢°æ’ï¼Œåˆ™å¾—åˆ°å³é¢ç¢ç‰‡çš„ä½ç½®åˆ¤æ–­æ˜¯å¦å¸é™„
+				PieceView rightPiece = (PieceView) allPieces.get(rightPieceId);
+				Point rightLoc = rightPiece.getLocation();
+				Point rightMinp = rightPiece.getMinp();
 
-    	}
+				//å¦‚æœå¸é™„æ¡ä»¶æˆç«‹ï¼Œåˆ™å¸é™„
+				if (distance(curMinp, rightMinp, curLoc, rightLoc, INACCURACY)) {
+					curPiece.setHasRight(true);
+					rightPiece.setHasLeft(true);
+					if (firstPiece == null) {
+						firstPiece = rightPiece;
+					}
+					
+				}
+			} else {
+				PieceView rightPiece = (PieceView) allPieces.get(rightPieceId);
+				if (!rightPiece.isTraverse()) {
+					checkAbsorb(rightPiece);
+				}
 
-    	//left
-    	if (curLine > 0) {
-    		int leftPieceId = curId - 1;
-    		if (!curPiece.isHasLeft()) {
-    			//Èç¹û´æÔÚÓÒÃæµÄËéÆ¬£¬»¹Ã»ÓĞÅö×²£¬ÔòµÃµ½ÓÒÃæËéÆ¬µÄÎ»ÖÃÅĞ¶ÏÊÇ·ñÎü¸½
-    			PieceView leftPiece = (PieceView) allPieces.get(leftPieceId);
-	    		Point leftLoc = leftPiece.getLocation();
-	    		Point leftMinp = leftPiece.getMinp();
-	    		
-	    		//Èç¹ûÎü¸½Ìõ¼ş³ÉÁ¢£¬ÔòÎü¸½
-	    		if (distance(curMinp, leftMinp, curLoc, leftLoc, INACCURACY)) {
-	    			curPiece.setHasLeft(true);
-	    			leftPiece.setHasRight(true);
-	    			if (firstPiece == null) {
-	    				firstPiece = leftPiece;
-	    			}
-	    			
-	    		}
-    		} else {
-    			PieceView leftPiece = (PieceView) allPieces.get(leftPieceId);
-    			if (!leftPiece.isTraverse()) {
-    				checkAbsorb(leftPiece);
-    			}
-    		}
+			}
+		}
+		
+		//feet
+		if (curRow < (row - 1)) {
+			int feetPieceId = (curRow + 1) * line + curLine;
+			if (!curPiece.isHasFeet()) {
+				//å¦‚æœå­˜åœ¨å³é¢çš„ç¢ç‰‡ï¼Œè¿˜æ²¡æœ‰ç¢°æ’ï¼Œåˆ™å¾—åˆ°å³é¢ç¢ç‰‡çš„ä½ç½®åˆ¤æ–­æ˜¯å¦å¸é™„
+				PieceView feetPiece = (PieceView) allPieces.get(feetPieceId);
+				Point feetLoc = feetPiece.getLocation();
+				Point feetMinp = feetPiece.getMinp();
+				
+				//å¦‚æœå¸é™„æ¡ä»¶æˆç«‹ï¼Œåˆ™å¸é™„
+				if (distance(curMinp, feetMinp, curLoc, feetLoc, INACCURACY)) {
+					curPiece.setHasFeet(true);
+					feetPiece.setHasTop(true);
+					if (firstPiece == null) {
+						firstPiece = feetPiece;
+					}
+					
+				}
+			} else {
+				PieceView feetPiece = (PieceView) allPieces.get(feetPieceId);
+				if (!feetPiece.isTraverse()) {
+					checkAbsorb(feetPiece);
+				}
+			}
 
-    	}
-    	
-    	if (firstPiece == null) {
-    		firstPiece = v;
-    	}
-    	
-    	return firstPiece;
-    	
-    }
+		}
 
-    /**
-     * Ç°ÖÃÏÔÊ¾Î´Æ´ºÏµÄËéÆ¬
-     * @param num Î´Æ´ºÏµÄËéÆ¬ÊıÁ¿
-     */
-    private void displayLast(int num) {
-    	int last = row * line;
-    	for (int i = 0; i < allPieces.size(); i++) {
-    		PieceView piece = (PieceView) allPieces.get(i);
-    		if (piece.isTraverse()) {
-    			
-    			last--;
-    		} else {
-    			
-    		}
-    	}
-    	if (last <= Math.round(row * line * 1/5)) {
-    		for (int i = 0; i < allPieces.size(); i++) {
-    			PieceView piece = (PieceView) allPieces.get(i);
-        		if (!piece.isTraverse()) {
-        			puzzle.bringChildToFront(piece);   //°Ñ¸ÃÊÓÍ¼ÖÃÓÚÆäËûËùÓĞ×ÓÊÓÍ¼Ö®ÉÏ
-        	    	piece.postInvalidate();
-        		}
-            	
-        	}
-    	
-    	}
-    }
-    
-    @SuppressLint("NewApi")
-    private void setOpacity(ArrayList<PieceView> pieces) {
-    	
-    	for (int i=0; i<allPieces.size(); i++) {
-    		PieceView piece = (PieceView) allPieces.get(i);
-    		if (pieces.contains(piece) || piece.isTraverse()) {
-    			if (android.os.Build.VERSION.SDK_INT < 11)
-    			piece.setPieceAlpha(255); //piece.setImageAlpha(255);
-    			else piece.setAlpha(1f);
-    		} else {
-    			if (android.os.Build.VERSION.SDK_INT < 11)
-    			piece.setPieceAlpha(200); //piece.setImageAlpha(200);
-    			else piece.setAlpha(0.92f);
-    		}
-        	
-    	}
-    }
+		//left
+		if (curLine > 0) {
+			int leftPieceId = curId - 1;
+			if (!curPiece.isHasLeft()) {
+				//å¦‚æœå­˜åœ¨å³é¢çš„ç¢ç‰‡ï¼Œè¿˜æ²¡æœ‰ç¢°æ’ï¼Œåˆ™å¾—åˆ°å³é¢ç¢ç‰‡çš„ä½ç½®åˆ¤æ–­æ˜¯å¦å¸é™„
+				PieceView leftPiece = (PieceView) allPieces.get(leftPieceId);
+				Point leftLoc = leftPiece.getLocation();
+				Point leftMinp = leftPiece.getMinp();
+				
+				//å¦‚æœå¸é™„æ¡ä»¶æˆç«‹ï¼Œåˆ™å¸é™„
+				if (distance(curMinp, leftMinp, curLoc, leftLoc, INACCURACY)) {
+					curPiece.setHasLeft(true);
+					leftPiece.setHasRight(true);
+					if (firstPiece == null) {
+						firstPiece = leftPiece;
+					}
+					
+				}
+			} else {
+				PieceView leftPiece = (PieceView) allPieces.get(leftPieceId);
+				if (!leftPiece.isTraverse()) {
+					checkAbsorb(leftPiece);
+				}
+			}
 
-    
+		}
+		
+		if (firstPiece == null) {
+			firstPiece = v;
+		}
+		
+		return firstPiece;
+		
+	}
+
+	/**
+	 * å‰ç½®æ˜¾ç¤ºæœªæ‹¼åˆçš„ç¢ç‰‡
+	 * @param num æœªæ‹¼åˆçš„ç¢ç‰‡æ•°é‡
+	 */
+	private void displayLast(int num) {
+		int last = row * line;
+		for (int i = 0; i < allPieces.size(); i++) {
+			PieceView piece = (PieceView) allPieces.get(i);
+			if (piece.isTraverse()) {
+				
+				last--;
+			} else {
+				
+			}
+		}
+		if (last <= Math.round(row * line * 1/5)) {
+			for (int i = 0; i < allPieces.size(); i++) {
+				PieceView piece = (PieceView) allPieces.get(i);
+				if (!piece.isTraverse()) {
+					space.bringChildToFront(piece);   //æŠŠè¯¥è§†å›¾ç½®äºå…¶ä»–æ‰€æœ‰å­è§†å›¾ä¹‹ä¸Š
+					piece.postInvalidate();
+				}
+				
+			}
+		
+		}
+	}
+
+	@SuppressLint("NewApi")
+	private void setOpacity(ArrayList<PieceView> pieces) {
+		
+		for (int i=0; i<allPieces.size(); i++) {
+			PieceView piece = (PieceView) allPieces.get(i);
+			if (pieces.contains(piece) || piece.isTraverse()) {
+				if (android.os.Build.VERSION.SDK_INT < 11)
+					piece.setPieceAlpha(255); //piece.setImageAlpha(255);
+				else piece.setAlpha(1f);
+			} else {
+				if (android.os.Build.VERSION.SDK_INT < 11)
+					piece.setPieceAlpha(200); //piece.setImageAlpha(200);
+				else piece.setAlpha(0.92f);
+			}
+			
+		}
+	}
+
+
 }

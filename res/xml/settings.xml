@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
      android:title="游戏设置" >
-	<PreferenceCategory android:title="基本设置">
-		<CheckBoxPreference android:key="absinmove"
-			android:title="移动判断"
-			android:summary="是否在碎片移动时进行拼合判断" >
-		</CheckBoxPreference>
+     <PreferenceCategory android:title="常规设置">
 		<CheckBoxPreference android:key="trainmove"
 			android:title="移动透明"
 			android:summary="是否在移动时透明显示其他碎片" >
-		</CheckBoxPreference>
-		<CheckBoxPreference android:key="withquad"
-			android:title="曲线风格"
-			android:summary="是否以曲线方式分割碎片" >
 		</CheckBoxPreference>
 		<CheckBoxPreference android:key="showedge"
 			android:title="显示边框"
@@ -23,6 +15,20 @@
 			android:summary="是否在游戏时保持屏幕常亮" >
 		</CheckBoxPreference>
 	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="基本设置">
+		<CheckBoxPreference android:key="absinmove"
+			android:title="移动判断"
+			android:defaultValue="true"
+			android:summary="是否在碎片移动时进行拼合判断" >
+		</CheckBoxPreference>
+		<CheckBoxPreference android:key="withquad"
+			android:title="曲线风格"
+			android:defaultValue="true"
+			android:summary="是否以曲线方式分割碎片" >
+		</CheckBoxPreference>
+	</PreferenceCategory>
+	
 	<PreferenceCategory android:title="模式设置">        
 		<ListPreference 
 			android:key="gamemode"
@@ -32,7 +38,6 @@
 			android:entries="@array/game_mode_key"
 			android:entryValues="@array/game_mode_value" >
 		</ListPreference>
-        
 		<ListPreference 
 			android:key="piececutflag"
 			android:title="切图方式" 
@@ -50,6 +55,7 @@
 			android:entryValues="@array/piece_render_value" >
 		</ListPreference>
 	</PreferenceCategory>
+	
 	<PreferenceCategory android:title="参数设置">
 	    <EditTextPreference android:key="pieceedgewidth"
 			android:title="碎片边缘宽度"

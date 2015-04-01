@@ -1,5 +1,6 @@
 package com.sunteorum.pinktoru.view;
 
+import com.sunteorum.pinktoru.R;
 import com.sunteorum.pinktoru.util.ImageUtils;
 
 import android.annotation.SuppressLint;
@@ -24,8 +25,11 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController.AnimationParameters;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -35,26 +39,26 @@ import android.widget.ImageView;
 @SuppressLint("ClickableViewAccessibility")
 @SuppressWarnings({ "deprecation", "unused" })
 public class GalleryDrag extends Gallery {
-	private WindowManager windowManager;// windows´°¿Ú¿ØÖÆÀà 
-	private WindowManager.LayoutParams windowParams;// ÓÃÓÚ¿ØÖÆÍÏ×§ÏîµÄÏÔÊ¾µÄ²ÎÊı 
+	private WindowManager windowManager;// windowsçª—å£æ§åˆ¶ç±» 
+	private WindowManager.LayoutParams windowParams;// ç”¨äºæ§åˆ¶æ‹–æ‹½é¡¹çš„æ˜¾ç¤ºçš„å‚æ•° 
 
-	private int scaledTouchSlop;// ÅĞ¶Ï»¬¶¯µÄÒ»¸ö¾àÀë,scrollµÄÊ±ºò»áÓÃµ½(24)
+	private int scaledTouchSlop;// åˆ¤æ–­æ»‘åŠ¨çš„ä¸€ä¸ªè·ç¦»,scrollçš„æ—¶å€™ä¼šç”¨åˆ°(24)
 
-	private ImageView dragImageView;// ±»ÍÏ×§µÄÏî(item)£¬ÆäÊµ¾ÍÊÇÒ»¸öImageView
-	private int dragSrcPosition;// ÊÖÖ¸ÍÏ¶¯ÏîÔ­Ê¼ÔÚÁĞ±íÖĞµÄÎ»ÖÃ 
-	private int dragPosition;// ÊÖÖ¸µã»÷×¼±¸ÍÏ¶¯µÄÊ±ºò,µ±Ç°ÍÏ¶¯ÏîÔÚÁĞ±íÖĞµÄÎ»ÖÃ.
+	private ImageView dragImageView;// è¢«æ‹–æ‹½çš„é¡¹(item)ï¼Œå…¶å®å°±æ˜¯ä¸€ä¸ªImageView
+	private int dragSrcPosition;// æ‰‹æŒ‡æ‹–åŠ¨é¡¹åŸå§‹åœ¨åˆ—è¡¨ä¸­çš„ä½ç½® 
+	private int dragPosition;// æ‰‹æŒ‡ç‚¹å‡»å‡†å¤‡æ‹–åŠ¨çš„æ—¶å€™,å½“å‰æ‹–åŠ¨é¡¹åœ¨åˆ—è¡¨ä¸­çš„ä½ç½®.
 
-	private int dragPointX;// ÔÚµ±Ç°Êı¾İÏîÖĞµÄÎ»ÖÃ 
+	private int dragPointX;// åœ¨å½“å‰æ•°æ®é¡¹ä¸­çš„ä½ç½® 
 	private int dragPointY;
 	private int dragOffsetX;
-	private int dragOffsetY;// µ±Ç°ÊÓÍ¼ºÍÆÁÄ»µÄ¾àÀë
+	private int dragOffsetY;// å½“å‰è§†å›¾å’Œå±å¹•çš„è·ç¦»
 
-	private int upScrollBounce;// ÍÏ¶¯µÄÊ±ºò£¬¿ªÊ¼ÏòÉÏ¹ö¶¯µÄ±ß½ç 
-	private int downScrollBounce;// ÍÏ¶¯µÄÊ±ºò£¬¿ªÊ¼ÏòÏÂ¹ö¶¯µÄ±ß½ç 
+	private int upScrollBounce;// æ‹–åŠ¨çš„æ—¶å€™ï¼Œå¼€å§‹å‘ä¸Šæ»šåŠ¨çš„è¾¹ç•Œ 
+	private int downScrollBounce;// æ‹–åŠ¨çš„æ—¶å€™ï¼Œå¼€å§‹å‘ä¸‹æ»šåŠ¨çš„è¾¹ç•Œ 
 
-	private final static int step = 1;// ListView »¬¶¯²½·¥.
+	private final static int step = 1;// ListView æ»‘åŠ¨æ­¥ä¼.
 
-	private int current_Step;// µ±Ç°²½·¥.
+	private int current_Step;// å½“å‰æ­¥ä¼.
 	private int wpflag = 1;
 	
 	private onDropListener mDropListener;
@@ -67,19 +71,24 @@ public class GalleryDrag extends Gallery {
 	private int perx, pery;
 	private boolean inreturn = false;
 	
+	
     public GalleryDrag(Context context) {
             super(context);
-            
+            init(context);
     }
     
     public GalleryDrag(Context context, AttributeSet attrs) {
             super(context, attrs);
-            
+            init(context);
     }
 
     public GalleryDrag(Context context, AttributeSet attrs, int defStyle) {
             super(context, attrs, defStyle);
-            
+            init(context);
+    }
+    
+    private void init(Context context) {
+    	
     }
     
     @Override
@@ -93,31 +102,31 @@ public class GalleryDrag extends Gallery {
     	switch (ev.getAction()) {
 	        case MotionEvent.ACTION_DOWN:
 	        	mme = ev;
-	        	int x = (int) ev.getX();// »ñÈ¡Ïà¶ÔÓëListViewµÄx×ø±ê 
-	    		int y = (int) ev.getY();// »ñÈ¡ÏàÓ¦ÓëListViewµÄy×ø±ê 
+	        	int x = (int) ev.getX();// è·å–ç›¸å¯¹ä¸ListViewçš„xåæ ‡ 
+	    		int y = (int) ev.getY();// è·å–ç›¸åº”ä¸ListViewçš„yåæ ‡ 
 	    		dragSrcPosition = dragPosition = pointToPosition(x, y);
-	    		// ÎŞĞ§²»½øĞĞ´¦Àí 
+	    		// æ— æ•ˆä¸è¿›è¡Œå¤„ç† 
 	    		if (dragPosition == AdapterView.INVALID_POSITION) {
 	    			//return;
 	    			return super.onInterceptTouchEvent(ev);
 	    		}
 	    		
-	    		// »ñÈ¡µ±Ç°Î»ÖÃµÄÊÓÍ¼(¿É¼û×´Ì¬)
+	    		// è·å–å½“å‰ä½ç½®çš„è§†å›¾(å¯è§çŠ¶æ€)
 	    	    itemView = (ImageView) getChildAt(dragPosition - getFirstVisiblePosition());
 	    	    
-	    	    // »ñÈ¡µ½µÄdragPointÆäÊµ¾ÍÊÇÔÚÄãµã»÷Ö¸¶¨itemÏîÖĞµÄ¸ß¶È.
+	    	    // è·å–åˆ°çš„dragPointå…¶å®å°±æ˜¯åœ¨ä½ ç‚¹å‡»æŒ‡å®šitemé¡¹ä¸­çš„é«˜åº¦.
 	    	    dragPointX = x - itemView.getLeft();
 	    	    dragPointY = y - itemView.getTop();
-	    	    // Õâ¸öÖµÊÇ¹Ì¶¨µÄ:ÆäÊµ¾ÍÊÇListViewÕâ¸ö¿Ø¼şÓëÆÁÄ»×î¶¥²¿µÄ¾àÀë£¨Ò»°ãÎª±êÌâÀ¸+×´Ì¬À¸£©.
+	    	    // è¿™ä¸ªå€¼æ˜¯å›ºå®šçš„:å…¶å®å°±æ˜¯ListViewè¿™ä¸ªæ§ä»¶ä¸å±å¹•æœ€é¡¶éƒ¨çš„è·ç¦»ï¼ˆä¸€èˆ¬ä¸ºæ ‡é¢˜æ +çŠ¶æ€æ ï¼‰.
 	    	    dragOffsetY = (int) (ev.getRawY() - y);
 	    	    dragOffsetX = (int) (ev.getRawX() - x);
 	    	    
 	    		
-	    	    upScrollBounce = getHeight() / 3;// È¡µÃÏòÉÏ¹ö¶¯µÄ±ß¼Ê£¬´ó¸ÅÎª¸Ã¿Ø¼şµÄ1/3
-	    	    downScrollBounce = getHeight() * 2 / 3;// È¡µÃÏòÏÂ¹ö¶¯µÄ±ß¼Ê£¬´ó¸ÅÎª¸Ã¿Ø¼şµÄ2/3
+	    	    upScrollBounce = getHeight() / 3;// å–å¾—å‘ä¸Šæ»šåŠ¨çš„è¾¹é™…ï¼Œå¤§æ¦‚ä¸ºè¯¥æ§ä»¶çš„1/3
+	    	    downScrollBounce = getHeight() * 2 / 3;// å–å¾—å‘ä¸‹æ»šåŠ¨çš„è¾¹é™…ï¼Œå¤§æ¦‚ä¸ºè¯¥æ§ä»¶çš„2/3
 	    	    
-	    	    itemView.setDrawingCacheEnabled(true);// ¿ªÆôcache.
-	    	    bm = Bitmap.createBitmap(ImageUtils.DrawableToBitmap(itemView.getDrawable()));// ¸ù¾İcache´´½¨Ò»¸öĞÂµÄbitmap¶ÔÏó.
+	    	    itemView.setDrawingCacheEnabled(true);// å¼€å¯cache.
+	    	    bm = Bitmap.createBitmap(ImageUtils.DrawableToBitmap(itemView.getDrawable()));// æ ¹æ®cacheåˆ›å»ºä¸€ä¸ªæ–°çš„bitmapå¯¹è±¡.
 	    	    
 	        	postCheckForLongClick();
             break;
@@ -151,7 +160,7 @@ public class GalleryDrag extends Gallery {
     		mHasPerformedLongPress = false;
     		mHandler.removeCallbacks(mPendingCheckForLongPress);
     	}
-    	// itemµÄview²»Îª¿Õ£¬ÇÒ»ñÈ¡µÄdragPositionÓĞĞ§ 
+    	// itemçš„viewä¸ä¸ºç©ºï¼Œä¸”è·å–çš„dragPositionæœ‰æ•ˆ 
 	    if (dragImageView != null && dragPosition != INVALID_POSITION) {
 		    int action = ev.getAction();
 		    switch (action) {
@@ -185,14 +194,14 @@ public class GalleryDrag extends Gallery {
 	public void onLongPress(MotionEvent ev) {
 		// TODO Auto-generated method stub
 		super.onLongPress(ev);
-		// °´ÏÂ 
+		// æŒ‰ä¸‹ 
     	if (ev.getAction() == MotionEvent.ACTION_DOWN) {
     		
 	    }
 	}
     
     /** 
-    * ×¼±¸ÍÏ¶¯£¬³õÊ¼»¯ÍÏ¶¯ÏîµÄÍ¼Ïñ 
+    * å‡†å¤‡æ‹–åŠ¨ï¼Œåˆå§‹åŒ–æ‹–åŠ¨é¡¹çš„å›¾åƒ 
     * 
     * @param bm 
     * @param y 
@@ -208,15 +217,15 @@ public class GalleryDrag extends Gallery {
 	    windowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
 	    windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 	
-	    windowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE// ²»Ğè»ñÈ¡½¹µã
-		    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE// ²»Ğè½ÓÊÜ´¥ÃşÊÂ¼ş 
-		    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON// ±£³ÖÉè±¸³£¿ª£¬²¢±£³ÖÁÁ¶È²»±ä¡£
-		    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;// ´°¿ÚÕ¼ÂúÕû¸öÆÁÄ»£¬ºöÂÔÖÜÎ§µÄ×°ÊÎ±ß¿ò£¨ÀıÈç×´Ì¬À¸£©¡£´Ë´°¿ÚĞè¿¼ÂÇµ½×°ÊÎ±ß¿òµÄÄÚÈİ¡£
-	    if (wpflag > 0)
-	    	windowParams.flags = windowParams.flags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;//´°¿ÚÖ®ºóµÄÄÚÈİ±ä°µ¡£
+	    windowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE// ä¸éœ€è·å–ç„¦ç‚¹
+		    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE// ä¸éœ€æ¥å—è§¦æ‘¸äº‹ä»¶ 
+		    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON// ä¿æŒè®¾å¤‡å¸¸å¼€ï¼Œå¹¶ä¿æŒäº®åº¦ä¸å˜ã€‚
+		    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;// çª—å£å æ»¡æ•´ä¸ªå±å¹•ï¼Œå¿½ç•¥å‘¨å›´çš„è£…é¥°è¾¹æ¡†ï¼ˆä¾‹å¦‚çŠ¶æ€æ ï¼‰ã€‚æ­¤çª—å£éœ€è€ƒè™‘åˆ°è£…é¥°è¾¹æ¡†çš„å†…å®¹ã€‚
+	    if (wpflag > 1 || (wpflag == 1 && ((int)(Math.random()*10)%2 ==0)))
+	    	windowParams.flags = windowParams.flags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;//çª—å£ä¹‹åçš„å†…å®¹å˜æš—ã€‚
 	    
-	    windowParams.format = PixelFormat.TRANSLUCENT;// Ä¬ÈÏÎª²»Í¸Ã÷£¬ÕâÀïÉè³ÉÍ¸Ã÷Ğ§¹û.
-	    windowParams.windowAnimations = android.R.style.Animation_Dialog;// ´°¿ÚËùÊ¹ÓÃµÄ¶¯»­ÉèÖÃ 
+	    windowParams.format = PixelFormat.TRANSLUCENT;// é»˜è®¤ä¸ºä¸é€æ˜ï¼Œè¿™é‡Œè®¾æˆé€æ˜æ•ˆæœ.
+	    windowParams.windowAnimations = R.style.DragAnimation;//android.R.style.Animation_Dialog;// çª—å£æ‰€ä½¿ç”¨çš„åŠ¨ç”»è®¾ç½® 
 	    
 	    ImageView imageView = new ImageView(getContext());
 	    imageView.setPadding(0, 0, 0, 0);
@@ -230,16 +239,16 @@ public class GalleryDrag extends Gallery {
     } 
 
     /**
-    * ÍÏ¶¯Ö´ĞĞ£¬ÔÚMove·½·¨ÖĞÖ´ĞĞ 
+    * æ‹–åŠ¨æ‰§è¡Œï¼Œåœ¨Moveæ–¹æ³•ä¸­æ‰§è¡Œ 
     * 
     */ 
     public void onDrag(int x, int y) { 
 	    
 	    if (dragImageView != null) {
-		    windowParams.alpha = 0.5f;// Í¸Ã÷¶È 
+		    windowParams.alpha = 0.5f;// é€æ˜åº¦ 
 		    windowParams.x = x - (int) (dragImageView.getWidth() / 2 + 0.5f);
 		    windowParams.y = y - (int) (dragImageView.getHeight() / 2 + 0.5f);
-		    windowManager.updateViewLayout(dragImageView, windowParams);// Ê±Ê±ÒÆ¶¯.
+		    windowManager.updateViewLayout(dragImageView, windowParams);// æ—¶æ—¶ç§»åŠ¨.
 		    //Log.i("onDrag", "x:" + windowParams.x + " - y:" + windowParams.y);
 	    }
 	    
@@ -247,7 +256,7 @@ public class GalleryDrag extends Gallery {
     }
 
 	/** 
-    * Í£Ö¹ÍÏ¶¯£¬É¾³ıÓ°Ïñ 
+    * åœæ­¢æ‹–åŠ¨ï¼Œåˆ é™¤å½±åƒ 
     */ 
     public void stopDrag() {
 	    if (dragImageView != null) {
@@ -274,6 +283,7 @@ public class GalleryDrag extends Gallery {
     		
 		    windowManager.updateViewLayout(dragImageView, windowParams);
 		    stopDrag();
+		    
 	    }
     }
     
@@ -291,12 +301,12 @@ public class GalleryDrag extends Gallery {
     }
     
     /**
-    * ÍÏ¶¯·ÅÏÂµÄÊ±ºò 
+    * æ‹–åŠ¨æ”¾ä¸‹çš„æ—¶å€™ 
     * 
     * @param y
     */
     public void onDrop(int x, int y) { 
-	    // ÎªÁË±ÜÃâ»¬¶¯µ½·Ö¸îÏßµÄÊ±ºò£¬·µ»Ø-1µÄÎÊÌâ 
+	    // ä¸ºäº†é¿å…æ»‘åŠ¨åˆ°åˆ†å‰²çº¿çš„æ—¶å€™ï¼Œè¿”å›-1çš„é—®é¢˜ 
 	    int tempPosition = pointToPosition(0, y);
 	    if (tempPosition != INVALID_POSITION) {
 	    	dragPosition = tempPosition;
@@ -306,17 +316,17 @@ public class GalleryDrag extends Gallery {
             mDropListener.drop(dragPosition, x, y);
         }
 	    
-	    /*// ³¬³ö±ß½ç´¦Àí(Èç¹ûÏòÉÏ³¬¹ıµÚ¶şÏîTopµÄ»°£¬ÄÇÃ´¾Í·ÅÖÃÔÚµÚÒ»¸öÎ»ÖÃ)
+	    /*// è¶…å‡ºè¾¹ç•Œå¤„ç†(å¦‚æœå‘ä¸Šè¶…è¿‡ç¬¬äºŒé¡¹Topçš„è¯ï¼Œé‚£ä¹ˆå°±æ”¾ç½®åœ¨ç¬¬ä¸€ä¸ªä½ç½®)
 	    if (y < getChildAt(0).getTop()) {
-		    // ³¬³öÉÏ±ß½ç 
+		    // è¶…å‡ºä¸Šè¾¹ç•Œ 
 		    dragPosition = 0;
-		    // Èç¹ûÍÏ¶¯³¬¹ı×îºóÒ»ÏîµÄ×îÏÂ±ßÄÇÃ´¾Í·ÀÖ¹ÔÚ×îÏÂ±ß 
+		    // å¦‚æœæ‹–åŠ¨è¶…è¿‡æœ€åä¸€é¡¹çš„æœ€ä¸‹è¾¹é‚£ä¹ˆå°±é˜²æ­¢åœ¨æœ€ä¸‹è¾¹ 
 	    } else if (y > getChildAt(getChildCount() - 1).getBottom()) {
-		    // ³¬³öÏÂ±ß½ç 
+		    // è¶…å‡ºä¸‹è¾¹ç•Œ 
 		    dragPosition = getAdapter().getCount() - 1;
 	    }
 	
-	    // Êı¾İ½»»» 
+	    // æ•°æ®äº¤æ¢ 
 	    if (dragPosition < getAdapter().getCount()) {
 		    DragListAdapter adapter = (DragListAdapter) getAdapter();
 		    adapter.update(dragSrcPosition, dragPosition);
@@ -325,7 +335,7 @@ public class GalleryDrag extends Gallery {
     }
     
     /**
-     * ²»Ö´ĞĞ£¿
+     * ä¸æ‰§è¡Œï¼Ÿ
      */
     public void animReturn() {
     	if (dragImageView == null) return;
@@ -396,7 +406,7 @@ public class GalleryDrag extends Gallery {
 	}
 	
 	private void performedLongPress(MotionEvent ev) {
-		startDrag(bm, (int) ev.getRawX(), (int) ev.getRawY());// ³õÊ¼»¯Ó°Ïñ 
+		startDrag(bm, (int) ev.getRawX(), (int) ev.getRawY());// åˆå§‹åŒ–å½±åƒ 
     
 	}
 	

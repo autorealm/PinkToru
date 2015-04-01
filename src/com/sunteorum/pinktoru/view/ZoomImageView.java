@@ -18,20 +18,20 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 /**
- * Ö§³ÖÊÖÊÆËõ·ÅµÄImageViewÀà
+ * æ”¯æŒæ‰‹åŠ¿ç¼©æ”¾çš„ImageViewç±»
  *
  */
 @SuppressLint({ "NewApi", "ClickableViewAccessibility" })
 public class ZoomImageView extends View {
-    /** »­±ÊÀà  **/
+    /** ç”»ç¬”ç±»  **/
 	private Paint mPaint;
 
     private Runnable mRefresh = null;
-    /** Ëõ·ÅÊÖÊÆ¼àÌýÀà  **/
+    /** ç¼©æ”¾æ‰‹åŠ¿ç›‘å¬ç±»  **/
     private ScaleGestureDetector mScaleDetector;
-    /** ÊÖÊÆÊ¶±ðÀà  **/
+    /** æ‰‹åŠ¿è¯†åˆ«ç±»  **/
     private GestureDetector mGestureDetector;
-    /** µ±Ç°±»äÖÈ¾µÄBitmap **/
+    /** å½“å‰è¢«æ¸²æŸ“çš„Bitmap **/
     private Bitmap mBitmap;
 
     private int mThisWidth = -1, mThisHeight = -1;
@@ -43,7 +43,7 @@ public class ZoomImageView extends View {
     private Matrix mSuppMatrix = new Matrix();
     private Matrix mMatrix = new Matrix();
 
-    /** ×î´óµÄÀ­Éì±ÈÀý   **/
+    /** æœ€å¤§çš„æ‹‰ä¼¸æ¯”ä¾‹   **/
     private float mMaxZoom;
 
     private float[] mMatrixValues = new float[9];
@@ -70,14 +70,14 @@ public class ZoomImageView extends View {
 
     private void init() {
         mPaint = new Paint();
-        // Í¼Ïñ¶¶¶¯´¦Àí
+        // å›¾åƒæŠ–åŠ¨å¤„ç†
         mPaint.setDither(true);
-        // ¹ýÂËÓÅ»¯²Ù×÷  ¼Ó¿ìÏÔÊ¾ 
+        // è¿‡æ»¤ä¼˜åŒ–æ“ä½œ  åŠ å¿«æ˜¾ç¤º 
         mPaint.setFilterBitmap(true);
-        // È¥µô¾â³Ý 
+        // åŽ»æŽ‰é”¯é½¿ 
         mPaint.setAntiAlias(true);
 
-        /** Ë¢ÐÂÏß³Ì  **/
+        /** åˆ·æ–°çº¿ç¨‹  **/
         mRefresh = new Runnable() {
             @Override
             public void run() {
@@ -88,7 +88,7 @@ public class ZoomImageView extends View {
         mScaleDetector = new ScaleGestureDetector(getContext(),new ScaleListener());
         mGestureDetector = new GestureDetector(getContext(),new MyGestureListener());
 
-        // ÅÐ¶ÏÊÇ·ñÊÇÐÂµÄAPI  ¿ªÆôÓ²¼þ¼ÓËÙ
+        // åˆ¤æ–­æ˜¯å¦æ˜¯æ–°çš„API  å¼€å¯ç¡¬ä»¶åŠ é€Ÿ
         if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.HONEYCOMB) {
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
@@ -98,7 +98,7 @@ public class ZoomImageView extends View {
         return mBitmap;
     }
 
-    /** »ØÊÕBitmap **/
+    /** å›žæ”¶Bitmap **/
     public void clear() {
         if(mBitmap != null && !mBitmap.isRecycled()) {
             mBitmap.recycle();
@@ -140,7 +140,7 @@ public class ZoomImageView extends View {
             scale = widthScale;
         }
 
-        /** ËãÈ¡±ÈÀý  ½øÐÐÆ½ÒÆ   **/
+        /** ç®—å–æ¯”ä¾‹  è¿›è¡Œå¹³ç§»   **/
         matrix.setScale(scale, scale);
         matrix.postTranslate(
                 (viewWidth  - ((float)bitmap.getWidth()  * scale))/2F, 
@@ -154,7 +154,7 @@ public class ZoomImageView extends View {
     }
 
     public void setImageMatrix(Matrix m){
-        /** MatrixÊÇ·ñÎª¿Õ²¢ÊÇ·ñ¶¨Òå   **/
+        /** Matrixæ˜¯å¦ä¸ºç©ºå¹¶æ˜¯å¦å®šä¹‰   **/
         if (m != null && m.isIdentity()) {
             m = null;
         }
@@ -169,14 +169,14 @@ public class ZoomImageView extends View {
     }
 
     /**
-     * ÉèÖÃBitmap 
+     * è®¾ç½®Bitmap 
      * 
      * @param bitmap
      */
     public void setImageBitmap(final Bitmap bitmap) {
         final int viewWidth = getWidth();
 
-        // ¿ªÆôÓ²¼þ¼ÓËÙ
+        // å¼€å¯ç¡¬ä»¶åŠ é€Ÿ
         if( Build.VERSION.SDK_INT >=  Build.VERSION_CODES.HONEYCOMB && bitmap!=null && bitmap.getHeight()>1800 )
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         if (viewWidth <= 0)  {
@@ -212,14 +212,14 @@ public class ZoomImageView extends View {
         }
         float oldScale = getScale();
         float deltaScale = scale / oldScale;
-        /** ¸ù¾ÝÄ³¸öÖÐÐÄµã°´ÕÕ±ÈÀýËõ·Å  **/
+        /** æ ¹æ®æŸä¸ªä¸­å¿ƒç‚¹æŒ‰ç…§æ¯”ä¾‹ç¼©æ”¾  **/
         mSuppMatrix.postScale(deltaScale, deltaScale, centerX, centerY);
         setImageMatrix(getImageViewMatrix());
         center(true, true, false);
     }
 
     /**
-     * ¼ÆËãÖÐÐÄÎ»ÖÃ 
+     * è®¡ç®—ä¸­å¿ƒä½ç½® 
      * 
      * @param vertical
      * @param horizontal
@@ -286,7 +286,7 @@ public class ZoomImageView extends View {
     }
 
     /**
-     * ¼ÆËã×î´óµÄÀ­Éì±ÈÀý
+     * è®¡ç®—æœ€å¤§çš„æ‹‰ä¼¸æ¯”ä¾‹
      * 
      * @return
      */
@@ -300,7 +300,7 @@ public class ZoomImageView extends View {
     }
 
     /**
-     * Ô­Ê¼ÏÔÊ¾±ÈÀý 
+     * åŽŸå§‹æ˜¾ç¤ºæ¯”ä¾‹ 
      * 
      * @return
      */
@@ -380,7 +380,7 @@ public class ZoomImageView extends View {
     /**
      * @author Administrator
      * 
-     * ÊÖÊÆËõ·Å¼àÌý
+     * æ‰‹åŠ¿ç¼©æ”¾ç›‘å¬
      */
     class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
@@ -405,7 +405,7 @@ public class ZoomImageView extends View {
     /**
      * @author Administrator
      *
-     * ÊÖÊÆÊ¶±ð¼àÌý
+     * æ‰‹åŠ¿è¯†åˆ«ç›‘å¬
      */
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
@@ -462,7 +462,7 @@ public class ZoomImageView extends View {
         public boolean onSingleTapConfirmed(MotionEvent e) {
             // TODO Auto-generated method stub
             Log.i("ZoomImageView", "onSingleTapConfirmed");
-            // ÉèÖÃµã»÷ÊÂ¼þ
+            // è®¾ç½®ç‚¹å‡»äº‹ä»¶
             if(mImageTouchedListener != null) {
                 mImageTouchedListener.onImageTouched();
                 return false;
@@ -489,7 +489,7 @@ public class ZoomImageView extends View {
      * 
      * @author Administrator
      * 
-     * µã»÷½Ó¿Ú
+     * ç‚¹å‡»æŽ¥å£
      */
     private onImageTouchedListener mImageTouchedListener;
 

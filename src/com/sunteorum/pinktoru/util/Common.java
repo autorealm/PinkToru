@@ -55,13 +55,13 @@ public class Common {
 			.setTitle(title)
 			.setMessage(message)
 			.setIcon(android.R.drawable.ic_menu_info_details)
-			.setPositiveButton("È·¶¨", null)
+			.setPositiveButton("ç¡®å®š", null)
 			.create().show();
     	
     }
 	
 	/**
-	 * Çå¿ÕÄÚ´æÖĞ»º´æµÄÍ¼Æ¬Êı¾İ
+	 * æ¸…ç©ºå†…å­˜ä¸­ç¼“å­˜çš„å›¾ç‰‡æ•°æ®
 	 * @param ImgCache
 	 */
 	public static void  clearCacheBitmap(Map<String, SoftReference<Bitmap>> ImgCache) {
@@ -149,9 +149,9 @@ public class Common {
 	}
 
 	/**
-	 * È¡µÃÎÄ¼şµÄMD5Âë
-	 * @param file ÎÄ¼ş
-	 * @return MD5Âë
+	 * å–å¾—æ–‡ä»¶çš„MD5ç 
+	 * @param file æ–‡ä»¶
+	 * @return MD5ç 
 	 */
 	public static String getFileMD5(File file) {
 		if (file == null || !file.isFile()) return null;
@@ -177,8 +177,8 @@ public class Common {
 	}
 
 	/**
-	 * È¡µÃ×Ö·û´®µÄMD5Âë
-	 * @param str ×Ö·û´®
+	 * å–å¾—å­—ç¬¦ä¸²çš„MD5ç 
+	 * @param str å­—ç¬¦ä¸²
 	 * @return
 	 */
     public static String getStringMD5(String str) {
@@ -211,7 +211,7 @@ public class Common {
     }
 
     /**
-     * ÒÔ±àÂëGB2312±£´æÎÄ±¾ÎÄ¼ş
+     * ä»¥ç¼–ç GB2312ä¿å­˜æ–‡æœ¬æ–‡ä»¶
      * @param context
      * @param filepath
      * @param text
@@ -233,8 +233,8 @@ public class Common {
 	}
 
     /**
-	 * »ñÈ¡Ä¿Â¼È«²¿JPEGÍ¼Æ¬ÁĞ±í
-	 * @return ÎÄ¼ş¼ĞÖĞµÄÍ¼Æ¬ÁĞ±í
+	 * è·å–ç›®å½•å…¨éƒ¨JPEGå›¾ç‰‡åˆ—è¡¨
+	 * @return æ–‡ä»¶å¤¹ä¸­çš„å›¾ç‰‡åˆ—è¡¨
 	 */
 	public static ArrayList<Map<String, ?>> getImageFileList(File dir) {
 		ArrayList<Map<String, ?>> lms = new ArrayList<Map<String, ?>>();

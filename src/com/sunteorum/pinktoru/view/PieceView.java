@@ -12,6 +12,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 
@@ -19,12 +20,12 @@ public class PieceView extends View {
 	protected SurfaceHolder holder;
 	protected Piece piece;
 	
-	private Bitmap mBitmap; //Ô­Ê¼ËéÆ¬Í¼Æ¬
+	private Bitmap mBitmap; //åŸå§‹ç¢ç‰‡å›¾ç‰‡
 	
-	private Point minp; //±£´æËéÆ¬ÖĞĞÄÎ»ÖÃ
-	private Point location; //±£´æËéÆ¬µ±Ç°Î»ÖÃ
+	private Point minp; //ä¿å­˜ç¢ç‰‡ä¸­å¿ƒä½ç½®
+	private Point location; //ä¿å­˜ç¢ç‰‡å½“å‰ä½ç½®
 	
-	//ÊÇ·ñÆ´ºÏ
+	//æ˜¯å¦æ‹¼åˆ
 	private boolean hasTop = false;
 	private boolean hasRight = false;
 	private boolean hasFeet = false;
@@ -86,6 +87,12 @@ public class PieceView extends View {
 		this.postInvalidate();
 	}
 	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		return super.onTouchEvent(event);
+	}
+
 	public class GameThread extends Thread {
 
 		@Override

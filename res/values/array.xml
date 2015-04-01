@@ -7,15 +7,19 @@
 	</string-array>
 	
 	<string-array name="game_mode_value">
+	    <item>0</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+		<item>4</item>
 	</string-array>
 	
 	<string-array name="game_mode_key">
+	    <item>随机模式</item>
 		<item>拼图模式</item>
 		<item>填图模式</item>
 		<item>组图模式</item>
+		<item>推图模式</item>
 	</string-array>
 
 	<string-array name="piece_cut_value">

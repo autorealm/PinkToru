@@ -30,12 +30,12 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 /**
- * Ó¦ÓÃµÄÈ«¾Ö±äÁ¿
+ * åº”ç”¨çš„å…¨å±€å˜é‡
  * @author KYO
  *
  */
 public class PinkToru extends Application {
-	final String CONF = "pt_config";	//³ÌĞòÅäÖÃ±£´æÃû
+	final String CONF = "pt_config";	//ç¨‹åºé…ç½®ä¿å­˜å
 	final String APP_DIR = "FADWorks/PinkToru";
 	final String APP_CACHE_DIR = "Cache";
 	final String APP_IMAGE_DIR = "Image";
@@ -45,28 +45,29 @@ public class PinkToru extends Application {
 	
 	private DataBean db;
 	private UserEntity user;
-	protected boolean offline = true;	//ÊÇ·ñÀëÏßÓÎÏ·Ä£Ê½£¬²âÊÔÓÃ
+	protected boolean offline = true;	//æ˜¯å¦ç¦»çº¿æ¸¸æˆæ¨¡å¼ï¼Œæµ‹è¯•ç”¨
 	
-	final int INACCURACY = 12;	//ÅĞ¶ÏÆ´ºÏµÄ¾àÀë
+	final int INACCURACY = 12;	//åˆ¤æ–­æ‹¼åˆçš„è·ç¦»
 	
-	private int gameStage = 1;	//µ±Ç°ÓÎÏ·µÄ¹ØÊı(µÚ¼¸¹Ø)£¬·ÇÓÎÏ·ÄÑ¶ÈµÈ¼¶
-	private long gameTime = 0;	//Í¬Ò»ÓÎÏ·ÀÛ¼ÆÊ±¼ä
+	private int gameStage = 1;	//å½“å‰æ¸¸æˆçš„å…³æ•°(ç¬¬å‡ å…³)ï¼Œéæ¸¸æˆéš¾åº¦ç­‰çº§
+	private long gameTime = 0;	//åŒä¸€æ¸¸æˆç´¯è®¡æ—¶é—´
 	
-	private boolean absinmove = true;	//ÊÇ·ñÒÆ¶¯Ê±½øĞĞÆ´ºÏÅĞ¶Ï
-	private boolean trainmove = false;	//ÊÇ·ñÒÆ¶¯Ê±Í¸Ã÷ÆäËûËéÆ¬
-	private boolean showedge = false;	//ÊÇ·ñÏÔÊ¾ËéÆ¬µÄĞéÏß±ß¿ò
-	private boolean withquad = true;	//ËéÆ¬ÇúÏß·Ö¸î·½Ê½
-	private boolean keepon = true;	//ÓÎÏ·Ê±±£³ÖÆÁÄ»³£ÁÁ
+	private boolean absinmove = true;	//æ˜¯å¦ç§»åŠ¨æ—¶è¿›è¡Œæ‹¼åˆåˆ¤æ–­
+	private boolean withquad = true;	//ç¢ç‰‡æ›²çº¿åˆ†å‰²æ–¹å¼
 	
-	private int gameMode = 1;	//ÓÎÏ·Ä£Ê½
+	private boolean trainmove = false;	//æ˜¯å¦ç§»åŠ¨æ—¶é€æ˜å…¶ä»–ç¢ç‰‡
+	private boolean showedge = false;	//æ˜¯å¦æ˜¾ç¤ºç¢ç‰‡çš„è™šçº¿è¾¹æ¡†
+	private boolean keepon = false;	//æ¸¸æˆæ—¶ä¿æŒå±å¹•å¸¸äº®
 	
-	private int pieceCutFlag = 1;	//ËéÆ¬·Ö¸î·½Ê½
-	private int pieceRenderFlag = 1;	//ËéÆ¬äÖÈ¾·½Ê½
-	private int pieceEdgeWidth = 16;	//ËéÆ¬±ßÔµ¿í¶È
-	private int pieceShadowOffset = 3;	//ËéÆ¬ÒõÓ°Æ«ÒÆÁ¿
+	private int gameMode = 1;	//æ¸¸æˆæ¨¡å¼
+	
+	private int pieceCutFlag = 1;	//ç¢ç‰‡åˆ†å‰²æ–¹å¼
+	private int pieceRenderFlag = 1;	//ç¢ç‰‡æ¸²æŸ“æ–¹å¼
+	private int pieceEdgeWidth = 16;	//ç¢ç‰‡è¾¹ç¼˜å®½åº¦
+	private int pieceShadowOffset = 3;	//ç¢ç‰‡é˜´å½±åç§»é‡
 	private int pieceKochCurveN = 2;
 	
-	/** Òì²½ÈÎÎñÁĞ±í  */
+	/** å¼‚æ­¥ä»»åŠ¡åˆ—è¡¨  */
 	protected List<AsyncTask<Void, String, Boolean>> mAsyncTasks = new ArrayList<AsyncTask<Void, String, Boolean>>();
 	private PTReceiver mReceiver = null;
 	
@@ -98,21 +99,24 @@ public class PinkToru extends Application {
 	public void init() {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
-		absinmove = prefs.getBoolean("absinmove", true);
-		trainmove = prefs.getBoolean("trainmove", false);
-		showedge = prefs.getBoolean("showedge", false);
-		withquad = prefs.getBoolean("withquad", true);
-		keepon = prefs.getBoolean("keepon", true);
+		absinmove = prefs.getBoolean("absinmove", absinmove);
+		trainmove = prefs.getBoolean("trainmove", trainmove);
+		showedge = prefs.getBoolean("showedge", showedge);
+		withquad = prefs.getBoolean("withquad", withquad);
+		keepon = prefs.getBoolean("keepon", keepon);
 		
 		try {
 			gameMode = Integer.parseInt(prefs.getString("gamemode", "1"));
-			pieceCutFlag = Integer.parseInt(prefs.getString("piececutflag", "0"));
+			pieceCutFlag = Integer.parseInt(prefs.getString("piececutflag", "1"));
 			pieceRenderFlag = Integer.parseInt(prefs.getString("piecerenderflag", "1"));
 			
 			pieceKochCurveN = Integer.parseInt(prefs.getString("piecekochcurven", "2"));
 			pieceEdgeWidth = Integer.parseInt(prefs.getString("pieceedgewidth", "16"));
 			pieceShadowOffset = Integer.parseInt(prefs.getString("pieceshadowoffset", "3"));
 			
+			if (pieceShadowOffset > 10 || pieceShadowOffset < 0) pieceShadowOffset = 3;
+			if (pieceKochCurveN > 8 || pieceKochCurveN < 0) pieceKochCurveN = 2;
+			if (pieceEdgeWidth > 100 || pieceEdgeWidth < 0) pieceEdgeWidth = 16;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -145,7 +149,13 @@ public class PinkToru extends Application {
 	
 	public Class<?> getGameClass(int gameMode) {
 		Class<?> GAME = PintuGameActivity.class;
-		if (gameMode == 0) gameMode = this.gameMode;
+		if (gameMode == 0) {
+			if (this.gameMode == 0) {
+				gameMode = (int) Math.round(Math.random() * 5);
+			} else {
+				gameMode = this.gameMode;
+			}
+		}
 		
 		if (gameMode == 1) {
 			GAME = PintuGameActivity.class;
@@ -153,6 +163,8 @@ public class PinkToru extends Application {
 			GAME = FillGameActivity.class;
 		} else if (gameMode == 3) {
 			GAME = SwapGameActivity.class;
+		} else if (gameMode == 4) {
+			GAME = PushGameActivity.class;
 		} else if (gameMode == 10) {
 			GAME = PokeGameActivity.class;
 		}
@@ -252,8 +264,8 @@ public class PinkToru extends Application {
 	}
 
 	public int getPieceCutFlag() {
-		if (this.gameMode == 3)
-			return 0; //×éÍ¼Ä£Ê½ Ç¿ÖÆ¾ØĞÎ
+		if (this.gameMode == 3 || this.gameMode == 4)
+			return 0; //ç»„å›¾æ¨¡å¼ å¼ºåˆ¶çŸ©å½¢
 		
 		return pieceCutFlag;
 	}
@@ -272,7 +284,7 @@ public class PinkToru extends Application {
 
 	public int getPieceEdgeWidth() {
 		//if (this.gameMode == 3)
-			//return 1; //×éÍ¼Ä£Ê½Ç¿ÖÆ±ß¿ò
+			//return 1; //ç»„å›¾æ¨¡å¼å¼ºåˆ¶è¾¹æ¡†
 		
 		return pieceEdgeWidth;
 	}
@@ -298,7 +310,7 @@ public class PinkToru extends Application {
 	}
 
 	/**
-	 * »ñÈ¡Ó¦ÓÃµÄÄ¬ÈÏ»º´æÄ¿Â¼
+	 * è·å–åº”ç”¨çš„é»˜è®¤ç¼“å­˜ç›®å½•
 	 * @return
 	 */
 	public File getAppCacheDir() {
@@ -371,17 +383,17 @@ public class PinkToru extends Application {
 		
 		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);  
 		
-		//½ûÖ¹·¢³öÍ¨Öª£¬¼ÈºóÌ¨ÏÂÔØ£¬Èç¹ûÒªÊ¹ÓÃÕâÒ»¾ä±ØĞëÉùÃ÷Ò»¸öÈ¨ÏŞ£ºandroid.permission.DOWNLOAD_WITHOUT_NOTIFICATION  
+		//ç¦æ­¢å‘å‡ºé€šçŸ¥ï¼Œæ—¢åå°ä¸‹è½½ï¼Œå¦‚æœè¦ä½¿ç”¨è¿™ä¸€å¥å¿…é¡»å£°æ˜ä¸€ä¸ªæƒé™ï¼šandroid.permission.DOWNLOAD_WITHOUT_NOTIFICATION  
 		//request.setShowRunningNotification(false);  
 		
-		//²»ÏÔÊ¾ÏÂÔØ½çÃæ  
+		//ä¸æ˜¾ç¤ºä¸‹è½½ç•Œé¢  
 		request.setVisibleInDownloadsUi(false);
-		/* ÉèÖÃÏÂÔØºóÎÄ¼ş´æ·ÅµÄÎ»ÖÃ,Èç¹ûsdcard²»¿ÉÓÃ£¬ÄÇÃ´ÉèÖÃÕâ¸ö½«±¨´í£¬Òò´Ë×îºÃ²»ÉèÖÃÈç¹ûsdcard¿ÉÓÃ£¬ÏÂÔØºóµÄÎÄ¼ş
-			ÔÚ/mnt/sdcard/Android/data/packageName/filesÄ¿Â¼ÏÂÃæ£¬Èç¹ûsdcard²»¿ÉÓÃ,ÉèÖÃÁËÏÂÃæÕâ¸ö½«±¨´í£¬²»ÉèÖÃ£¬ÏÂÔØºóµÄÎÄ¼şÔÚ/cacheÕâ¸ö  Ä¿Â¼ÏÂÃæ
+		/* è®¾ç½®ä¸‹è½½åæ–‡ä»¶å­˜æ”¾çš„ä½ç½®,å¦‚æœsdcardä¸å¯ç”¨ï¼Œé‚£ä¹ˆè®¾ç½®è¿™ä¸ªå°†æŠ¥é”™ï¼Œå› æ­¤æœ€å¥½ä¸è®¾ç½®å¦‚æœsdcardå¯ç”¨ï¼Œä¸‹è½½åçš„æ–‡ä»¶
+			åœ¨/mnt/sdcard/Android/data/packageName/filesç›®å½•ä¸‹é¢ï¼Œå¦‚æœsdcardä¸å¯ç”¨,è®¾ç½®äº†ä¸‹é¢è¿™ä¸ªå°†æŠ¥é”™ï¼Œä¸è®¾ç½®ï¼Œä¸‹è½½åçš„æ–‡ä»¶åœ¨/cacheè¿™ä¸ª  ç›®å½•ä¸‹é¢
 		*/
 		//request.setDestinationInExternalFilesDir(this, null, "tar.apk");
 		long id = downloadManager.enqueue(request);
-		//TODO °Ñid±£´æºÃ£¬ÔÚ½ÓÊÕÕßÀïÃæÒªÓÃ£¬×îºÃ±£´æÔÚPreferencesÀïÃæ
+		//TODO æŠŠidä¿å­˜å¥½ï¼Œåœ¨æ¥æ”¶è€…é‡Œé¢è¦ç”¨ï¼Œæœ€å¥½ä¿å­˜åœ¨Preferencesé‡Œé¢
 		
 		mReceiver = new PTReceiver(id);
 		IntentFilter filter = new IntentFilter("android.intent.action.DOWNLOAD_COMPLETE");
@@ -391,7 +403,7 @@ public class PinkToru extends Application {
 	}
 	
 	/**
-	 * ±£´æÓ¦ÓÃÅäÖÃ
+	 * ä¿å­˜åº”ç”¨é…ç½®
 	 * @param conf
 	 * @return
 	 */

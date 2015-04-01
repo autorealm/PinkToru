@@ -7,64 +7,65 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * ÓÎÏ·¹Ø¿¨Êı¾İ°ü×°Àà
+ * æ¸¸æˆå…³å¡æ•°æ®åŒ…è£…ç±»
  * @author KYO
  *
  */
 public class LevelEntity implements Parcelable {
 
-	private int levelId;//ÓÎÏ·¹Ø¿¨ID
-	private int gameMode = 1;//ÓÎÏ·Ä£Ê½£¬0.Á¬Í¼£¬1.Æ´Í¼£¬2.ÌîÍ¼£¬3.×éÍ¼¡£
-	private int targetValue = 0;//ÓÎÏ·¹Ø¿¨Ä¿±ê·ÖÖµ
-	private int giftPoints = 0;//ÓÎÏ·¹Ø¿¨ÔùËÍµãÊı
-	private int pieceRow;//ÁĞ
-	private int pieceLine;//ĞĞ
+	private int levelId;//æ¸¸æˆå…³å¡ID
+	private int gameMode = 1;//æ¸¸æˆæ¨¡å¼ï¼Œ0.è¿å›¾ï¼Œ1.æ‹¼å›¾ï¼Œ2.å¡«å›¾ï¼Œ3.ç»„å›¾ã€‚
+	private int targetValue = 0;//æ¸¸æˆå…³å¡ç›®æ ‡åˆ†å€¼
+	private int giftPoints = 0;//æ¸¸æˆå…³å¡èµ é€ç‚¹æ•°
+	private int pieceRow;//åˆ—
+	private int pieceLine;//è¡Œ
 	
-	private int cutFlag = 0;//ÇĞÍ¼·½Ê½
-	private int cutAlt = 2;//ÇĞÍ¼²ÎÊı
-	private int renderFlag = 1;//ËéÆ¬äÖÈ¾·½Ê½
-	private int edgeWidth = 16;//ËéÆ¬±ßÔµ¿í¶È
-	private int shadowOffset = 3;//ËéÆ¬ÒõÓ°
+	private int cutFlag = 0;//åˆ‡å›¾æ–¹å¼
+	private int cutAlt = 2;//åˆ‡å›¾å‚æ•°
+	private int renderFlag = 1;//ç¢ç‰‡æ¸²æŸ“æ–¹å¼
+	private int edgeWidth = 16;//ç¢ç‰‡è¾¹ç¼˜å®½åº¦
+	private int shadowOffset = 3;//ç¢ç‰‡é˜´å½±
 	
-	private int imageId = 0;//ÓÎÏ·Í¼Æ¬µÄID
-	private String imageUrl;//ÓÎÏ·Í¼Æ¬µÄURL
-	private String addData;//ÓÎÏ·¹Ø¿¨¸½¼ÓÊı¾İ
-	private String levelDesc = "¸ÃÓÎÏ·¹Ø¿¨ÔİÎŞ½éÉÜ";//ÓÎÏ·¹Ø¿¨½éÉÜ
+	private boolean withQuad = true;//æ›²çº¿ç»˜å›¾
+	private boolean absInMove = true;//ç§»åŠ¨æ‹¼æ¥
+	
+	private int imageId = 0;//æ¸¸æˆå›¾ç‰‡çš„ID
+	private String imageUrl;//æ¸¸æˆå›¾ç‰‡çš„URL
+	private String addData;//æ¸¸æˆå…³å¡é™„åŠ æ•°æ®
+	private String levelDesc = "è¯¥æ¸¸æˆå…³å¡æš‚æ— ä»‹ç»";//æ¸¸æˆå…³å¡ä»‹ç»
 	
 	public LevelEntity() {
 		super();
 		
 	}
 	
-	public LevelEntity(int id, int row, int line, String desc) {
-		//ÓÎÏ·ID·ÖÀà£º0ÎªÔ¤ÖÃ£¬1¡«100Îª×Ô¶¨Òå£¬1000ÒÔÉÏÎªÏÂÔØÄÚÈİ
+	public LevelEntity(int id, int row, int line, String uri) {
+		//æ¸¸æˆIDåˆ†ç±»ï¼š0ä¸ºé¢„ç½®ï¼Œ1ï½100ä¸ºè‡ªå®šä¹‰ï¼Œ1000ä»¥ä¸Šä¸ºä¸‹è½½å†…å®¹
 		this.levelId = 0;
 		this.imageId = 0;
-		this.imageUrl = "";
+		this.imageUrl = uri;
 		this.levelId = id;
 		this.pieceRow = row;
 		this.pieceLine = line;
-		this.gameMode = 1;
-		this.levelDesc = desc;
+		this.gameMode = 0;
+		this.levelDesc = "";
 		
 	}
 	
 	/**
-	 * ×Ô¶¨ÒåÓÎÏ·¹Ø¿¨ÖØÔØ
+	 * è‡ªå®šä¹‰æ¸¸æˆå…³å¡é‡è½½
 	 * @param id
-	 * @param level
 	 * @param mode
 	 * @param row
 	 * @param line
 	 * @param path
 	 * @param desc
 	 */
-	public LevelEntity(int id, int level, int mode, int row, int line, String path, String desc) {
+	public LevelEntity(int id, int mode, int row, int line, String path, String desc) {
 		if (id < 1 || id > 100) id = 1;
 		this.levelId = id;
 		this.imageId = 0;
 		this.imageUrl = path;
-		this.targetValue = level;
 		this.pieceRow = row;
 		this.pieceLine = line;
 		this.gameMode = mode;
@@ -162,6 +163,8 @@ public class LevelEntity implements Parcelable {
 		p.writeInt(renderFlag);
 		p.writeInt(edgeWidth);
 		p.writeInt(shadowOffset);
+		p.writeInt(withQuad ? 1 : 0);
+		p.writeInt(absInMove ? 1 : 0);
 		
 		p.writeString(imageUrl);
 		p.writeString(addData);
@@ -188,6 +191,9 @@ public class LevelEntity implements Parcelable {
 			pe.renderFlag = p.readInt();
 			pe.edgeWidth = p.readInt();
 			pe.shadowOffset = p.readInt();
+			
+			pe.withQuad = (p.readInt() == 0)? false : true;
+			pe.absInMove = (p.readInt() == 0)? false : true;
 			
 			pe.imageUrl = p.readString();
 			pe.addData = p.readString();
@@ -286,6 +292,22 @@ public class LevelEntity implements Parcelable {
 
 	public int getShadowOffset() {
 		return shadowOffset;
+	}
+
+	public boolean isWithQuad() {
+		return withQuad;
+	}
+
+	public void setWithQuad(boolean withQuad) {
+		this.withQuad = withQuad;
+	}
+
+	public boolean isAbsInMove() {
+		return absInMove;
+	}
+
+	public void setAbsInMove(boolean absInMove) {
+		this.absInMove = absInMove;
 	}
 
 	public void setShadowOffset(int shadowOffset) {
